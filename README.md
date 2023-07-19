@@ -158,7 +158,7 @@ Fields:
 
 - [x] [Initial server setup](https://github.com/alan-hadyk/side-stacker-game/pull/2)
 - [x] [Initial client setup](https://github.com/alan-hadyk/side-stacker-game/pull/3)
-- [ ] Server database setup
+- [x] [Server database setup](https://github.com/alan-hadyk/side-stacker-game/pull/4)
 - [ ] Server error handling
 - [ ] Server-side Player model implementation
 - [ ] Server-side Player routes and controllers implementation
