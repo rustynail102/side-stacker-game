@@ -77,6 +77,7 @@ The take-home task is to implement the 2-player version of this game, where each
 6. **React Router** - React Router enables "client side routing". Since this will be a "SPA" (Single-Page Application), some form of routing will be needed. React Router will allow developers to create different routes for different views in the application (like a home page, a game page, and a leaderboard page).
 7. **ESLint and Prettier** - ESLint and Prettier are tools that enforce code quality and consistent formatting. ESLint catches potential bugs and enforces best practices, while Prettier ensures that code follows a consistent style. This will help maintain code quality and readability, which is especially important in a collaborative project.
 8. **Socket.IO** - Socket.IO is a JavaScript library for real-time web applications. It enables real-time, bidirectional and event-based communication between the browser and the server. It will be used to handle real-time updates of the game state.
+9. **daisyUI** - daisyUI is a plugin for Tailwind CSS that adds semantic class names, making it easier and faster to build beautiful user interfaces. It provides a set of pre-designed components that can be used out of the box, while still allowing for customization through Tailwind's utility classes. daisyUI's semantic class names make the code more readable and easier to maintain. It's framework-agnostic, meaning it can be used with any JavaScript framework or no framework at all. This will be particularly useful for quickly styling the game components and user interface in this project.
 
 #### The Backend
 
@@ -156,7 +157,7 @@ Fields:
 > List of the major tasks that have to be completed
 
 - [x] [Initial server setup](https://github.com/alan-hadyk/side-stacker-game/pull/2)
-- [ ] Initial client setup
+- [x] [Initial client setup](https://github.com/alan-hadyk/side-stacker-game/pull/3)
 - [ ] Server database setup
 - [ ] Server error handling
 - [ ] Server-side Player model implementation
