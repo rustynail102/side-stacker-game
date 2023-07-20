@@ -60,6 +60,7 @@ export class GameModel {
 
   static getAll = ({
     filters,
+    filterType = "AND",
     limit = 40,
     offset = 0,
     orderBy = "created_at",
@@ -80,7 +81,10 @@ export class GameModel {
       const query = sql.typeAlias("game")`
         SELECT * 
         FROM games 
-        WHERE ${sql.join(filtersFragments, sql.unsafe`, `)}
+        WHERE ${sql.join(
+          filtersFragments,
+          filterType === "AND" ? sql.unsafe`, ` : sql.unsafe` OR `,
+        )}
         ORDER BY ${sql.identifier([orderBy])} ${sql.unsafe([direction])} 
         LIMIT ${limit} 
         OFFSET ${offset}

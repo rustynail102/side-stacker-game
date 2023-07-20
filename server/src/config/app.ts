@@ -1,4 +1,6 @@
 export const appConfig = {
-  host: "127.0.0.1",
-  port: 3000,
+  httpServer: {
+    host: "127.0.0.1",
+    port: 3000,
+  },
 }

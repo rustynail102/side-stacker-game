@@ -165,7 +165,7 @@ Fields:
 - [x] [Server-side Player model implementation](https://github.com/alan-hadyk/side-stacker-game/pull/6)
 - [x] [Server-side Game model implementation](https://github.com/alan-hadyk/side-stacker-game/pull/7)
 - [x] [Server-side Move model implementation](https://github.com/alan-hadyk/side-stacker-game/pull/8)
-- [ ] Server-side Player controllers and services implementation
+- [x] [Server-side Player controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/9)
 - [ ] Server-side Game controllers and services implementation
 - [ ] Server-side Move controllers and services implementation
 - [ ] Server routes implementation

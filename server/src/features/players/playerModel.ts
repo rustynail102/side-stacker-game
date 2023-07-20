@@ -31,14 +31,20 @@ export class PlayerModel {
       return rows[0]
     })
 
-  static delete = (player_id: Player["player_id"]): Promise<Player> =>
+  static delete = (
+    player_id: Player["player_id"],
+    session_id: Player["session_id"],
+  ): Promise<Player> =>
     pool.connect(async (connection) => {
-      const fragments = [sql.fragment`deleted_at = NOW()`]
+      const fragments = [
+        sql.fragment`session_id = NULL`,
+        sql.fragment`deleted_at = NOW()`,
+      ]
 
       const query = sql.typeAlias("player")`
           UPDATE players
           SET ${sql.join(fragments, sql.unsafe`, `)}
-          WHERE player_id = ${player_id}
+          WHERE player_id = ${player_id}, session_id = ${session_id}
           RETURNING *
         `
 
@@ -54,7 +60,7 @@ export class PlayerModel {
   static getAll = ({
     limit = 20,
     offset = 0,
-    orderBy = "created_at",
+    orderBy = "last_active_at",
     orderDirection = OrderDirection.DESC,
   }: PlayerModelGetAll): Promise<readonly Player[]> =>
     pool.connect(async (connection) => {
@@ -84,24 +90,10 @@ export class PlayerModel {
 
   static update = (
     player_id: Player["player_id"],
-    {
-      last_active_at,
-      session_id,
-      username,
-    }: Partial<Pick<Player, "last_active_at" | "session_id" | "username">>,
+    { username }: Partial<Pick<Player, "username">>,
   ): Promise<Player> =>
     pool.connect(async (connection) => {
-      const fragments = []
-
-      fragments.push(
-        last_active_at !== undefined
-          ? sql.fragment`last_active_at = ${last_active_at}`
-          : sql.fragment`last_active_at = NOW()`,
-      )
-
-      if (session_id !== undefined) {
-        fragments.push(sql.fragment`session_id = ${session_id}`)
-      }
+      const fragments = [sql.fragment`last_active_at = NOW()`]
 
       if (username !== undefined) {
         fragments.push(sql.fragment`username = ${username}`)
