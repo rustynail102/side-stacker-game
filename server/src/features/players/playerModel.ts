@@ -132,5 +132,5 @@ export const PlayersTableInit = sql.unsafe`
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     last_active_at TIMESTAMP,
     deleted_at TIMESTAMP
-  )
+  );
 `
