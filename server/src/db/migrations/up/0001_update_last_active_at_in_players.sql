@@ -1,0 +1,3 @@
+ALTER TABLE players 
+ALTER COLUMN last_active_at SET NOT NULL,
+ALTER COLUMN last_active_at SET DEFAULT NOW();

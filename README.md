@@ -100,31 +100,32 @@ Real and production-level application could also have additional tools, such as 
 
 Data model consists of three main entities: `Player`, `Game`, and `Move`.
 
-1. `Players` table: This table stores information about each player.
+1. `players` table: This table stores information about each player.
 Fields:
     - `player_id` (UUID, required): A unique identifier for each player. This is the primary key.
     - `session_id` (UUID, required): The session ID associated with the player. This is used to maintain the player's connection and game state.
     - `username` (text, required): The player's chosen username.
     - `created_at` (timestamp, required): The time when given player joined.
-    - `last_active_at` (timestamp, required): The time when player made a last move.
+    - `last_active_at` (timestamp, required): The time when player last time made any activity (made a move, joined a game, etc.)
+    - `deleted_at` (timestamp, optional): The time when player was deleted
 
-2. `Games` table: This table stores information about each game.
+2. `games` table: This table stores information about each game.
 Fields:
     - `game_id` (UUID, required): A unique identifier for each game. This is the primary key.
-    - `player1_id` (UUID, required): The ID of the first player (owner of the game). This is a foreign key referencing `Players.player_id`.
-    - `player2_id` (UUID, optional): The ID of the second player. This is a foreign key referencing `Players.player_id`. This field is optional because a game might be created before the second player has joined.
-    - `current_player_id` (UUID, required): The ID of the player whose turn it is. This is a foreign key referencing `Players.player_id`.
+    - `player1_id` (UUID, optional): The ID of the first player (owner of the game). This is a foreign key referencing `players.player_id`. This field is optional because a game might be created before the first player has joined, or a first player might abandon the game.
+    - `player2_id` (UUID, optional): The ID of the second player. This is a foreign key referencing `players.player_id`. This field is optional because a game might be created before the second player has joined, or a second player might abandon the game.
+    - `current_player_id` (UUID, required): The ID of the player whose turn it is. This is a foreign key referencing `players.player_id`.
     - `current_game_state` (enum, required): The current state of the game. This is an enumeration with values like "waiting for players", "in progress", "finished", etc.
     - `next_possible_moves` (integer[][2], required): An array of pairs of integers representing the X and Y coordinates of the next possible moves.
-    - `winner_id` (UUID, optional): The ID of the winning player, if the game has finished. This is a foreign key referencing `Players.player_id`.
+    - `winner_id` (UUID, optional): The ID of the winning player, if the game has finished. This is a foreign key referencing `players.player_id`.
     - `created_at` (timestamp, required): The time when the game was created.
     - `finished_at` (timestamp, optional): The time when the game was finished. This field is optional because it will be empty for games that are still in progress.
 
-3. `Moves` table: This table stores information about each move made in a game.
+3. `moves` table: This table stores information about each move made in a game.
 Fields:
     - `move_id` (UUID, required): A unique identifier for each move. This is the primary key. 
-    - `game_id` (UUID, required): The ID of the game in which the move was made. This is a foreign key referencing `Games.game_id`.
-    - `player_id` (UUID, required): The ID of the player who made the move. This is a foreign key referencing `Players.player_id`.
+    - `game_id` (UUID, required): The ID of the game in which the move was made. This is a foreign key referencing `games.game_id`.
+    - `player_id` (UUID, required): The ID of the player who made the move. This is a foreign key referencing `players.player_id`.
     - `move_number` (integer, required): The order in which the move was made in the game. This can be used to reconstruct the game state.
     - `position_x` (integer, required): The X position on the game board where the move was made.
     - `position_y` (integer, required): The Y position on the game board where the move was made.
@@ -142,7 +143,7 @@ Fields:
 
 4. **User creates a new game or joins an existing one**
 - A: **User creates a new game**: User clicks on "New Game" button. New game is created, and user is redirected to a route with a new game. They are assigned as Player 1 and there's no Player 2 yet. User waits for another player to join. If they are currently participating in another game, they are removed from that other game.
-- B: **User joins an existing game**: User clicks on one of the games in progress. They are redirected to a route with an existing game. If there's a free spot, user clicks on "Join Game" button. User is assigned as Player 1 or Player 2. If there isn't any free spot, user can watch the game.
+- B: **User joins an existing game**: User clicks on one of the games in progress. They are redirected to a route with an existing game. If there's a free spot, user clicks on "Join Game" button. If they are currently participating in another game, they are removed from that other game. User is assigned as Player 1 or Player 2. If there isn't any free spot, user can watch the game.
 
 5. **Game starts**: The game board is displayed, and Player 1 is prompted to make the first move.
 
@@ -160,12 +161,13 @@ Fields:
 - [x] [Initial client setup](https://github.com/alan-hadyk/side-stacker-game/pull/3)
 - [x] [Server database setup](https://github.com/alan-hadyk/side-stacker-game/pull/4)
 - [x] [Server error handling](https://github.com/alan-hadyk/side-stacker-game/pull/5)
-- [ ] Server-side Player model implementation
-- [ ] Server-side Player routes and controllers implementation
-- [ ] Server-side Game entity implementation
-- [ ] Server-side Game routes and controllers implementation
-- [ ] Server-side Move entity implementation
-- [ ] Server-side Move routes and controllers implementation
+- [x] [Server-side Player model implementation](https://github.com/alan-hadyk/side-stacker-game/pull/6)
+- [ ] Server-side Game model implementation
+- [ ] Server-side Move model implementation
+- [ ] Server-side Player controllers and services implementation
+- [ ] Server-side Game controllers and services implementation
+- [ ] Server-side Move controllers and services implementation
+- [ ] Server routes implementation
 - [ ] Client - session logic
 - [ ] Client routes
 - [ ] Client - game lobby

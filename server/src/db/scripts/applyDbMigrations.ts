@@ -2,6 +2,7 @@ import { createSqlTag, DatabasePoolConnection } from "slonik"
 import { readdir, readFile } from "node:fs/promises"
 import path from "node:path"
 import { MigrationObject } from "@app/db/utils/objects/migrationObject"
+import { MigrationsTableInit } from "@app/db/utils/tables/migrationTable"
 
 const migrationsDir = path.resolve(process.cwd(), "src/db/migrations/up")
 
@@ -12,22 +13,16 @@ const sql = createSqlTag({
 })
 
 export const applyDbMigrations = async (connection: DatabasePoolConnection) => {
-  await connection.query(
-    sql.unsafe`
-      CREATE TABLE IF NOT EXISTS migrations (
-        executed_at TIMESTAMP NOT NULL DEFAULT NOW(),
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-        name TEXT NOT NULL,
-        type TEXT NOT NULL
-      )
-    `,
-  )
+  await connection.query(MigrationsTableInit)
 
   const migrationFiles = await readdir(migrationsDir)
   migrationFiles.sort()
 
   const executedMigrations = await connection.query(
-    sql.typeAlias("migration")`SELECT name FROM migrations`,
+    sql.typeAlias("migration")`
+      SELECT name 
+      FROM migrations
+    `,
   )
   const executedMigrationNames = executedMigrations.rows.map(
     (migration) => migration.name,
