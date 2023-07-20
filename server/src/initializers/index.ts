@@ -1,3 +1,3 @@
-import { initDb } from "@app/initializers/db";
+import { initDb } from "@app/initializers/db"
 
-export const initializers = [initDb];
+export const initializers = [initDb]

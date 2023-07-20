@@ -25,3 +25,4 @@ jobs:
           yarn install
           yarn cache clean
           yarn build
+          yarn lint

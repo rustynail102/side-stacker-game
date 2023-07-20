@@ -39,7 +39,8 @@
     "db:start": "docker-compose up db -d",
     "db:stop": "docker-compose down",
     "dev": "NODE_ENV=development npm run db:start && ts-node-dev -r tsconfig-paths/register --project tsconfig.json src/index.ts",
-    "lint": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
     "start": "NODE_ENV=production node -r module-alias/register dist/index.js"
   },
   "version": "1.0.0"
