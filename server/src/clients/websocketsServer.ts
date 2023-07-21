@@ -3,7 +3,7 @@ import {
   ServerToClientEvents,
   InterServerEvents,
   SocketData,
-} from "@app/clients/@types/websocketsServer"
+} from "@app/@types/websocketsServer"
 import { IncomingMessage, Server, ServerResponse } from "http"
 import { Server as SocketIOServer } from "socket.io"
 
@@ -30,6 +30,8 @@ export const createWebsocketsServer = (
       skipMiddlewares: true,
     },
   })
+
+  return websocketsServer
 }
 
 export { websocketsServer }

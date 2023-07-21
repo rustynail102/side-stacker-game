@@ -1,4 +1,4 @@
-import { CustomError } from "@app/errors/definitions/customError"
+import { CustomError } from "@app/errors/customError"
 
 export class ValidationError extends CustomError {
   constructor(message: string | string[]) {

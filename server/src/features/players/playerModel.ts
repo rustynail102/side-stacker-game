@@ -1,10 +1,15 @@
-import { pool } from "@app/db/pool"
-import { OrderDirection } from "@app/features/@types/models"
-import { PlayerModelGetAll } from "@app/features/players/@types/playerModel"
-import { Player } from "@app/features/players/@types/playerObject"
+import { databasePool } from "@app/db/databasePool"
+import { OrderDirection } from "@app/@types/models"
+import { PlayerModelGetAll } from "@app/@types/playerModel"
+import { Player } from "@app/@types/playerObject"
 import { PlayerObject } from "@app/features/players/playerObject"
-import { NotFoundError, createSqlTag } from "slonik"
-import { z } from "zod"
+import {
+  DatabasePoolConnection,
+  NotFoundError,
+  QuerySqlToken,
+  createSqlTag,
+} from "slonik"
+import { ZodTypeAny, z } from "zod"
 
 const sql = createSqlTag({
   typeAliases: {
@@ -14,11 +19,26 @@ const sql = createSqlTag({
 })
 
 export class PlayerModel {
+  private static lastActiveNowFragment = sql.fragment`last_active_at = NOW()`
+
+  private static async executeQuery(
+    connection: DatabasePoolConnection,
+    query: QuerySqlToken<ZodTypeAny>,
+  ) {
+    const { rowCount, rows } = await connection.query(query)
+
+    if (rowCount === 0) {
+      throw new NotFoundError(query)
+    }
+
+    return rows[0]
+  }
+
   static create = ({
     session_id,
     username,
   }: Pick<Player, "session_id" | "username">): Promise<Player> =>
-    pool.connect(async (connection) => {
+    databasePool.connect(async (connection) => {
       const query = sql.typeAlias("player")`
           INSERT 
           INTO players (player_id, session_id, username, created_at, last_active_at, deleted_at) 
@@ -35,26 +55,20 @@ export class PlayerModel {
     player_id: Player["player_id"],
     session_id: Player["session_id"],
   ): Promise<Player> =>
-    pool.connect(async (connection) => {
+    databasePool.connect(async (connection) => {
       const fragments = [
         sql.fragment`session_id = NULL`,
         sql.fragment`deleted_at = NOW()`,
       ]
 
       const query = sql.typeAlias("player")`
-          UPDATE players
-          SET ${sql.join(fragments, sql.unsafe`, `)}
-          WHERE player_id = ${player_id}, session_id = ${session_id}
-          RETURNING *
-        `
+        UPDATE players
+        SET ${sql.join(fragments, sql.unsafe`, `)}
+        WHERE player_id = ${player_id}, session_id = ${session_id}
+        RETURNING *
+      `
 
-      const { rowCount, rows } = await connection.query(query)
-
-      if (rowCount === 0) {
-        throw new NotFoundError(query)
-      }
-
-      return rows[0]
+      return PlayerModel.executeQuery(connection, query)
     })
 
   static getAll = ({
@@ -63,7 +77,7 @@ export class PlayerModel {
     orderBy = "last_active_at",
     orderDirection = OrderDirection.DESC,
   }: PlayerModelGetAll): Promise<readonly Player[]> =>
-    pool.connect(async (connection) => {
+    databasePool.connect(async (connection) => {
       const direction = orderDirection === OrderDirection.ASC ? "ASC" : "DESC"
       const query = sql.typeAlias("player")`
         SELECT * 
@@ -78,7 +92,7 @@ export class PlayerModel {
     })
 
   static getById = (player_id: Player["player_id"]): Promise<Player> =>
-    pool.connect(async (connection) =>
+    databasePool.connect(async (connection) =>
       connection.one(
         sql.typeAlias("player")`
             SELECT * 
@@ -92,8 +106,8 @@ export class PlayerModel {
     player_id: Player["player_id"],
     { username }: Partial<Pick<Player, "username">>,
   ): Promise<Player> =>
-    pool.connect(async (connection) => {
-      const fragments = [sql.fragment`last_active_at = NOW()`]
+    databasePool.connect(async (connection) => {
+      const fragments = [PlayerModel.lastActiveNowFragment]
 
       if (username !== undefined) {
         fragments.push(sql.fragment`username = ${username}`)
@@ -106,13 +120,7 @@ export class PlayerModel {
           RETURNING *
         `
 
-      const { rowCount, rows } = await connection.query(query)
-
-      if (rowCount === 0) {
-        throw new NotFoundError(query)
-      }
-
-      return rows[0]
+      return PlayerModel.executeQuery(connection, query)
     })
 }
 
@@ -122,7 +130,7 @@ export const PlayersTableInit = sql.unsafe`
     session_id UUID NOT NULL,
     username TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    last_active_at TIMESTAMP,
+    last_active_at TIMESTAMP NOT NULL DEFAULT NOW(),
     deleted_at TIMESTAMP
   );
 `

@@ -1,4 +1,4 @@
-import { connectToDb, pool } from "@app/db/pool"
+import { connectToDb, databasePool } from "@app/db/databasePool"
 import { applyDbMigrations } from "@app/db/scripts/applyDbMigrations"
 import { initDbExtensions } from "@app/db/scripts/initDbExtensions"
 import { initDbTables } from "@app/db/scripts/initDbTables"
@@ -6,7 +6,7 @@ import { initDbTables } from "@app/db/scripts/initDbTables"
 export const initDb = async () => {
   await connectToDb()
 
-  await pool.connect(async (connection) => {
+  await databasePool.connect(async (connection) => {
     // Initialize extensions
     await initDbExtensions(connection)
 

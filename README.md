@@ -117,7 +117,7 @@ Fields:
     - `current_player_id` (UUID, optional): The ID of the player whose turn it is. This is a foreign key referencing `players.player_id`. This field is optional because there might not be any players in the game.
     - `current_game_state` (ENUM, required): The current state of the game. This is an enumeration with values like "waiting for players", "in progress", "finished", etc.
     - `current_board_status` (JSONB, required): Two-dimensional array (enum[7][7]) of enums (["X", "O", "empty"]) representing current board state, stored in JSONB format.
-    - `next_possible_moves` (JSONB, required): Two-dimensional array (integer[][2]) of pairs of integers representing the X and Y coordinates of the next possible moves, stored in JSONB format.
+    - `next_possible_moves` (JSONB, required): Two-dimensional array (integer[][2]) of pairs of integers representing coordinates of the next possible moves, stored in JSONB format. First number is Y coordinate (row number), and second number is X coordinate (cell number).
     - `winner_id` (UUID, optional): The ID of the winning player, if the game has finished. This is a foreign key referencing `players.player_id`. This field is optional because winner appears only when the game is finished, or there might be a draw.
     - `created_at` (TIMESTAMP, required): The time when the game was created.
     - `finished_at` (TIMESTAMP, optional): The time when the game was finished. This field is optional because it will be empty for games that are still in progress.
@@ -166,7 +166,7 @@ Fields:
 - [x] [Server-side Game model implementation](https://github.com/alan-hadyk/side-stacker-game/pull/7)
 - [x] [Server-side Move model implementation](https://github.com/alan-hadyk/side-stacker-game/pull/8)
 - [x] [Server-side Player controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/9)
-- [ ] Server-side Game controllers and services implementation
+- [x] [Server-side Game controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/10)
 - [ ] Server-side Move controllers and services implementation
 - [ ] Server routes implementation
 - [ ] Client - session logic

@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const handleWsErrors = (err: any) => {
+export const logWsErrorsMiddleware = (err: any) => {
   console.error("Websockets error:")
   console.log(err?.req) // the request object
   console.log(err?.code) // the error code, for example 1

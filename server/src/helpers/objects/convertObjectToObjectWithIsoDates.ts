@@ -1,4 +1,4 @@
-import { convertUnixTimestampToDate } from "@app/helpers/dates/convertUnixTimestampToDate"
+import { convertTimestampToDateISOString } from "@app/helpers/dates/convertTimestampToDateISOString"
 import { isConvertableToNumber } from "@app/helpers/numbers/isConvertableToNumber"
 
 export const convertObjectToObjectWithIsoDates = <
@@ -18,7 +18,7 @@ export const convertObjectToObjectWithIsoDates = <
         if (isConvertableToNumber(value)) {
           const valueAsNumber = Number(value)
 
-          transformedObject[dateField] = convertUnixTimestampToDate(
+          transformedObject[dateField] = convertTimestampToDateISOString(
             valueAsNumber,
           ) as V
         }

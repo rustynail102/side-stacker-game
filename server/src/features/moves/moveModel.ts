@@ -1,6 +1,6 @@
-import { pool } from "@app/db/pool"
-import { MoveModelGetAll } from "@app/features/moves/@types/moveModel"
-import { Move } from "@app/features/moves/@types/moveObject"
+import { databasePool } from "@app/db/databasePool"
+import { MoveModelGetAll } from "@app/@types/moveModel"
+import { Move } from "@app/@types/moveObject"
 import { MoveObject } from "@app/features/moves/moveObject"
 import { createSqlTag } from "slonik"
 
@@ -21,7 +21,7 @@ export class MoveModel {
     Move,
     "game_id" | "player_id" | "move_number" | "position_x" | "position_y"
   >): Promise<Move> =>
-    pool.connect(async (connection) => {
+    databasePool.connect(async (connection) => {
       const query = sql.typeAlias("move")`
           INSERT 
           INTO moves (move_id, game_id, player_id, move_number, position_x, position_y, created_at) 
@@ -35,7 +35,7 @@ export class MoveModel {
     })
 
   static getAll = ({ filters }: MoveModelGetAll): Promise<readonly Move[]> =>
-    pool.connect(async (connection) => {
+    databasePool.connect(async (connection) => {
       const filtersFragments = []
 
       if (filters) {
@@ -56,7 +56,7 @@ export class MoveModel {
     })
 
   static getById = (move_id: Move["move_id"]): Promise<Move> =>
-    pool.connect(async (connection) =>
+    databasePool.connect(async (connection) =>
       connection.one(
         sql.typeAlias("move")`
             SELECT * 

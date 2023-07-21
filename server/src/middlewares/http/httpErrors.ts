@@ -1,4 +1,4 @@
-import { Err } from "@app/middlewares/@types/handleHttpErrors"
+import { Err } from "@app/@types/errors"
 import { NextFunction, Request, Response } from "express"
 import {
   BackendTerminatedError,
@@ -13,7 +13,7 @@ import {
   UniqueIntegrityConstraintViolationError,
 } from "slonik"
 
-export const handleHttpErrorsMiddleware = (
+export const httpErrorsMiddleware = (
   error: Err,
   _req: Request,
   res: Response,
