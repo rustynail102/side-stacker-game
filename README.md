@@ -103,24 +103,24 @@ Data model consists of three main entities: `Player`, `Game`, and `Move`.
 1. `players` table: This table stores information about each player.
 Fields:
     - `player_id` (UUID, required): A unique identifier for each player. This is the primary key.
-    - `session_id` (UUID, required): The session ID associated with the player. This is used to maintain the player's connection and game state.
     - `username` (TEXT, required): The player's chosen username.
     - `created_at` (TIMESTAMP, required): The time when given player joined.
     - `last_active_at` (TIMESTAMP, required): The time when player last time made any activity (made a move, joined a game, etc.)
-    - `deleted_at` (TIMESTAMP, optional): The time when player was deleted
+    - `deleted_at` (TIMESTAMP, optional): The time when player was deleted.
 
 2. `games` table: This table stores information about each game.
 Fields:
     - `game_id` (UUID, required): A unique identifier for each game. This is the primary key.
     - `player1_id` (UUID, optional): The ID of the first player (owner of the game). This is a foreign key referencing `players.player_id`. This field is optional because a game might be created before the first player has joined, or a first player might abandon the game.
     - `player2_id` (UUID, optional): The ID of the second player. This is a foreign key referencing `players.player_id`. This field is optional because a game might be created before the second player has joined, or a second player might abandon the game.
-    - `current_player_id` (UUID, optional): The ID of the player whose turn it is. This is a foreign key referencing `players.player_id`. This field is optional because there might not be any players in the game.
-    - `current_game_state` (ENUM, required): The current state of the game. This is an enumeration with values like "waiting for players", "in progress", "finished", etc.
+    - `current_game_state` (ENUM, required): The current state of the game. This is an enumeration with values: "waiting_for_players", "in_progress", "finished".
     - `current_board_status` (JSONB, required): Two-dimensional array (enum[7][7]) of enums (["X", "O", "empty"]) representing current board state, stored in JSONB format.
     - `next_possible_moves` (JSONB, required): Two-dimensional array (integer[][2]) of pairs of integers representing coordinates of the next possible moves, stored in JSONB format. First number is Y coordinate (row number), and second number is X coordinate (cell number).
+    - `number_of_moves` (INTEGER, required): Integer representing the number of moves made in the game so far.
     - `winner_id` (UUID, optional): The ID of the winning player, if the game has finished. This is a foreign key referencing `players.player_id`. This field is optional because winner appears only when the game is finished, or there might be a draw.
+    - `winning_moves` (JSONB, optional): Two-dimensional array (integer[][2]) of 4 pairs of integers representing the move that won the game, stored in JSONB format. First number of each pair is Y coordinate (row number), and second number is X coordinate (cell number).
     - `created_at` (TIMESTAMP, required): The time when the game was created.
-    - `finished_at` (TIMESTAMP, optional): The time when the game was finished. This field is optional because it will be empty for games that are still in progress.
+    - `finished_at` (TIMESTAMP, optional): The time when the game was finished. This field is optional because it will be empty for games that are still in progress, or waiting for players.
 
 3. `moves` table: This table stores information about each move made in a game.
 Fields:
@@ -128,6 +128,7 @@ Fields:
     - `game_id` (UUID, required): The ID of the game in which the move was made. This is a foreign key referencing `games.game_id`.
     - `player_id` (UUID, required): The ID of the player who made the move. This is a foreign key referencing `players.player_id`.
     - `move_number` (INTEGER, required): The order in which the move was made in the game. This can be used to reconstruct the game state.
+    - `move_type` (ENUM, required): Type of the given move. This is an enumeration with values: "X", "O".
     - `position_x` (INTEGER, required): The X position on the game board where the move was made.
     - `position_y` (INTEGER, required): The Y position on the game board where the move was made.
     - `created_at` (TIMESTAMP, required): The time when the move was made.
