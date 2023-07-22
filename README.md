@@ -168,7 +168,7 @@ Fields:
 - [x] [Server-side Player controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/9)
 - [x] [Server-side Game controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/10)
 - [x] [Server-side Move controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/11)
-- [ ] Server routes implementation
+- [x] [Server - routes implementation](https://github.com/alan-hadyk/side-stacker-game/pull/12)
 - [ ] Client - session logic
 - [ ] Client routes
 - [ ] Client - game lobby

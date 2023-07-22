@@ -1,9 +1,13 @@
 import { createWebsocketsServer } from "@app/clients/websocketsServer"
 import { config } from "@app/config"
+import { gamesRouter } from "@app/features/games/gameRoutes"
+import { movesRouter } from "@app/features/moves/moveRoutes"
+import { playersRouter } from "@app/features/players/playerRoutes"
 import { initializers } from "@app/initializers"
 import { useHttpMiddlewares } from "@app/middlewares/http"
 import { httpErrorsMiddleware } from "@app/middlewares/http/httpErrors"
 import { useWsMiddlewares } from "@app/middlewares/ws"
+import { Path } from "@app/routes/paths"
 import express from "express"
 import { createServer as createHttpServer } from "http"
 
@@ -16,10 +20,14 @@ const startServer = async () => {
 
   // Initializers
   await Promise.all(initializers.map((initializer) => initializer()))
-
   // Middlewares
   useHttpMiddlewares(app)
   useWsMiddlewares(websocketsServer)
+
+  // Routes
+  app.use(Path.Root, gamesRouter)
+  app.use(Path.Root, movesRouter)
+  app.use(Path.Root, playersRouter)
 
   // HTTP Errors middleware - has to be used after
   // routing to catch all errors from routers, controllers and models
