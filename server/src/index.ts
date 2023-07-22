@@ -20,18 +20,18 @@ const startServer = async () => {
 
   // Initializers
   await Promise.all(initializers.map((initializer) => initializer()))
+
   // Middlewares
   useHttpMiddlewares(app)
-  useWsMiddlewares(websocketsServer)
 
   // Routes
   app.use(Path.Root, gamesRouter)
   app.use(Path.Root, movesRouter)
   app.use(Path.Root, playersRouter)
 
-  // HTTP Errors middleware - has to be used after
-  // routing to catch all errors from routers, controllers and models
+  // HTTP & WS Errors along with WS logging middlewares - have to be used after routing
   app.use(httpErrorsMiddleware)
+  useWsMiddlewares(websocketsServer)
 
   const { appConfig } = config
   const { host, port } = appConfig.httpServer
