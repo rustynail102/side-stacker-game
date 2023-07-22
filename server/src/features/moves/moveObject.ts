@@ -1,3 +1,4 @@
+import { MoveTypeEnum } from "@app/features/games/gameObject"
 import { z } from "zod"
 
 export const MoveObject = z
@@ -6,6 +7,7 @@ export const MoveObject = z
     game_id: z.string().uuid(),
     move_id: z.string().uuid(),
     move_number: z.number(),
+    move_type: z.enum([MoveTypeEnum.enum.X, MoveTypeEnum.enum.O]),
     player_id: z.string().uuid(),
     position_x: z.number(),
     position_y: z.number(),

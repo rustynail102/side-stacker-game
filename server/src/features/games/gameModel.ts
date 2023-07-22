@@ -6,7 +6,7 @@ import {
 } from "@app/@types/gameModel"
 import { Game } from "@app/@types/gameObject"
 import {
-  BoardMoveTypeEnum,
+  MoveTypeEnum,
   GameObject,
   GameStateEnum,
 } from "@app/features/games/gameObject"
@@ -36,7 +36,9 @@ export class GameModel {
     keys
       .filter((key) => fields[key] !== undefined)
       .map((key) => {
-        if (types[key] === "json") {
+        if (fields[key] === null) {
+          return sql.fragment`${sql.identifier([key])} = ${null}`
+        } else if (types[key] === "json") {
           return sql.fragment`${sql.identifier([key])} = ${sql.json(
             fields[key] as SerializableValue,
           )}`
@@ -67,31 +69,31 @@ export class GameModel {
     player2_id,
     current_game_state,
     next_possible_moves,
-    winner_id,
   }: Pick<
     Game,
-    | "player1_id"
-    | "player2_id"
-    | "current_game_state"
-    | "next_possible_moves"
-    | "winner_id"
+    "player1_id" | "player2_id" | "current_game_state" | "next_possible_moves"
   >): Promise<Game> =>
     databasePool.connect(async (connection) => {
       const current_board_status_row = new Array(7).fill(
-        BoardMoveTypeEnum.enum.empty,
+        MoveTypeEnum.enum.empty,
       )
       const current_board_status = new Array(7).fill(current_board_status_row)
 
       const query = sql.typeAlias("game")`
           INSERT 
-          INTO games (game_id, player1_id, player2_id, current_game_state, current_board_status, next_possible_moves, number_of_moves, winner_id, created_at) 
-          VALUES (uuid_generate_v4(), ${player1_id || ""}, ${
-            player2_id || ""
-          }, ${
-            current_game_state || GameStateEnum.enum.waiting_for_players
-          }, ${sql.json(current_board_status)}, ${next_possible_moves}, ${0}, ${
-            winner_id || ""
-          }, NOW())
+          INTO games (game_id, player1_id, player2_id, current_game_state, current_board_status, next_possible_moves, number_of_moves, winner_id, winning_moves, created_at) 
+          VALUES (
+            uuid_generate_v4(), 
+            ${player1_id || null}, 
+            ${player2_id || null}, 
+            ${current_game_state || GameStateEnum.enum.waiting_for_players}, 
+            ${sql.json(current_board_status)}, 
+            ${next_possible_moves}, 
+            ${0}, 
+            NULL, 
+            NULL, 
+            NOW()
+          )
           RETURNING *
         `
 
@@ -113,16 +115,18 @@ export class GameModel {
 
       if (filters) {
         for (const [key, value] of Object.entries(filters)) {
-          if (Array.isArray(value)) {
-            value.forEach((val) => {
+          if (value !== undefined) {
+            if (Array.isArray(value)) {
+              value.forEach((val) => {
+                filtersFragments.push(
+                  sql.fragment`${sql.identifier([key])} = ${val}`,
+                )
+              })
+            } else {
               filtersFragments.push(
-                sql.fragment`${sql.identifier([key])} = ${val}`,
+                sql.fragment`${sql.identifier([key])} = ${value}`,
               )
-            })
-          } else {
-            filtersFragments.push(
-              sql.fragment`${sql.identifier([key])} = ${value}`,
-            )
+            }
           }
         }
       }
@@ -171,6 +175,7 @@ export class GameModel {
           "player1_id",
           "player2_id",
           "winner_id",
+          "winning_moves",
         ],
         {
           current_board_status: "json",
@@ -181,6 +186,7 @@ export class GameModel {
           player1_id: "default",
           player2_id: "default",
           winner_id: "default",
+          winning_moves: "json",
         },
       )
 
@@ -211,6 +217,7 @@ export const GamesTableInit = sql.unsafe`
         next_possible_moves JSONB NOT NULL,
         number_of_moves INTEGER NOT NULL DEFAULT 0,
         winner_id UUID REFERENCES players(player_id),
+        winning_moves JSONB,
         created_at TIMESTAMP NOT NULL DEFAULT NOW(),
         finished_at TIMESTAMP
     );

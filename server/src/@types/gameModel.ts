@@ -4,10 +4,10 @@ import { PrimitiveValueExpression } from "slonik"
 
 export interface GameModelGetAll {
   filters?: {
-    player1_id?: string
-    player2_id?: string
+    player1_id?: string | null
+    player2_id?: string | null
     current_game_state?: GameStateEnum | GameStateEnum[]
-    winner_id?: string
+    winner_id?: string | null
   }
   filterType?: "AND" | "OR"
   limit?: number

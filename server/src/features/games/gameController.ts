@@ -110,18 +110,14 @@ export class GameController {
 
     const currentGame = await GameModel.getById(game_id)
 
-    const currentGameWithUpdates = {
-      ...currentGame,
+    const currentGameState = GameService.determineCurrentGameState({
+      finished_at: currentGame.finished_at,
       player1_id,
       player2_id,
-    }
-
-    const current_game_state = GameService.determineCurrentGameState(
-      currentGameWithUpdates,
-    )
+    })
 
     const updatedGame = await GameModel.update(game_id, {
-      current_game_state,
+      current_game_state: currentGameState,
       player1_id,
       player2_id,
     })

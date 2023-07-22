@@ -148,9 +148,9 @@ Fields:
 
 5. **Game starts**: The game board is displayed, and Player 1 is prompted to make the first move.
 
-6. **Players make moves**: Players take turns making moves. After each move, the game state is updated and displayed on the game board.
+6. **Players make moves**: Players take turns making moves. After each move, the game state is updated and displayed on the game board. Once a move is done, it cannot be changed or reversed. Any of the players might abandon a game in progress. A different player might join the same game if there's an empty slot.
 
-7. **Game ends**: The game ends when one player wins or the game is a draw. The result is displayed on the screen, and both players are taken back to the game lobby.
+7. **Game ends**: The game ends when one player wins or the game is a draw. The result is displayed on the screen. Players might inspect the board, or return to the game lobby.
 
 8. **User leaves the application**: The user can choose to create another game, join another existing game or leave the application. If they click on "Leave" button, their session ends. If they refresh the page or come back to the application later, their session will persist.
 
@@ -167,7 +167,7 @@ Fields:
 - [x] [Server-side Move model implementation](https://github.com/alan-hadyk/side-stacker-game/pull/8)
 - [x] [Server-side Player controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/9)
 - [x] [Server-side Game controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/10)
-- [ ] Server-side Move controllers and services implementation
+- [x] [Server-side Move controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/11)
 - [ ] Server routes implementation
 - [ ] Client - session logic
 - [ ] Client routes
@@ -213,3 +213,5 @@ TODO
 4. **Cheating**: Players might try to cheat by modifying the client code or sending fake requests to the server. This can be addressed by validating all moves on the server and checking that they come from the player whose turn it is.
 
 5. **User experience**: Creating a user interface that is intuitive and responsive can be challenging. This can be addressed by using a modern front-end framework, and by testing the user interface with real users and iterating based on their feedback.
+
+6. **Abandoned games**: If a given user participates in a game, and then closes the browser or loses connection while the game is still in progress, and never comes back, there might a "ghost game" with that player assigned, and without the possibility to finish the game. To prevent this, there might be a CRON job that frequently checks all games in progress, and removes players that weren't active for a given period of time.

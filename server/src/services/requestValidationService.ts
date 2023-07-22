@@ -2,7 +2,7 @@ import { ValidationError } from "@app/errors/validationError"
 import { Request } from "express"
 import isEmpty from "lodash/isEmpty"
 import omitBy from "lodash/omitBy"
-import isNil from "lodash/isNil"
+import isUndefined from "lodash/isUndefined"
 import { ZodRawShape, z } from "zod"
 
 export class RequestValidationService {
@@ -23,7 +23,7 @@ export class RequestValidationService {
       throw new ValidationError(incorrectFields)
     }
 
-    const objectWithoutEmptyFields = omitBy(object, isNil)
+    const objectWithoutEmptyFields = omitBy(object, isUndefined)
 
     schema.parse(objectWithoutEmptyFields)
 

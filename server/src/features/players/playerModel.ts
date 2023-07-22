@@ -34,15 +34,24 @@ export class PlayerModel {
     return rows[0]
   }
 
-  static create = ({
-    session_id,
-    username,
-  }: Pick<Player, "session_id" | "username">): Promise<Player> =>
+  static create = ({ username }: Pick<Player, "username">): Promise<Player> =>
     databasePool.connect(async (connection) => {
       const query = sql.typeAlias("player")`
           INSERT 
-          INTO players (player_id, session_id, username, created_at, last_active_at, deleted_at) 
-          VALUES (uuid_generate_v4(), ${session_id}, ${username}, NOW(), NOW(), NULL)
+          INTO players (
+            player_id, 
+            username, 
+            created_at, 
+            last_active_at, 
+            deleted_at
+          ) 
+          VALUES (
+            uuid_generate_v4(), 
+            ${username}, 
+            NOW(), 
+            NOW(), 
+            NULL
+          )
           RETURNING *
         `
 
@@ -51,20 +60,14 @@ export class PlayerModel {
       return rows[0]
     })
 
-  static delete = (
-    player_id: Player["player_id"],
-    session_id: Player["session_id"],
-  ): Promise<Player> =>
+  static delete = (player_id: Player["player_id"]): Promise<Player> =>
     databasePool.connect(async (connection) => {
-      const fragments = [
-        sql.fragment`session_id = NULL`,
-        sql.fragment`deleted_at = NOW()`,
-      ]
+      const fragments = [sql.fragment`deleted_at = NOW()`]
 
       const query = sql.typeAlias("player")`
         UPDATE players
         SET ${sql.join(fragments, sql.unsafe`, `)}
-        WHERE player_id = ${player_id}, session_id = ${session_id}
+        WHERE player_id = ${player_id}
         RETURNING *
       `
 
@@ -127,7 +130,6 @@ export class PlayerModel {
 export const PlayersTableInit = sql.unsafe`
   CREATE TABLE IF NOT EXISTS players (
     player_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    session_id UUID NOT NULL,
     username TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     last_active_at TIMESTAMP NOT NULL DEFAULT NOW(),

@@ -4,10 +4,7 @@ import { convertObjectToObjectWithIsoDates } from "@app/helpers/objects/convertO
 export class PlayerService {
   static parsePlayerToResponse = (
     player: Player,
-  ): Omit<
-    Player,
-    "created_at" | "deleted_at" | "last_active_at" | "session_id"
-  > & {
+  ): Omit<Player, "created_at" | "deleted_at" | "last_active_at"> & {
     created_at: string
     deleted_at?: string
     last_active_at: string

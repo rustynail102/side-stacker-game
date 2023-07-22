@@ -3,7 +3,7 @@ import { isConvertableToNumber } from "@app/helpers/numbers/isConvertableToNumbe
 
 export const convertObjectToObjectWithIsoDates = <
   K extends PropertyKey,
-  V extends string | number,
+  V extends string | number | null,
 >(
   obj: Record<K, V>,
   dateFields: Array<K>,
@@ -15,7 +15,7 @@ export const convertObjectToObjectWithIsoDates = <
       try {
         const value = obj[dateField]
 
-        if (isConvertableToNumber(value)) {
+        if (value && isConvertableToNumber(value)) {
           const valueAsNumber = Number(value)
 
           transformedObject[dateField] = convertTimestampToDateISOString(

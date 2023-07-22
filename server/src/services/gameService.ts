@@ -1,10 +1,7 @@
-import {
-  BoardMoveTypeEnum as BoardMoveTypeEnumType,
-  Game,
-} from "@app/@types/gameObject"
+import { MoveTypeEnum as MoveTypeEnumType, Game } from "@app/@types/gameObject"
 import { GameModel } from "@app/features/games/gameModel"
 import {
-  BoardMoveTypeEnum,
+  MoveTypeEnum,
   GameStateEnum,
   gameObjectKeys,
 } from "@app/features/games/gameObject"
@@ -13,27 +10,50 @@ import { WebsocketService } from "@app/services/websocketService"
 import { convertObjectToObjectWithIsoDates } from "@app/helpers/objects/convertObjectToObjectWithIsoDates"
 import { GameResponse } from "@app/@types/gameService"
 import { convertDateISOStringToTimestamp } from "@app/helpers/dates/convertDateISOStringToTimestamp"
+import { Move } from "@app/@types/moveObject"
+import isEmpty from "lodash/isEmpty"
 
 export class GameService {
   static readonly BOARD_SIZE = 7
 
+  static calculateBoardStatusAfterNextMove = (
+    current_board_status: MoveTypeEnumType[][],
+    position_y: Move["position_y"],
+    position_x: Move["position_x"],
+    moveType: MoveTypeEnumType,
+  ) => {
+    const currentBoardStatus = { ...current_board_status }
+
+    currentBoardStatus[position_y][position_x] = moveType
+
+    return currentBoardStatus
+  }
+
   static calculateNextPossibleMoves = (
-    current_board_status?: BoardMoveTypeEnumType[][],
+    currentBoardStatus?: MoveTypeEnumType[][],
   ) => {
     const boardStatusRowInit = new Array(GameService.BOARD_SIZE).fill(
-      BoardMoveTypeEnum.enum.empty,
+      MoveTypeEnum.enum.empty,
     )
-    const boardStatusInit: BoardMoveTypeEnumType[][] = new Array(
+    const boardStatusInit: MoveTypeEnumType[][] = new Array(
       GameService.BOARD_SIZE,
     ).fill(boardStatusRowInit)
 
-    const boardStatus = current_board_status || boardStatusInit
+    const boardStatus = currentBoardStatus || boardStatusInit
+
+    // Check if the game has been won
+    if (
+      currentBoardStatus &&
+      !isEmpty(GameService.calculateWinningMoves(boardStatus))
+    ) {
+      return []
+    }
 
     const nextPossibleMoves: number[][] = []
 
     boardStatus.forEach((row, rowIndex) => {
-      const leftMostEmptyIndex = row.indexOf(BoardMoveTypeEnum.enum.empty)
-      const rightMostEmptyIndex = row.lastIndexOf(BoardMoveTypeEnum.enum.empty)
+      const leftMostEmptyIndex = row.indexOf(MoveTypeEnum.enum.empty)
+      const rightMostEmptyIndex = row.lastIndexOf(MoveTypeEnum.enum.empty)
 
       if (leftMostEmptyIndex !== -1) {
         nextPossibleMoves.push([rowIndex, leftMostEmptyIndex])
@@ -50,7 +70,71 @@ export class GameService {
     return nextPossibleMoves
   }
 
-  static determineCurrentGameState = (game: Game) => {
+  static calculateWinningMoves = (boardStatus: MoveTypeEnumType[][]) => {
+    // Vertical and horizontal checks
+    for (let rowIndex = 0; rowIndex < boardStatus.length; rowIndex++) {
+      for (
+        let cellIndex = 0;
+        cellIndex < boardStatus[rowIndex].length;
+        cellIndex++
+      ) {
+        for (const cell of ["X", "O"]) {
+          const horizontalWin = [...Array(4).keys()].every(
+            (i) => boardStatus[rowIndex][cellIndex + i] === cell,
+          )
+          const verticalWin = [...Array(4).keys()].every(
+            (i) =>
+              boardStatus[rowIndex + i] &&
+              boardStatus[rowIndex + i][cellIndex] === cell,
+          )
+
+          if (horizontalWin) {
+            return [...Array(4).keys()].map((i) => [rowIndex, cellIndex + i])
+          }
+          if (verticalWin) {
+            return [...Array(4).keys()].map((i) => [rowIndex + i, cellIndex])
+          }
+        }
+      }
+    }
+
+    // Diagonal checks
+    for (let rowIndex = 0; rowIndex < boardStatus.length - 3; rowIndex++) {
+      for (
+        let cellIndex = 0;
+        cellIndex < boardStatus[rowIndex].length - 3;
+        cellIndex++
+      ) {
+        for (const cell of [MoveTypeEnum.enum.X, MoveTypeEnum.enum.O]) {
+          const diagonalWin1 = [...Array(4).keys()].every(
+            (i) => boardStatus[rowIndex + i][cellIndex + i] === cell,
+          )
+          const diagonalWin2 = [...Array(4).keys()].every(
+            (i) => boardStatus[rowIndex + 3 - i][cellIndex + i] === cell,
+          )
+
+          if (diagonalWin1) {
+            return [...Array(4).keys()].map((i) => [
+              rowIndex + i,
+              cellIndex + i,
+            ])
+          }
+          if (diagonalWin2) {
+            return [...Array(4).keys()].map((i) => [
+              rowIndex + 3 - i,
+              cellIndex + i,
+            ])
+          }
+        }
+      }
+    }
+
+    return []
+  }
+
+  static determineCurrentGameState = (
+    game: Pick<Game, "finished_at" | "player1_id" | "player2_id">,
+  ) => {
     if (game.finished_at) {
       return GameStateEnum.enum.finished
     }
@@ -64,7 +148,12 @@ export class GameService {
 
   // TODO - Remove if unused
   static parseRequestToGame = (game: Partial<GameResponse>) => {
-    const { current_board_status, created_at, next_possible_moves } = game
+    const {
+      current_board_status,
+      created_at,
+      next_possible_moves,
+      winning_moves,
+    } = game
 
     return {
       ...game,
@@ -77,16 +166,23 @@ export class GameService {
       next_possible_moves: next_possible_moves
         ? JSON.stringify(next_possible_moves)
         : undefined,
+      winning_moves: winning_moves ? JSON.stringify(winning_moves) : undefined,
     }
   }
 
   static parseGameToResponse = (game: Game): GameResponse => {
-    const { current_board_status, created_at, next_possible_moves } = game
+    const {
+      current_board_status,
+      created_at,
+      next_possible_moves,
+      winning_moves,
+    } = game
 
     return {
       ...game,
       current_board_status: JSON.parse(current_board_status),
       next_possible_moves: JSON.parse(next_possible_moves),
+      winning_moves: winning_moves ? JSON.parse(winning_moves) : undefined,
       ...convertObjectToObjectWithIsoDates({ created_at }, ["created_at"]),
     }
   }

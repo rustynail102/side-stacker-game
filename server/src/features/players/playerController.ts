@@ -3,7 +3,6 @@ import { PlayerObject } from "@app/features/players/playerObject"
 import { GameService } from "@app/services/gameService"
 import { RequestValidationService } from "@app/services/requestValidationService"
 import { Request, Response } from "express"
-import { v4 as uuidv4 } from "uuid"
 import { z } from "zod"
 import { OrderDirection } from "@app/@types/models"
 import { PlayerService } from "@app/services/playerService"
@@ -18,7 +17,6 @@ export class PlayerController {
     )
 
     const newPlayer = await PlayerModel.create({
-      session_id: uuidv4(),
       username: body.username,
     })
 
@@ -27,23 +25,18 @@ export class PlayerController {
     // Emit an event to all connected clients to invalidate the players query
     WebsocketService.emitInvalidateQuery(["players", "list"])
 
-    res.json({ ...newPlayerResponse, session_id: newPlayer.session_id })
+    res.json(newPlayerResponse)
   }
 
   static delete = async (req: Request, res: Response) => {
     RequestValidationService.validateQuery(req.query, z.object({}))
-    const { session_id } = RequestValidationService.validateBody(
-      req.body,
-      PlayerObject.pick({
-        session_id: true,
-      }),
-    )
+    RequestValidationService.validateBody(req.body, z.object({}))
     const { player_id } = RequestValidationService.validateParams(
       req.params,
       PlayerObject.pick({ player_id: true }),
     )
 
-    const deletedPlayer = await PlayerModel.delete(player_id, session_id)
+    const deletedPlayer = await PlayerModel.delete(player_id)
 
     await GameService.removePlayerFromActiveGames(deletedPlayer.player_id)
 
