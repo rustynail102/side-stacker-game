@@ -13,7 +13,6 @@ import {
 } from "slonik"
 
 export type Err =
-  | Error
   | ValidationError
   | BackendTerminatedError
   | DataIntegrityError

@@ -5,6 +5,7 @@
   "author": "alan-hadyk <alan.hadyk@gmail.com>",
   "description": "Server for Side-Stacker game",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "lodash": "^4.17.21",
     "slonik": "^34.0.1",

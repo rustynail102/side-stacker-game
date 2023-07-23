@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -17,6 +18,7 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:import/recommended",
     "plugin:import/typescript",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
     "plugin:prettier/recommended",
   ],
   overrides: [
@@ -36,7 +38,12 @@ module.exports = {
     ],
     sourceType: "module",
   },
-  plugins: ["react-refresh", "typescript-sort-keys", "import"],
+  plugins: [
+    "react-refresh",
+    "typescript-sort-keys",
+    "import",
+    "@tanstack/query",
+  ],
   root: true,
   rules: {
     "@typescript-eslint/no-non-null-assertion": "off",
@@ -74,5 +81,8 @@ module.exports = {
         natural: true,
       },
     ],
+    "@typescript-eslint/no-misused-promises": [0],
+    "require-await": "off",
+    "@typescript-eslint/require-await": "error",
   },
 }

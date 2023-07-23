@@ -1,5 +1,6 @@
 import { Config } from "tailwindcss"
 import daisyUI from "daisyui"
+import tailwindCss3D from "tailwindcss-3d"
 
 const tailwindConfig: Config = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -16,7 +17,7 @@ const tailwindConfig: Config = {
     utils: true, // adds responsive and modifier utility classes
   },
 
-  plugins: [daisyUI],
+  plugins: [daisyUI, tailwindCss3D],
   theme: {
     extend: {},
   },
