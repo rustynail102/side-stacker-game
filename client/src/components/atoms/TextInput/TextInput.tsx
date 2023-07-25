@@ -1,5 +1,5 @@
-import { TextInputProps } from "@app/components/atoms/TextInput/@types/TextInput"
-import { getInputColor } from "@app/components/atoms/TextInput/styles"
+import { TextInputProps } from "@client/components/atoms/TextInput/@types/TextInput"
+import { getInputColor } from "@client/components/atoms/TextInput/styles"
 import { forwardRef } from "react"
 
 const _TextInput: React.ForwardRefRenderFunction<

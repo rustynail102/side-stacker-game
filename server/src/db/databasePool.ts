@@ -1,4 +1,4 @@
-import { config } from "@app/config"
+import { config } from "@server/config"
 import { DatabasePool, createPool, createTypeParserPreset } from "slonik"
 
 export let databasePool: DatabasePool

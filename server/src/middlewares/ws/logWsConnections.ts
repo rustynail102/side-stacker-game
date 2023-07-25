@@ -3,7 +3,7 @@ import {
   ServerToClientEvents,
   InterServerEvents,
   SocketData,
-} from "@app/@types/websocketsServer"
+} from "@server/@types/websocketsServer"
 import { Socket } from "socket.io"
 
 export const logWsConnectionsMiddleware = (
@@ -21,5 +21,5 @@ export const logWsConnectionsMiddleware = (
     console.log("websocketsServer connection")
   }
 
-  console.log({ socket })
+  console.log("websocketsServer handshake", socket.handshake)
 }

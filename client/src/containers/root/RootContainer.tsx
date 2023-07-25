@@ -1,10 +1,14 @@
-import { FullScreenLoader } from "@app/components/atoms/FullScreenLoader/FullScreenLoader"
-import { LoginContainer } from "@app/containers/login/LoginContainer"
-import { useGetPlayer } from "@app/hooks/queries/useGetPlayer"
-import { useAuthenticatedUser } from "@app/hooks/useAuthenticatedUser"
+import { useGetPlayer } from "@client/api/queries/useGetPlayer"
+import { FullScreenLoader } from "@client/components/atoms/FullScreenLoader/FullScreenLoader"
+import { LoginContainer } from "@client/containers/login/LoginContainer"
+import { RootContainerHeaderSection } from "@client/containers/root/sections/header/RootContainerHeaderSection"
+import { useAuthenticatedUser } from "@client/hooks/useAuthenticatedUser"
+import { useWebsockets } from "@client/hooks/useWebsockets"
 import { Outlet } from "@tanstack/router"
 
 export const RootContainer: React.FC = () => {
+  useWebsockets()
+
   const { authenticatedUser, setAuthenticatedUser } = useAuthenticatedUser()
   const { isInitialLoading } = useGetPlayer(authenticatedUser, {
     onError: () => {
@@ -25,7 +29,7 @@ export const RootContainer: React.FC = () => {
 
   return (
     <div>
-      <h1>My App</h1>
+      <RootContainerHeaderSection />
       <Outlet /> {/* This is where child routes will render */}
     </div>
   )

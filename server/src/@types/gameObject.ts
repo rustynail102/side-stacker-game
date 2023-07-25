@@ -2,7 +2,7 @@ import {
   MoveTypeEnum,
   GameStateEnum,
   GameObject,
-} from "@app/features/games/gameObject"
+} from "@server/features/games/gameObject"
 import { z } from "zod"
 
 export type GameStateEnum = z.infer<typeof GameStateEnum>

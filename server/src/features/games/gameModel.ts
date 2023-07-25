@@ -1,15 +1,15 @@
-import { databasePool } from "@app/db/databasePool"
-import { OrderDirection } from "@app/@types/models"
+import { databasePool } from "@server/db/databasePool"
+import { OrderDirection } from "@server/@types/models"
 import {
   GameModelGetAll,
   GameModelUpdateFieldsReturnType,
-} from "@app/@types/gameModel"
-import { Game } from "@app/@types/gameObject"
+} from "@server/@types/gameModel"
+import { Game } from "@server/@types/gameObject"
 import {
   MoveTypeEnum,
   GameObject,
   GameStateEnum,
-} from "@app/features/games/gameObject"
+} from "@server/features/games/gameObject"
 import {
   DatabasePoolConnection,
   NotFoundError,
@@ -19,6 +19,7 @@ import {
   createSqlTag,
 } from "slonik"
 import { ZodTypeAny, z } from "zod"
+import { MoveTypeEnum as MoveTypeEnumType } from "@server/@types/api"
 
 const sql = createSqlTag({
   typeAliases: {
@@ -30,8 +31,8 @@ const sql = createSqlTag({
 export class GameModel {
   private static updateFields = (
     fields: Partial<Game>,
-    keys: (keyof Omit<Game, "created_at" | "game_id">)[],
-    types: Record<keyof Omit<Game, "created_at" | "game_id">, string>,
+    keys: (keyof Omit<Game, "created_at" | "game_id" | "name">)[],
+    types: Record<keyof Omit<Game, "created_at" | "game_id" | "name">, string>,
   ): GameModelUpdateFieldsReturnType =>
     keys
       .filter((key) => fields[key] !== undefined)
@@ -68,26 +69,46 @@ export class GameModel {
     player1_id,
     player2_id,
     current_game_state,
+    name,
     next_possible_moves,
   }: Pick<
     Game,
-    "player1_id" | "player2_id" | "current_game_state" | "next_possible_moves"
+    | "player1_id"
+    | "player2_id"
+    | "current_game_state"
+    | "name"
+    | "next_possible_moves"
   >): Promise<Game> =>
     databasePool.connect(async (connection) => {
       const current_board_status_row = new Array(7).fill(
         MoveTypeEnum.enum.empty,
       )
-      const current_board_status = new Array(7).fill(current_board_status_row)
+      const current_board_status: MoveTypeEnumType[][] = new Array(7).fill(
+        current_board_status_row,
+      )
 
       const query = sql.typeAlias("game")`
           INSERT 
-          INTO games (game_id, player1_id, player2_id, current_game_state, current_board_status, next_possible_moves, number_of_moves, winner_id, winning_moves, created_at) 
+          INTO games (
+            game_id, 
+            player1_id, 
+            player2_id, 
+            current_game_state, 
+            current_board_status, 
+            name,
+            next_possible_moves, 
+            number_of_moves, 
+            winner_id, 
+            winning_moves, 
+            created_at
+          ) 
           VALUES (
             uuid_generate_v4(), 
             ${player1_id || null}, 
             ${player2_id || null}, 
             ${current_game_state || GameStateEnum.enum.waiting_for_players}, 
             ${sql.json(current_board_status)}, 
+            ${name},
             ${next_possible_moves}, 
             ${0}, 
             NULL, 
@@ -145,7 +166,9 @@ export class GameModel {
         OFFSET ${offset}
       `
 
-      return connection.many(query)
+      const { rows } = await connection.query(query)
+
+      return rows
     })
 
   static getById = (game_id: Game["game_id"]): Promise<Game> =>
@@ -161,7 +184,7 @@ export class GameModel {
 
   static update = (
     game_id: Game["game_id"],
-    fields: Partial<Omit<Game, "created_at" | "game_id">>,
+    fields: Partial<Omit<Game, "created_at" | "game_id" | "name">>,
   ): Promise<Game> =>
     databasePool.connect(async (connection) => {
       const fragments = GameModel.updateFields(
@@ -201,7 +224,7 @@ export class GameModel {
     })
 }
 
-export const GamesTableInit = sql.unsafe`
+export const GameModelSchema = sql.unsafe`
     DO $$ BEGIN
         CREATE TYPE game_state AS ENUM ('waiting_for_players', 'in_progress', 'finished');
     EXCEPTION
@@ -214,6 +237,7 @@ export const GamesTableInit = sql.unsafe`
         player2_id UUID REFERENCES players(player_id),
         current_game_state game_state NOT NULL DEFAULT 'waiting_for_players',
         current_board_status JSONB NOT NULL,
+        name TEXT NOT NULL,
         next_possible_moves JSONB NOT NULL,
         number_of_moves INTEGER NOT NULL DEFAULT 0,
         winner_id UUID REFERENCES players(player_id),

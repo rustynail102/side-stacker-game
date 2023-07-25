@@ -1,8 +1,8 @@
-import { databasePool } from "@app/db/databasePool"
-import { OrderDirection } from "@app/@types/models"
-import { PlayerModelGetAll } from "@app/@types/playerModel"
-import { Player } from "@app/@types/playerObject"
-import { PlayerObject } from "@app/features/players/playerObject"
+import { databasePool } from "@server/db/databasePool"
+import { OrderDirection } from "@server/@types/models"
+import { PlayerModelGetAll } from "@server/@types/playerModel"
+import { Player } from "@server/@types/playerObject"
+import { PlayerObject } from "@server/features/players/playerObject"
 import {
   DatabasePoolConnection,
   NotFoundError,
@@ -19,8 +19,6 @@ const sql = createSqlTag({
 })
 
 export class PlayerModel {
-  private static lastActiveNowFragment = sql.fragment`last_active_at = NOW()`
-
   private static async executeQuery(
     connection: DatabasePoolConnection,
     query: QuerySqlToken<ZodTypeAny>,
@@ -110,7 +108,7 @@ export class PlayerModel {
     { username }: Partial<Pick<Player, "username">>,
   ): Promise<Player> =>
     databasePool.connect(async (connection) => {
-      const fragments = [PlayerModel.lastActiveNowFragment]
+      const fragments = [sql.fragment`last_active_at = NOW()`]
 
       if (username !== undefined) {
         fragments.push(sql.fragment`username = ${username}`)
@@ -127,7 +125,7 @@ export class PlayerModel {
     })
 }
 
-export const PlayersTableInit = sql.unsafe`
+export const PlayerModelSchema = sql.unsafe`
   CREATE TABLE IF NOT EXISTS players (
     player_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username TEXT NOT NULL,

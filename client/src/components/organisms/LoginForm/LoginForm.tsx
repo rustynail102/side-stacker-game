@@ -1,11 +1,11 @@
-import { Button } from "@app/components/atoms/Button/Button"
-import { Hero } from "@app/components/atoms/Hero/Hero"
-import { TextInput } from "@app/components/atoms/TextInput/TextInput"
+import { Button } from "@client/components/atoms/Button/Button"
+import { Hero } from "@client/components/atoms/Hero/Hero"
+import { TextInput } from "@client/components/atoms/TextInput/TextInput"
 import {
   LoginFormProps,
   LoginFormValues,
-} from "@app/components/molecules/LoginForm/@types/LoginForm"
-import { Logo } from "@app/components/molecules/Logo/Logo"
+} from "@client/components/organisms/LoginForm/@types/LoginForm"
+import { Logo } from "@client/components/molecules/Logo/Logo"
 import { useForm } from "react-hook-form"
 import isEmpty from "lodash/isEmpty"
 

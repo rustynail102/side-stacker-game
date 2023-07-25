@@ -1,20 +1,29 @@
-import { MoveTypeEnum as MoveTypeEnumType, Game } from "@app/@types/gameObject"
-import { GameModel } from "@app/features/games/gameModel"
+import {
+  MoveTypeEnum as MoveTypeEnumType,
+  Game,
+} from "@server/@types/gameObject"
+import { GameModel } from "@server/features/games/gameModel"
 import {
   MoveTypeEnum,
   GameStateEnum,
   gameObjectKeys,
-} from "@app/features/games/gameObject"
-import { Player } from "@app/@types/playerObject"
-import { WebsocketService } from "@app/services/websocketService"
-import { convertObjectToObjectWithIsoDates } from "@app/helpers/objects/convertObjectToObjectWithIsoDates"
-import { convertDateISOStringToTimestamp } from "@app/helpers/dates/convertDateISOStringToTimestamp"
-import { Move } from "@app/@types/moveObject"
+} from "@server/features/games/gameObject"
+import { Player } from "@server/@types/playerObject"
+import { WebsocketService } from "@server/services/websocketService"
+import { convertObjectToObjectWithIsoDates } from "@server/helpers/objects/convertObjectToObjectWithIsoDates"
+import { convertDateISOStringToTimestamp } from "@server/helpers/dates/convertDateISOStringToTimestamp"
+import { Move } from "@server/@types/moveObject"
 import isEmpty from "lodash/isEmpty"
 import {
   GameResponse,
   GameStateEnum as GameStateEnumType,
-} from "@app/@types/api"
+  QueryKeys,
+} from "@server/@types/api"
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  starWars,
+} from "unique-names-generator"
 
 export class GameService {
   static readonly BOARD_SIZE = 7
@@ -235,7 +244,7 @@ export class GameService {
             await GameModel.update(game.game_id, updateObject)
 
             WebsocketService.emitInvalidateQuery(
-              ["games", "detail"],
+              [QueryKeys.Games, QueryKeys.Detail],
               game.game_id,
             )
           }
@@ -245,4 +254,12 @@ export class GameService {
       )
     }
   }
+
+  static generateGameName = () =>
+    uniqueNamesGenerator({
+      dictionaries: [adjectives, starWars],
+      length: 2,
+      separator: " ",
+      style: "capital",
+    })
 }

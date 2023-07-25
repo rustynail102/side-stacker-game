@@ -1,4 +1,4 @@
-import { MoveTypeEnum } from "@app/features/games/gameObject"
+import { MoveTypeEnum } from "@server/features/games/gameObject"
 import { z } from "zod"
 
 export const MoveObject = z

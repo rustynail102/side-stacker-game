@@ -3,9 +3,9 @@ import {
   ServerToClientEvents,
   InterServerEvents,
   SocketData,
-} from "@app/@types/websocketsServer"
-import { logWsConnectionsMiddleware } from "@app/middlewares/ws/logWsConnections"
-import { logWsErrorsMiddleware } from "@app/middlewares/ws/logWsErrors"
+} from "@server/@types/websocketsServer"
+import { logWsConnectionsMiddleware } from "@server/middlewares/ws/logWsConnections"
+import { logWsErrorsMiddleware } from "@server/middlewares/ws/logWsErrors"
 import { Server as SocketIOServer } from "socket.io"
 
 export const useWsMiddlewares = (

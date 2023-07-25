@@ -1,11 +1,13 @@
-import { GameModel } from "@app/features/games/gameModel"
-import { GameObject, GameStateEnum } from "@app/features/games/gameObject"
-import { RequestValidationService } from "@app/services/requestValidationService"
+import { GameModel } from "@server/features/games/gameModel"
+import { GameObject, GameStateEnum } from "@server/features/games/gameObject"
+import { RequestValidationService } from "@server/services/requestValidationService"
 import { Request, Response } from "express"
-import { GameService } from "@app/services/gameService"
+import { GameService } from "@server/services/gameService"
 import { z } from "zod"
-import { WebsocketService } from "@app/services/websocketService"
-import { OrderDirection } from "@app/@types/models"
+import { WebsocketService } from "@server/services/websocketService"
+import { OrderDirection } from "@server/@types/models"
+import { QueryKeys } from "@server/@types/api"
+import { PlayerModel } from "@server/features/players/playerModel"
 
 export class GameController {
   static create = async (req: Request, res: Response) => {
@@ -19,16 +21,28 @@ export class GameController {
 
     const newGame = await GameModel.create({
       current_game_state: GameStateEnum.enum.waiting_for_players,
+      name: GameService.generateGameName(),
       next_possible_moves: JSON.stringify(
         GameService.calculateNextPossibleMoves(),
       ),
       player1_id,
     })
 
+    if (player1_id) {
+      await PlayerModel.update(player1_id, {})
+
+      // Emit an event to all connected clients to invalidate the players query
+      WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
+      WebsocketService.emitInvalidateQuery(
+        [QueryKeys.Players, QueryKeys.Detail],
+        player1_id,
+      )
+    }
+
     const newGameResponse = GameService.parseGameToResponse(newGame)
 
     // Emit an event to all connected clients to invalidate the games query
-    WebsocketService.emitInvalidateQuery(["games", "list"])
+    WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
 
     res.json(newGameResponse)
   }
@@ -123,8 +137,11 @@ export class GameController {
     })
 
     // Emit an event to all connected clients to invalidate the games query
-    WebsocketService.emitInvalidateQuery(["games", "list"])
-    WebsocketService.emitInvalidateQuery(["games", "detail"], game_id)
+    WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
+    WebsocketService.emitInvalidateQuery(
+      [QueryKeys.Games, QueryKeys.Detail],
+      game_id,
+    )
 
     const updatedGameResponse = GameService.parseGameToResponse(updatedGame)
 

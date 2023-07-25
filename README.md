@@ -79,6 +79,8 @@ The take-home task is to implement the 2-player version of this game, where each
 8. **Socket.IO** - Socket.IO is a JavaScript library for real-time web applications. It enables real-time, bidirectional and event-based communication between the browser and the server. It will be used to handle real-time updates of the game state.
 9. **daisyUI** - daisyUI is a plugin for Tailwind CSS that adds semantic class names, making it easier and faster to build beautiful user interfaces. It provides a set of pre-designed components that can be used out of the box, while still allowing for customization through Tailwind's utility classes. daisyUI's semantic class names make the code more readable and easier to maintain. It's framework-agnostic, meaning it can be used with any JavaScript framework or no framework at all. This will be particularly useful for quickly styling the game components and user interface in this project.
 10. **Axios** - The project involves interacting with REST endpoints, and Axios provides a simple and efficient way to do this. Its promise-based design allows for easy handling of asynchronous HTTP requests, which is essential for the project's real-time data fetching and updating needs. Axios also provides automatic transforms for JSON data, making it easier to handle and manipulate data received from or sent to the server. Its client-side protection against XSRF adds an extra layer of security for the application. Overall, Axios simplifies the process of making HTTP requests and managing responses, making it a valuable tool for this project.
+11. **Day.js** - Day.js is a lightweight and fast alternative to Moment.js, a library for parsing, manipulating, and displaying dates and times in JavaScript. With a file size of just 2kB, it is incredibly efficient, making it a perfect choice for this game project, where reducing download and execution times is crucial for a smooth user experience. Day.js offers a modern API that is largely compatible with Moment.js, making it easy to use for developers who are already familiar with Moment.js. Additionally, Day.js follows an immutable pattern, meaning that all API operations that modify the Day.js object will return a new instance. This immutability helps prevent bugs and makes debugging sessions shorter and more efficient. 
+12. **react-icons** - React Icons is an essential tool for this project as it simplifies the process of including popular icons in React applications. It utilizes ES6 imports, enabling developers to include only the specific icons needed for the project, reducing the overall bundle size. Given the diverse set of icons commonly used in web applications, React Icons provides a wide range of icon libraries, ensuring that the game can leverage a variety of icons for different functionalities and user interface elements. The easy integration with React projects ensures that the game's frontend remains performant and responsive while delivering an engaging user experience with attractive and recognizable icons.
 
 #### The Backend
 
@@ -90,6 +92,7 @@ The take-home task is to implement the 2-player version of this game, where each
 6. **Docker** - Docker is a platform that enables developers to build, package, and distribute applications in standardized units called containers. Docker will be used to containerize the PostgreSQL database, ensuring that it runs consistently in any environment.
 7. **ESLint and Prettier** - As in the frontend, ESLint and Prettier will be used to enforce code quality and consistent formatting in the backend codebase.
 8. **Socket.IO** - Socket.IO is a JavaScript library for real-time web applications. It enables real-time, bidirectional and event-based communication between the server and the client. It will be used to handle real-time updates of the game state.
+9. **unique-names-generator** - In the context of the game, generating random and unique names is essential for providing players with distinctive identities for their game sessions. Unique Names Generator is a tree-shakeable Node package designed specifically for generating random and unique names. By using this package, the game can efficiently create various names for each new game instance, enhancing the diversity and individuality of the gaming experience. As a result, players will encounter interesting and distinct names, contributing to a more immersive and enjoyable gaming environment.
 
 #### Additional tools
 
@@ -116,6 +119,7 @@ Fields:
     - `player2_id` (UUID, optional): The ID of the second player. This is a foreign key referencing `players.player_id`. This field is optional because a game might be created before the second player has joined, or a second player might abandon the game.
     - `current_game_state` (ENUM, required): The current state of the game. This is an enumeration with values: "waiting_for_players", "in_progress", "finished".
     - `current_board_status` (JSONB, required): Two-dimensional array (enum[7][7]) of enums (["X", "O", "empty"]) representing current board state, stored in JSONB format.
+    - `name` (TEXT, required): Randomly generated name of the game.
     - `next_possible_moves` (JSONB, required): Two-dimensional array (integer[][2]) of pairs of integers representing coordinates of the next possible moves, stored in JSONB format. First number is Y coordinate (row number), and second number is X coordinate (cell number).
     - `number_of_moves` (INTEGER, required): Integer representing the number of moves made in the game so far.
     - `winner_id` (UUID, optional): The ID of the winning player, if the game has finished. This is a foreign key referencing `players.player_id`. This field is optional because winner appears only when the game is finished, or there might be a draw.
@@ -172,14 +176,15 @@ Fields:
 - [x] [Server-side Move controllers and services implementation](https://github.com/alan-hadyk/side-stacker-game/pull/11)
 - [x] [Server - routes implementation](https://github.com/alan-hadyk/side-stacker-game/pull/12)
 - [x] [Client - session logic](https://github.com/alan-hadyk/side-stacker-game/pull/15)
-- [ ] Client routes
-- [ ] Client - game lobby
+- [x] [Client - game lobby](https://github.com/alan-hadyk/side-stacker-game/pull/16)
+- [ ] Client - toasts and error handling
+- [ ] Authentication
 - [ ] Client - game board
 - [ ] Client - game creation and joining logic
 - [ ] Client - game play (making moves) logic
 - [ ] Client - game end (win/draw) logic
-- [ ] Client - user interface for game lobby, game board, and game end
-- [ ] Integration of client and server
+- [ ] Client - 404 page
+- [ ] Server - abandoned games
 - [ ] Testing of all routes, controllers, and user interfaces
 
 ### Potential additional features

@@ -1,4 +1,4 @@
-import { Err } from "@app/@types/errors"
+import { Err } from "@server/@types/errors"
 import { NextFunction, Request, Response } from "express"
 import {
   BackendTerminatedError,

@@ -23,7 +23,7 @@
     /* Absolute paths */
 		"baseUrl": ".",
     "paths": {
-      "@app/*": ["./src/*"],
+      "@client/*": ["./src/*"],
       "@server/*": ["../server/src/*"],
     }
   },

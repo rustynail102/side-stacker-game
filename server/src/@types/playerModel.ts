@@ -1,5 +1,5 @@
-import { OrderDirection } from "@app/@types/models"
-import { Player } from "@app/@types/playerObject"
+import { OrderDirection } from "@server/@types/models"
+import { Player } from "@server/@types/playerObject"
 
 export interface PlayerModelGetAll {
   limit?: number

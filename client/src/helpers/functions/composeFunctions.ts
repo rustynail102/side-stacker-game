@@ -1,4 +1,4 @@
-import { ComponentEnhancer } from "@app/helpers/functions/@types/composeFunctions"
+import { ComponentEnhancer } from "@client/helpers/functions/@types/composeFunctions"
 
 export const composeFunctions = <TComponentType>(
   ...functions: ComponentEnhancer<TComponentType, TComponentType>[]

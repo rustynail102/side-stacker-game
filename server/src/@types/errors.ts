@@ -1,4 +1,4 @@
-import { ValidationError } from "@app/errors/validationError"
+import { ValidationError } from "@server/errors/validationError"
 import {
   BackendTerminatedError,
   ConnectionError,

@@ -1,5 +1,5 @@
-import { Game, GameStateEnum } from "@app/@types/gameObject"
-import { OrderDirection } from "@app/@types/models"
+import { Game, GameStateEnum } from "@server/@types/gameObject"
+import { OrderDirection } from "@server/@types/models"
 import { PrimitiveValueExpression } from "slonik"
 
 export interface GameModelGetAll {

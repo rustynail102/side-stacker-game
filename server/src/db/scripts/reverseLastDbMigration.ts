@@ -1,12 +1,12 @@
-import { connectToDb, databasePool } from "@app/db/databasePool"
-import { MigrationsTableInit } from "@app/db/utils/tables/migrationTable"
+import { connectToDb, databasePool } from "@server/db/databasePool"
+import { MigrationsTableInit } from "@server/db/utils/tables/migrationTable"
 import {
   getMigrationsDir,
   getMigrationFiles,
   getExecutedMigrations,
   migrationsSql,
   executeMigration,
-} from "@app/db/scripts/dbMigrations"
+} from "@server/db/scripts/dbMigrations"
 
 // Reverses the last applied migration
 // Run this script in terminal with `yarn db:reverse-migration`

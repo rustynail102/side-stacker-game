@@ -1,4 +1,4 @@
-import { config } from "@app/config"
+import { config } from "@client/config"
 import _axios from "axios"
 
 export const axios = _axios.create({

@@ -1,6 +1,6 @@
-import { PlayerController } from "@app/features/players/playerController"
-import { requestAsyncHandlerMiddleware } from "@app/middlewares/http/requestAsyncHandler"
-import { Path } from "@app/routes/paths"
+import { PlayerController } from "@server/features/players/playerController"
+import { requestAsyncHandlerMiddleware } from "@server/middlewares/http/requestAsyncHandler"
+import { Path } from "@server/routes/paths"
 import express from "express"
 
 const playersRouter = express.Router()

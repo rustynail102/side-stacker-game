@@ -1,5 +1,5 @@
-import { convertTimestampToDateISOString } from "@app/helpers/dates/convertTimestampToDateISOString"
-import { isConvertableToNumber } from "@app/helpers/numbers/isConvertableToNumber"
+import { convertTimestampToDateISOString } from "@server/helpers/dates/convertTimestampToDateISOString"
+import { isConvertableToNumber } from "@server/helpers/numbers/isConvertableToNumber"
 
 export const convertObjectToObjectWithIsoDates = <
   K extends PropertyKey,

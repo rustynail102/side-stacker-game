@@ -1,12 +1,28 @@
-import { PlayerResponse } from "@server/@types/api"
+import {
+  GamesGetAllQueryParams,
+  PlayerResponse,
+  PlayersGetAllQueryParams,
+  QueryKeys,
+} from "@server/@types/api"
 
 export const queryKeys = {
+  games: {
+    list: (params?: GamesGetAllQueryParams) => [
+      QueryKeys.Games,
+      QueryKeys.List,
+      params,
+    ],
+  },
   players: {
     detail: (player_id?: PlayerResponse["player_id"]) => [
-      "players",
-      "detail",
+      QueryKeys.Players,
+      QueryKeys.Detail,
       player_id,
     ],
-    list: ["players", "list"],
+    list: (params?: PlayersGetAllQueryParams) => [
+      QueryKeys.Players,
+      QueryKeys.List,
+      params,
+    ],
   },
 }

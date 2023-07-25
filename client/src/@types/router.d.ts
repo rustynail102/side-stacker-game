@@ -1,4 +1,4 @@
-import { router } from "@app/routing"
+import { router } from "@client/routing"
 
 declare module "@tanstack/router" {
   interface Register {

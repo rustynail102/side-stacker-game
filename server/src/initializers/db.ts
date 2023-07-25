@@ -1,7 +1,7 @@
-import { connectToDb, databasePool } from "@app/db/databasePool"
-import { applyDbMigrations } from "@app/db/scripts/applyDbMigrations"
-import { initDbExtensions } from "@app/db/scripts/initDbExtensions"
-import { initDbTables } from "@app/db/scripts/initDbTables"
+import { connectToDb, databasePool } from "@server/db/databasePool"
+import { applyDbMigrations } from "@server/db/scripts/applyDbMigrations"
+import { initDbExtensions } from "@server/db/scripts/initDbExtensions"
+import { initDbSchemas } from "@server/db/scripts/initDbSchemas"
 
 export const initDb = async () => {
   await connectToDb()
@@ -11,7 +11,7 @@ export const initDb = async () => {
     await initDbExtensions(connection)
 
     // Create tables if they don't exist
-    await initDbTables(connection)
+    await initDbSchemas(connection)
 
     // Migrations
     await applyDbMigrations(connection)

@@ -1,12 +1,13 @@
-import { Game } from "@app/@types/gameObject"
-import { GameModel } from "@app/features/games/gameModel"
-import { MoveTypeEnum, GameStateEnum } from "@app/features/games/gameObject"
-import { MoveModel } from "@app/features/moves/moveModel"
-import { MoveObject } from "@app/features/moves/moveObject"
-import { PlayerModel } from "@app/features/players/playerModel"
-import { GameService } from "@app/services/gameService"
-import { RequestValidationService } from "@app/services/requestValidationService"
-import { WebsocketService } from "@app/services/websocketService"
+import { QueryKeys } from "@server/@types/api"
+import { Game } from "@server/@types/gameObject"
+import { GameModel } from "@server/features/games/gameModel"
+import { MoveTypeEnum, GameStateEnum } from "@server/features/games/gameObject"
+import { MoveModel } from "@server/features/moves/moveModel"
+import { MoveObject } from "@server/features/moves/moveObject"
+import { PlayerModel } from "@server/features/players/playerModel"
+import { GameService } from "@server/services/gameService"
+import { RequestValidationService } from "@server/services/requestValidationService"
+import { WebsocketService } from "@server/services/websocketService"
 import { Request } from "express"
 import isEmpty from "lodash/isEmpty"
 import { z } from "zod"
@@ -73,9 +74,15 @@ export class MoveController {
 
     await PlayerModel.update(player_id, {})
 
-    WebsocketService.emitInvalidateQuery(["games", "list"])
-    WebsocketService.emitInvalidateQuery(["games", "detail"], game_id)
-    WebsocketService.emitInvalidateQuery(["players", "list"])
-    WebsocketService.emitInvalidateQuery(["players", "detail"], player_id)
+    WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
+    WebsocketService.emitInvalidateQuery(
+      [QueryKeys.Games, QueryKeys.Detail],
+      game_id,
+    )
+    WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
+    WebsocketService.emitInvalidateQuery(
+      [QueryKeys.Players, QueryKeys.Detail],
+      player_id,
+    )
   }
 }

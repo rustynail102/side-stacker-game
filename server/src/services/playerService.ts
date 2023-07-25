@@ -1,6 +1,6 @@
-import { PlayerResponse } from "@app/@types/api"
-import { Player } from "@app/@types/playerObject"
-import { convertObjectToObjectWithIsoDates } from "@app/helpers/objects/convertObjectToObjectWithIsoDates"
+import { PlayerResponse } from "@server/@types/api"
+import { Player } from "@server/@types/playerObject"
+import { convertObjectToObjectWithIsoDates } from "@server/helpers/objects/convertObjectToObjectWithIsoDates"
 
 export class PlayerService {
   static parsePlayerToResponse = (player: Player): PlayerResponse => {

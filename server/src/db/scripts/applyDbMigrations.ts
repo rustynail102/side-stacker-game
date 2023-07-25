@@ -1,12 +1,12 @@
 import { DatabasePoolConnection } from "slonik"
-import { MigrationsTableInit } from "@app/db/utils/tables/migrationTable"
+import { MigrationsTableInit } from "@server/db/utils/tables/migrationTable"
 import {
   executeMigration,
   getExecutedMigrations,
   getMigrationFiles,
   getMigrationsDir,
   migrationsSql,
-} from "@app/db/scripts/dbMigrations"
+} from "@server/db/scripts/dbMigrations"
 
 // Applies all pending migrations to the database
 export const applyDbMigrations = async (connection: DatabasePoolConnection) => {

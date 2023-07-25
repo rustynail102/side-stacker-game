@@ -1,5 +1,5 @@
-import { axiosPost } from "@app/helpers/api/axiosPost"
-import { getAxiosError } from "@app/helpers/api/getAxiosError"
+import { axiosPost } from "@client/helpers/api/axiosPost"
+import { getAxiosError } from "@client/helpers/api/getAxiosError"
 import { PlayerResponse } from "@server/@types/api"
 import { MutateOptions, useMutation } from "@tanstack/react-query"
 

@@ -1,4 +1,4 @@
-import { ButtonSize } from "@app/components/atoms/Button/@types/Button"
+import { ButtonSize } from "@client/components/atoms/Button/@types/Button"
 
 export const mapButtonSizeToSpinnerSize: Record<ButtonSize, string> = {
   [ButtonSize.Xs]: "loading-xs",

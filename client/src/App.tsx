@@ -1,9 +1,9 @@
-import { composeFunctions } from "@app/helpers/functions/composeFunctions"
-import { withQueryClientProvider } from "@app/hoc/withQueryClientProvider"
-import { router } from "@app/routing"
+import { composeFunctions } from "@client/helpers/functions/composeFunctions"
+import { withQueryClientProvider } from "@client/hoc/withQueryClientProvider"
+import { router } from "@client/routing"
 import { RouterProvider } from "@tanstack/router"
 
-import "@app/styles/global.css"
+import "@client/styles/global.css"
 
 const _App: React.FC = () => <RouterProvider router={router} />
 

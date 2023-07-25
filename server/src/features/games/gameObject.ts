@@ -15,6 +15,7 @@ export const GameObject = z
     current_game_state: GameStateEnum,
     finished_at: z.number().optional().nullable(),
     game_id: z.string().uuid(),
+    name: z.string(),
     next_possible_moves: z.string(),
     number_of_moves: z.number(),
     player1_id: z.string().uuid().optional().nullable(),

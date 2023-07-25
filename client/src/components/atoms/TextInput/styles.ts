@@ -1,4 +1,4 @@
-import { TextInputProps } from "@app/components/atoms/TextInput/@types/TextInput"
+import { TextInputProps } from "@client/components/atoms/TextInput/@types/TextInput"
 
 export const getInputColor = ({
   disabled,

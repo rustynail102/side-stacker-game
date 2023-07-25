@@ -1,4 +1,4 @@
-import { HeroProps } from "@app/components/atoms/Hero/@types/Hero"
+import { HeroProps } from "@client/components/atoms/Hero/@types/Hero"
 
 export const Hero: React.FC<HeroProps> = ({ children, className = "" }) => (
   <div className={`hero min-h-screen bg-base-200 ${className}`}>

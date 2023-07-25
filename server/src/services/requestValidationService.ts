@@ -1,4 +1,4 @@
-import { ValidationError } from "@app/errors/validationError"
+import { ValidationError } from "@server/errors/validationError"
 import { Request } from "express"
 import isEmpty from "lodash/isEmpty"
 import omitBy from "lodash/omitBy"
@@ -25,9 +25,31 @@ export class RequestValidationService {
 
     const objectWithoutEmptyFields = omitBy(object, isUndefined)
 
-    schema.parse(objectWithoutEmptyFields)
+    // Transformation step - this is needed because values in the incoming requests
+    // are always strings
+    const transformedObject = Object.keys(objectWithoutEmptyFields).reduce(
+      (acc, key) => {
+        const value = objectWithoutEmptyFields[key]
+        const fieldSchema = schema.shape[key as keyof T]
+        const innerSchema =
+          fieldSchema instanceof z.ZodOptional
+            ? fieldSchema._def.innerType
+            : fieldSchema
 
-    return objectWithoutEmptyFields as z.infer<typeof schema>
+        if (innerSchema instanceof z.ZodNumber && typeof value === "string") {
+          acc[key] = parseInt(value, 10)
+        } else {
+          acc[key] = value
+        }
+
+        return acc
+      },
+      {} as Record<string, unknown>,
+    )
+
+    schema.parse(transformedObject)
+
+    return transformedObject as z.infer<typeof schema>
   }
 
   static validateBody = <T extends ZodRawShape>(

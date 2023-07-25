@@ -3,7 +3,7 @@ import {
   ServerToClientEvents,
   InterServerEvents,
   SocketData,
-} from "@app/@types/websocketsServer"
+} from "@server/@types/websocketsServer"
 import { IncomingMessage, Server, ServerResponse } from "http"
 import { Server as SocketIOServer } from "socket.io"
 
@@ -28,6 +28,9 @@ export const createWebsocketsServer = (
       maxDisconnectionDuration: 10 * 60 * 1000,
       // whether to skip middlewares upon successful recovery
       skipMiddlewares: true,
+    },
+    cors: {
+      origin: "http://127.0.0.1:4000",
     },
   })
 

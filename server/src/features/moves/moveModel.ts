@@ -1,7 +1,7 @@
-import { databasePool } from "@app/db/databasePool"
-import { MoveModelGetAll } from "@app/@types/moveModel"
-import { Move } from "@app/@types/moveObject"
-import { MoveObject } from "@app/features/moves/moveObject"
+import { databasePool } from "@server/db/databasePool"
+import { MoveModelGetAll } from "@server/@types/moveModel"
+import { Move } from "@server/@types/moveObject"
+import { MoveObject } from "@server/features/moves/moveObject"
 import { createSqlTag } from "slonik"
 
 const sql = createSqlTag({
@@ -84,7 +84,7 @@ export class MoveModel {
     )
 }
 
-export const MovesTableInit = sql.unsafe`
+export const MoveModelSchema = sql.unsafe`
   DO $$ BEGIN
     CREATE TYPE move_type AS ENUM ('X', 'O');
   EXCEPTION

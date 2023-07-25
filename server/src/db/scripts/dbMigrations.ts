@@ -5,7 +5,7 @@ import {
 } from "slonik"
 import { readdir, readFile } from "node:fs/promises"
 import path from "node:path"
-import { MigrationObject } from "@app/db/utils/objects/migrationObject"
+import { MigrationObject } from "@server/db/utils/objects/migrationObject"
 import { z } from "zod"
 
 // SQL tag for migrations, with type aliases for migration and null

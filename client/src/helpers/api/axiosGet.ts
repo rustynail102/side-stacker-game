@@ -1,4 +1,4 @@
-import { axios } from "@app/clients/axios"
+import { axios } from "@client/clients/axios"
 import { RawAxiosRequestConfig } from "axios"
 
 export const axiosGet = async <TResponse>(

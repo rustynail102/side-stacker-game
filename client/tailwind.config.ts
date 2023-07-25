@@ -19,7 +19,24 @@ const tailwindConfig: Config = {
 
   plugins: [daisyUI, tailwindCss3D],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        "bg-gradient-slow": "bg-gradient 1500ms ease infinite",
+      },
+      backgroundSize: {
+        "400%": "400%",
+      },
+      borderWidth: {
+        "1": "1px",
+      },
+      keyframes: {
+        "bg-gradient": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
+      },
+    },
   },
 }
 

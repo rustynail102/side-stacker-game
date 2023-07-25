@@ -25,6 +25,11 @@ export enum ButtonVariant {
   Link = "btn-link",
 }
 
+export enum ButtonShape {
+  Default = "",
+  Circle = "btn-circle",
+}
+
 export interface ButtonProps {
   children: ReactNode | ReactNode[]
   className?: string
@@ -32,6 +37,7 @@ export interface ButtonProps {
   fill?: ButtonFill
   isLoading?: boolean
   onClick?: React.MouseEventHandler<HTMLButtonElement>
+  shape?: ButtonShape
   size?: ButtonSize
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"]
   variant?: ButtonVariant

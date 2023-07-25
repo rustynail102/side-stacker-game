@@ -1,7 +1,7 @@
-import { LoginFormValues } from "@app/components/molecules/LoginForm/@types/LoginForm"
-import { LoginForm } from "@app/components/molecules/LoginForm/LoginForm"
-import { useCreatePlayer } from "@app/hooks/mutations/useCreatePlayer"
-import { useAuthenticatedUser } from "@app/hooks/useAuthenticatedUser"
+import { LoginFormValues } from "@client/components/organisms/LoginForm/@types/LoginForm"
+import { LoginForm } from "@client/components/organisms/LoginForm/LoginForm"
+import { useCreatePlayer } from "@client/api/mutations/useCreatePlayer"
+import { useAuthenticatedUser } from "@client/hooks/useAuthenticatedUser"
 
 export const LoginContainer: React.FC = () => {
   const { createPlayer, isLoading } = useCreatePlayer()
