@@ -72,7 +72,13 @@ export class MoveController {
       position_y,
     })
 
-    await PlayerModel.update(player_id, {})
+    const updatedPlayer = await PlayerModel.update(player_id, {})
+
+    if (!isEmpty(winningMoves)) {
+      WebsocketService.emitToast(
+        `${updatedPlayer.username} just won ${game.name}!`,
+      )
+    }
 
     WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
     WebsocketService.emitInvalidateQuery(

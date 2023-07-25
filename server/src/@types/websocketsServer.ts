@@ -6,6 +6,7 @@ export interface InvalidateQueryPayload {
 }
 export interface ServerToClientEvents {
   invalidateQuery: (queryKeys: InvalidateQueryPayload) => void
+  toast: (message: string) => void
 }
 
 export interface ClientToServerEvents {}

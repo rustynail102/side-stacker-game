@@ -23,6 +23,8 @@ export class PlayerController {
 
     const newPlayerResponse = PlayerService.parsePlayerToResponse(newPlayer)
 
+    WebsocketService.emitToast(`New Player - ${newPlayerResponse.username}`)
+
     // Emit an event to all connected clients to invalidate the players query
     WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
 
@@ -125,6 +127,12 @@ export class PlayerController {
 
     const updatedPlayerResponse =
       PlayerService.parsePlayerToResponse(updatedPlayer)
+
+    if (body.username) {
+      WebsocketService.emitToast(
+        `${body.username} changed name to ${updatedPlayerResponse.username}`,
+      )
+    }
 
     // Emit an event to all connected clients to invalidate the players query
     WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])

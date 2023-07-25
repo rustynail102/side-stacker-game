@@ -11,6 +11,7 @@ import {
   TupleMovedToAnotherPartitionError,
   UniqueIntegrityConstraintViolationError,
 } from "slonik"
+import { ZodError } from "zod"
 
 export type Err =
   | ValidationError
@@ -24,3 +25,4 @@ export type Err =
   | TupleMovedToAnotherPartitionError
   | UniqueIntegrityConstraintViolationError
   | ConnectionError
+  | ZodError

@@ -24,7 +24,7 @@ export enum QueryKeys {
 
 export interface ErrorResponse {
   code: number
-  error: string | string[]
+  errors: string[]
 }
 
 export interface PlayerResponse {

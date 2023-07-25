@@ -81,6 +81,7 @@ The take-home task is to implement the 2-player version of this game, where each
 10. **Axios** - The project involves interacting with REST endpoints, and Axios provides a simple and efficient way to do this. Its promise-based design allows for easy handling of asynchronous HTTP requests, which is essential for the project's real-time data fetching and updating needs. Axios also provides automatic transforms for JSON data, making it easier to handle and manipulate data received from or sent to the server. Its client-side protection against XSRF adds an extra layer of security for the application. Overall, Axios simplifies the process of making HTTP requests and managing responses, making it a valuable tool for this project.
 11. **Day.js** - Day.js is a lightweight and fast alternative to Moment.js, a library for parsing, manipulating, and displaying dates and times in JavaScript. With a file size of just 2kB, it is incredibly efficient, making it a perfect choice for this game project, where reducing download and execution times is crucial for a smooth user experience. Day.js offers a modern API that is largely compatible with Moment.js, making it easy to use for developers who are already familiar with Moment.js. Additionally, Day.js follows an immutable pattern, meaning that all API operations that modify the Day.js object will return a new instance. This immutability helps prevent bugs and makes debugging sessions shorter and more efficient. 
 12. **react-icons** - React Icons is an essential tool for this project as it simplifies the process of including popular icons in React applications. It utilizes ES6 imports, enabling developers to include only the specific icons needed for the project, reducing the overall bundle size. Given the diverse set of icons commonly used in web applications, React Icons provides a wide range of icon libraries, ensuring that the game can leverage a variety of icons for different functionalities and user interface elements. The easy integration with React projects ensures that the game's frontend remains performant and responsive while delivering an engaging user experience with attractive and recognizable icons.
+13. **react-hot-toast** - An excellent addition to the project for displaying toast notifications in the frontend. The library provides toast notifications that are eye-catching and attention-grabbing, ensuring important messages are noticed by users. It offers a simple and intuitive API, making it effortless to implement toast notifications throughout the application. It allows developers to customize the appearance and behavior of toast notifications. Being a lightweight library, it won't add unnecessary bloat to the project, ensuring smooth performance and fast loading times.
 
 #### The Backend
 
@@ -177,7 +178,7 @@ Fields:
 - [x] [Server - routes implementation](https://github.com/alan-hadyk/side-stacker-game/pull/12)
 - [x] [Client - session logic](https://github.com/alan-hadyk/side-stacker-game/pull/15)
 - [x] [Client - game lobby](https://github.com/alan-hadyk/side-stacker-game/pull/16)
-- [ ] Client - toasts and error handling
+- [x] [Client - toasts and error handling](https://github.com/alan-hadyk/side-stacker-game/pull/17)
 - [ ] Authentication
 - [ ] Client - game board
 - [ ] Client - game creation and joining logic

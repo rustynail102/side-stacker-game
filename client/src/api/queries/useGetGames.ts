@@ -3,12 +3,25 @@ import { axiosGet } from "@client/helpers/api/axiosGet"
 import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { GameResponse, GamesGetAllQueryParams } from "@server/@types/api"
+import { useToast } from "@client/hooks/useToast"
+import { getAxiosError } from "@client/helpers/api/getAxiosError"
 
 export const useGetGames = (
   params?: GamesGetAllQueryParams,
   options?: UseQueryOptions<GameResponse[], AxiosError, GameResponse[]>,
 ) => {
+  const { errorToast } = useToast()
+
   const getGamesQuery = useQuery({
+    onError: (error) => {
+      const apiError = getAxiosError(error)
+
+      if (apiError) {
+        apiError.errors.forEach((message) => {
+          errorToast(message)
+        })
+      }
+    },
     queryFn: () => axiosGet<GameResponse[]>("/games", { params }),
     queryKey: queryKeys.games.list(params),
     ...options,

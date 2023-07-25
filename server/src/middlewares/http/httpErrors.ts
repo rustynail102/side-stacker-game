@@ -1,4 +1,5 @@
 import { Err } from "@server/@types/errors"
+import { ValidationError } from "@server/errors/validationError"
 import { NextFunction, Request, Response } from "express"
 import {
   BackendTerminatedError,
@@ -12,6 +13,7 @@ import {
   TupleMovedToAnotherPartitionError,
   UniqueIntegrityConstraintViolationError,
 } from "slonik"
+import { ZodError } from "zod"
 
 export const httpErrorsMiddleware = (
   error: Err,
@@ -24,6 +26,39 @@ export const httpErrorsMiddleware = (
 
   // Use the status code from the error, or default to 500
   let status = "statusCode" in error ? error.statusCode : 500
+  // Default to [error.message]
+  let errorMessages: string[] = [error.message]
+
+  switch (true) {
+    case error instanceof NotFoundError:
+    case error instanceof DataIntegrityError:
+    case error instanceof ForeignKeyIntegrityConstraintViolationError:
+    case error instanceof NotNullIntegrityConstraintViolationError:
+    case error instanceof UniqueIntegrityConstraintViolationError:
+    case error instanceof BackendTerminatedError:
+    case error instanceof ConnectionError:
+    case error instanceof StatementCancelledError:
+    case error instanceof TupleMovedToAnotherPartitionError:
+    case error instanceof StatementTimeoutError:
+      errorMessages = [error.message]
+      break
+
+    case error instanceof ZodError:
+      if ("issues" in error) {
+        errorMessages = error.issues.map(
+          ({ message, path }) => `${path.join(" / ")} - ${message}`,
+        )
+      }
+      break
+
+    case error instanceof ValidationError:
+      if ("errors" in error) {
+        errorMessages = error.errors.map((error) =>
+          typeof error === "string" ? error : error.message,
+        )
+      }
+      break
+  }
 
   switch (true) {
     case error instanceof NotFoundError:
@@ -55,6 +90,6 @@ export const httpErrorsMiddleware = (
   // Send the error message in the response
   res.json({
     code: status,
-    error: "errors" in error ? error.errors : error.message,
+    errors: errorMessages,
   })
 }

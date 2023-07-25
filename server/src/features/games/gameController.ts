@@ -41,6 +41,7 @@ export class GameController {
 
     const newGameResponse = GameService.parseGameToResponse(newGame)
 
+    WebsocketService.emitToast(`New Game available - ${newGameResponse.name}`)
     // Emit an event to all connected clients to invalidate the games query
     WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
 
@@ -116,14 +117,23 @@ export class GameController {
 
     if (player1_id) {
       await GameService.removePlayerFromActiveGames(player1_id)
+      await PlayerModel.update(player1_id, {})
+      WebsocketService.emitInvalidateQuery(
+        [QueryKeys.Players, QueryKeys.Detail],
+        player1_id,
+      )
     }
 
     if (player2_id) {
       await GameService.removePlayerFromActiveGames(player2_id)
+      await PlayerModel.update(player2_id, {})
+      WebsocketService.emitInvalidateQuery(
+        [QueryKeys.Players, QueryKeys.Detail],
+        player2_id,
+      )
     }
 
     const currentGame = await GameModel.getById(game_id)
-
     const currentGameState = GameService.determineCurrentGameState({
       finished_at: currentGame.finished_at,
       player1_id,
