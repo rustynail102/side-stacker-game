@@ -11,23 +11,32 @@ export const useWebsockets = () => {
   useEffect(() => {
     websocketsClient.connect()
 
-    websocketsClient.on(
-      "invalidateQuery",
-      async (data: InvalidateQueryPayload) => {
-        console.log("invalidateQuery event", { data })
-        const queryKey = [...data.entity, data.id].filter(Boolean)
+    const hasEventListener = (name: string) =>
+      websocketsClient.listeners(name).length > 0
 
-        await queryClient.invalidateQueries({ queryKey })
-      },
-    )
+    if (!hasEventListener("invalidateQuery")) {
+      websocketsClient.on(
+        "invalidateQuery",
+        async (data: InvalidateQueryPayload) => {
+          console.log("invalidateQuery event", { data })
+          const queryKey = [...data.entity, data.id].filter(Boolean)
 
-    websocketsClient.on("toast", (message: string) => {
-      console.log("toast event", { message })
+          await queryClient.invalidateQueries({ queryKey })
+        },
+      )
+    }
 
-      successToast(message)
-    })
+    if (!hasEventListener("toast")) {
+      websocketsClient.on("toast", (message: string) => {
+        console.log("toast event", { message })
+
+        successToast(message)
+      })
+    }
 
     return () => {
+      websocketsClient.off("invalidateQuery")
+      websocketsClient.off("toast")
       websocketsClient.close()
     }
   }, [queryClient, successToast])

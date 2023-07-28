@@ -1,8 +1,7 @@
-import { useGetPlayer } from "@client/api/queries/useGetPlayer"
+import { useGetCurrentPlayer } from "@client/api/queries/useGetCurrentPlayer"
 import { FullScreenLoader } from "@client/components/atoms/FullScreenLoader/FullScreenLoader"
-import { LoginContainer } from "@client/containers/login/LoginContainer"
+import { AuthenticationContainer } from "@client/containers/authentication/AuthenticationContainer"
 import { RootContainerHeaderSection } from "@client/containers/root/sections/header/RootContainerHeaderSection"
-import { useAuthenticatedUser } from "@client/hooks/useAuthenticatedUser"
 import { useToast } from "@client/hooks/useToast"
 import { useWebsockets } from "@client/hooks/useWebsockets"
 import { Outlet } from "@tanstack/router"
@@ -10,24 +9,21 @@ import { Outlet } from "@tanstack/router"
 export const RootContainer: React.FC = () => {
   useWebsockets()
 
-  const { authenticatedUser, setAuthenticatedUser } = useAuthenticatedUser()
   const { successToast } = useToast()
-  const { isInitialLoading } = useGetPlayer(authenticatedUser, {
-    onError: () => {
-      setAuthenticatedUser(undefined)
-    },
+  const { currentPlayer, isInitialLoading } = useGetCurrentPlayer({
     onSuccess: (player) => {
       successToast(`Welcome back, ${player.username}`)
-      setAuthenticatedUser(player)
     },
+    refetchOnWindowFocus: false,
+    retry: false,
   })
 
   if (isInitialLoading) {
     return <FullScreenLoader />
   }
 
-  if (!authenticatedUser) {
-    return <LoginContainer />
+  if (!currentPlayer) {
+    return <AuthenticationContainer />
   }
 
   return (

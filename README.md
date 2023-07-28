@@ -2,6 +2,12 @@
 
 Side-Stacker Game - Monadical Application - Take-home project
 
+## Important
+
+Please read `Architecture Implementation Plan` below first, and then refer to client and server documentation:
+- [Client Documentation](client/README.md)
+- [Server Documentation](server/README.md)
+
 ## Architecture Implementation Plan
 
 ### Project Overview
@@ -63,6 +69,35 @@ The take-home task is to implement the 2-player version of this game, where each
 
 ![System Architecture - High-level diagram](docs/system-architecture.drawio.svg?raw=true "System Architecture - High-level diagram")
 
+Arrows between the components indicate the direction of communication. For instance, both clients send requests to the server and receive responses from it. The server, in turn, communicates with the databases to fetch, update, or delete data as per the client's requests.
+
+This diagram provides a high-level overview of how these components interact within the system.
+
+The system architecture is primarily divided into three parts: the client-side, the server-side and databases.
+
+#### Client-side:
+
+There are two clients represented in the diagram, both using React for their frontend:
+
+- **Client 1 (React)**: This client communicates with the server using HTTP/REST and WebSockets. The client sends requests to the server and receives responses.
+- **Client 2 (React)**: This client also communicates with the server using HTTP/REST and WebSockets.
+
+**Detailed client implementation is described in [client's README](client/README.md)**
+
+
+#### Server-side:
+
+**Server (Node.js/Express)**: This server is built using Node.js and Express. It communicates with both clients using HTTP/REST and WebSockets. It also interacts with the PostgreSQL database and the Redis Store.
+
+**Detailed server implementation is described in [server's README](server/README.md)**
+
+#### Databases:
+
+There are two databases in the system:
+
+- **PostgreSQL Database**: This is a relational database used for storing structured data. 
+- **Redis Store**: This is an in-memory data structure store, used as a database and cache. 
+
 ### Technology Stack
 
 > List of technologies used in the project
@@ -94,6 +129,9 @@ The take-home task is to implement the 2-player version of this game, where each
 7. **ESLint and Prettier** - As in the frontend, ESLint and Prettier will be used to enforce code quality and consistent formatting in the backend codebase.
 8. **Socket.IO** - Socket.IO is a JavaScript library for real-time web applications. It enables real-time, bidirectional and event-based communication between the server and the client. It will be used to handle real-time updates of the game state.
 9. **unique-names-generator** - In the context of the game, generating random and unique names is essential for providing players with distinctive identities for their game sessions. Unique Names Generator is a tree-shakeable Node package designed specifically for generating random and unique names. By using this package, the game can efficiently create various names for each new game instance, enhancing the diversity and individuality of the gaming experience. As a result, players will encounter interesting and distinct names, contributing to a more immersive and enjoyable gaming environment.
+10. **argon2** - Argon2 is a password hashing function that was selected as the winner of the Password Hashing Competition in July 2015. It's designed to be secure against a range of attacks and to be efficient to compute on modern hardware. Argon2 is suitable for hashing passwords for credential storage, key derivation, or other cryptographic applications.
+11. **Redis** - Redis (Remote Dictionary Server) is an in-memory data structure store used as a database, cache, and message broker. It supports various data structures and is perfect for high-performance tasks like caching. In this application, Redis could be used to store session data, game state, or other temporary, high-performance needs.
+12. **Express-Session** - express-session is a middleware for Express.js that handles session management. It provides mechanisms to store session data that persist across requests. In a game like Side-Stacker, express-session could be used to keep track of user authentication, game state, and other data that needs to persist between different requests from the same user.
 
 #### Additional tools
 
@@ -179,9 +217,9 @@ Fields:
 - [x] [Client - session logic](https://github.com/alan-hadyk/side-stacker-game/pull/15)
 - [x] [Client - game lobby](https://github.com/alan-hadyk/side-stacker-game/pull/16)
 - [x] [Client - toasts and error handling](https://github.com/alan-hadyk/side-stacker-game/pull/17)
-- [ ] Authentication
-- [ ] Client - game board
-- [ ] Client - game creation and joining logic
+- [x] [Authentication](https://github.com/alan-hadyk/side-stacker-game/pull/18)
+- [ ] Client - game creation and game board
+- [ ] Client - game joining logic
 - [ ] Client - game play (making moves) logic
 - [ ] Client - game end (win/draw) logic
 - [ ] Client - 404 page

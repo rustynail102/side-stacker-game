@@ -4,7 +4,6 @@ import {
   GameModelGetAll,
   GameModelUpdateFieldsReturnType,
 } from "@server/@types/gameModel"
-import { Game } from "@server/@types/gameObject"
 import {
   MoveTypeEnum,
   GameObject,
@@ -20,6 +19,7 @@ import {
 } from "slonik"
 import { ZodTypeAny, z } from "zod"
 import { MoveTypeEnum as MoveTypeEnumType } from "@server/@types/api"
+import { Game } from "@server/@types/gameObject"
 
 const sql = createSqlTag({
   typeAliases: {

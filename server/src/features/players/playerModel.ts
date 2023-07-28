@@ -15,6 +15,7 @@ const sql = createSqlTag({
   typeAliases: {
     null: z.null(),
     player: PlayerObject,
+    playerWithoutPassword: PlayerObject.omit({ password: true }),
   },
 })
 
@@ -32,13 +33,19 @@ export class PlayerModel {
     return rows[0]
   }
 
-  static create = ({ username }: Pick<Player, "username">): Promise<Player> =>
+  static create = ({
+    password,
+    username,
+  }: Pick<Player, "username" | "password">): Promise<
+    Omit<Player, "password">
+  > =>
     databasePool.connect(async (connection) => {
-      const query = sql.typeAlias("player")`
+      const query = sql.typeAlias("playerWithoutPassword")`
           INSERT 
           INTO players (
             player_id, 
-            username, 
+            username,
+            password, 
             created_at, 
             last_active_at, 
             deleted_at
@@ -46,11 +53,12 @@ export class PlayerModel {
           VALUES (
             uuid_generate_v4(), 
             ${username}, 
+            ${password},
             NOW(), 
             NOW(), 
             NULL
           )
-          RETURNING *
+          RETURNING player_id, username, created_at, last_active_at, deleted_at
         `
 
       const { rows } = await connection.query(query)
@@ -58,38 +66,71 @@ export class PlayerModel {
       return rows[0]
     })
 
-  static delete = (player_id: Player["player_id"]): Promise<Player> =>
+  static delete = (
+    player_id: Player["player_id"],
+  ): Promise<Omit<Player, "password">> =>
     databasePool.connect(async (connection) => {
       const fragments = [sql.fragment`deleted_at = NOW()`]
 
-      const query = sql.typeAlias("player")`
+      const query = sql.typeAlias("playerWithoutPassword")`
         UPDATE players
         SET ${sql.join(fragments, sql.unsafe`, `)}
         WHERE player_id = ${player_id}
-        RETURNING *
+        RETURNING player_id, username, created_at, last_active_at, deleted_at
       `
 
       return PlayerModel.executeQuery(connection, query)
     })
 
   static getAll = ({
+    filters,
+    filterType = "AND",
     limit = 20,
     offset = 0,
     orderBy = "last_active_at",
     orderDirection = OrderDirection.DESC,
   }: PlayerModelGetAll): Promise<readonly Player[]> =>
     databasePool.connect(async (connection) => {
+      const filtersFragments = []
+
+      if (filters) {
+        for (const [key, value] of Object.entries(filters)) {
+          if (value !== undefined) {
+            if (Array.isArray(value)) {
+              value.forEach((val) => {
+                filtersFragments.push(
+                  sql.fragment`${sql.identifier([key])} = ${val}`,
+                )
+              })
+            } else {
+              filtersFragments.push(
+                sql.fragment`${sql.identifier([key])} = ${value}`,
+              )
+            }
+          }
+        }
+      }
+
       const direction = orderDirection === OrderDirection.ASC ? "ASC" : "DESC"
       const query = sql.typeAlias("player")`
         SELECT * 
-        FROM players 
-        WHERE deleted_at IS NULL
+        FROM players
+        ${
+          filtersFragments.length > 0
+            ? sql.fragment`WHERE deleted_at IS NULL AND (${sql.join(
+                filtersFragments,
+                filterType === "AND" ? sql.unsafe`, ` : sql.unsafe` OR `,
+              )})`
+            : sql.fragment`WHERE deleted_at IS NULL`
+        } 
         ORDER BY ${sql.identifier([orderBy])} ${sql.unsafe([direction])} 
         LIMIT ${limit} 
         OFFSET ${offset}
       `
 
-      return connection.many(query)
+      const { rows } = await connection.query(query)
+
+      return rows
     })
 
   static getById = (player_id: Player["player_id"]): Promise<Player> =>
@@ -106,7 +147,7 @@ export class PlayerModel {
   static update = (
     player_id: Player["player_id"],
     { username }: Partial<Pick<Player, "username">>,
-  ): Promise<Player> =>
+  ): Promise<Omit<Player, "password">> =>
     databasePool.connect(async (connection) => {
       const fragments = [sql.fragment`last_active_at = NOW()`]
 
@@ -114,11 +155,11 @@ export class PlayerModel {
         fragments.push(sql.fragment`username = ${username}`)
       }
 
-      const query = sql.typeAlias("player")`
+      const query = sql.typeAlias("playerWithoutPassword")`
           UPDATE players
           SET ${sql.join(fragments, sql.unsafe`, `)}
           WHERE player_id = ${player_id}
-          RETURNING *
+          RETURNING player_id, username, created_at, last_active_at, deleted_at
         `
 
       return PlayerModel.executeQuery(connection, query)
@@ -129,6 +170,7 @@ export const PlayerModelSchema = sql.unsafe`
   CREATE TABLE IF NOT EXISTS players (
     player_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username TEXT NOT NULL,
+    password TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     last_active_at TIMESTAMP NOT NULL DEFAULT NOW(),
     deleted_at TIMESTAMP

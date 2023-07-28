@@ -4,7 +4,8 @@ import {
   InterServerEvents,
   SocketData,
 } from "@server/@types/websocketsServer"
-import { logWsConnectionsMiddleware } from "@server/middlewares/ws/logWsConnections"
+import { httpSessionMiddleware } from "@server/middlewares/http/httpSession"
+import { handleSocketConnectionMiddleware } from "@server/middlewares/ws/handleSocketConnection"
 import { logWsErrorsMiddleware } from "@server/middlewares/ws/logWsErrors"
 import { Server as SocketIOServer } from "socket.io"
 
@@ -16,9 +17,12 @@ export const useWsMiddlewares = (
     SocketData
   >,
 ) => {
-  // Websockets errors
+  // Use express-session middleware
+  websocketsServer.engine.use(httpSessionMiddleware)
+
+  // Websockets errors middleware
   websocketsServer.engine.on("connection_error", logWsErrorsMiddleware)
 
-  // Websockets logging
-  websocketsServer.on("connection", logWsConnectionsMiddleware)
+  // Handle socket connection middleware
+  websocketsServer.on("connection", handleSocketConnectionMiddleware)
 }

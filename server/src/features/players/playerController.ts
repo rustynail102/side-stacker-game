@@ -1,37 +1,48 @@
 import { PlayerModel } from "@server/features/players/playerModel"
 import { PlayerObject } from "@server/features/players/playerObject"
-import { GameService } from "@server/services/gameService"
 import { RequestValidationService } from "@server/services/requestValidationService"
 import { Request, Response } from "express"
 import { z } from "zod"
 import { OrderDirection } from "@server/@types/models"
 import { PlayerService } from "@server/services/playerService"
-import { WebsocketService } from "@server/services/websocketService"
-import { QueryKeys } from "@server/@types/api"
+import { SessionService } from "@server/services/sessionService"
+import { RedisService } from "@server/services/redisService"
+import { AuthenticationError } from "@server/errors/authenticationError"
 
 export class PlayerController {
+  // Creates a new player
   static create = async (req: Request, res: Response) => {
+    // Validation of query and body of the request
     RequestValidationService.validateQuery(req.query, z.object({}))
     const body = RequestValidationService.validateBody(
       req.body,
-      PlayerObject.pick({ username: true }),
+      z.object({ password: z.string().min(8), username: z.string().max(100) }),
     )
 
-    const newPlayer = await PlayerModel.create({
-      username: body.username,
+    // Validation of username
+    await PlayerService.validateUsername(body.username)
+
+    // Create new player
+    const { newPlayer, newPlayerResponse } =
+      await PlayerService.createNewPlayer({
+        password: body.password,
+        username: body.username,
+      })
+
+    // Create new session
+    SessionService.setSessionData(req, {
+      player_id: newPlayer.player_id,
     })
-
-    const newPlayerResponse = PlayerService.parsePlayerToResponse(newPlayer)
-
-    WebsocketService.emitToast(`New Player - ${newPlayerResponse.username}`)
-
-    // Emit an event to all connected clients to invalidate the players query
-    WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
 
     res.json(newPlayerResponse)
   }
 
+  // Deletes an existing player (soft delete)
   static delete = async (req: Request, res: Response) => {
+    // Retrieve player id from session data
+    const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
+
+    // Validation of query and body of the request
     RequestValidationService.validateQuery(req.query, z.object({}))
     RequestValidationService.validateBody(req.body, z.object({}))
     const { player_id } = RequestValidationService.validateParams(
@@ -39,26 +50,24 @@ export class PlayerController {
       PlayerObject.pick({ player_id: true }),
     )
 
-    const deletedPlayer = await PlayerModel.delete(player_id)
+    // Throw an error if user attempts to delete another user
+    if (player_id !== sessionPlayerId) {
+      throw new AuthenticationError("Not allowed", 403)
+    }
 
-    await GameService.removePlayerFromActiveGames(deletedPlayer.player_id)
+    // Delete player
+    await PlayerService.deletePlayer(player_id)
 
-    // Emit an event to all connected clients to invalidate the players query
-    WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
-    WebsocketService.emitInvalidateQuery(
-      [QueryKeys.Players, QueryKeys.Detail],
-      deletedPlayer.player_id,
-    )
-    // Emit an event to all connected clients to invalidate the games queries
-    WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
-
-    const deletedPlayerResponse =
-      PlayerService.parsePlayerToResponse(deletedPlayer)
-
-    res.json(deletedPlayerResponse)
+    // Destroy session
+    SessionService.destroySession(req, res)
   }
 
+  // Gets all players
   static getAll = async (req: Request, res: Response) => {
+    // Validate session data
+    SessionService.getSessionData(req)
+
+    // Validation of query and body of the request
     const { limit, offset, orderBy, orderDirection } =
       RequestValidationService.validateQuery(
         req.query,
@@ -81,6 +90,7 @@ export class PlayerController {
       )
     RequestValidationService.validateBody(req.body, z.object({}))
 
+    // Get players
     const players = await PlayerModel.getAll({
       limit,
       offset,
@@ -88,12 +98,24 @@ export class PlayerController {
       orderDirection,
     })
 
-    const playersResponse = players.map(PlayerService.parsePlayerToResponse)
+    // Get current online users
+    const onlineUsers = await RedisService.getOnlineUsers()
+
+    // Map players to response
+    const playersResponse = players.map((player) => {
+      const is_online = onlineUsers.includes(player.player_id)
+      return PlayerService.parsePlayerToResponse(player, is_online)
+    })
 
     res.json(playersResponse)
   }
 
+  // Gets a player by id
   static getById = async (req: Request, res: Response) => {
+    // Validate session data
+    SessionService.getSessionData(req)
+
+    // Validation of query and body of the request
     RequestValidationService.validateQuery(req.query, z.object({}))
     RequestValidationService.validateBody(req.body, z.object({}))
     const params = RequestValidationService.validateParams(
@@ -101,14 +123,48 @@ export class PlayerController {
       PlayerObject.pick({ player_id: true }),
     )
 
+    // Get player from database
     const player = await PlayerModel.getById(params.player_id)
-    const playerResponse = PlayerService.parsePlayerToResponse(player)
+
+    // Check if player is online
+    const is_online = await RedisService.isUserOnline(player.player_id)
+
+    // Parse player to response
+    const playerResponse = PlayerService.parsePlayerToResponse(
+      player,
+      is_online,
+    )
 
     res.json(playerResponse)
   }
 
-  // TODO - Remove if unused
+  // Gets the current player (the one in session)
+  static getCurrent = async (req: Request, res: Response) => {
+    // Retrieve player id from session data
+    const { player_id } = SessionService.getSessionData(req)
+
+    // Validation of query and body of the request
+    RequestValidationService.validateQuery(req.query, z.object({}))
+    RequestValidationService.validateBody(req.body, z.object({}))
+
+    // Get player by player_id from session data
+    const player = await PlayerModel.getById(player_id)
+
+    // Mark player as "online"
+    await PlayerService.markAsOnline(player)
+
+    // Parse player to response
+    const playerResponse = PlayerService.parsePlayerToResponse(player, true)
+
+    res.json(playerResponse)
+  }
+
+  // Updates a player's data
   static update = async (req: Request, res: Response) => {
+    // Retrieve player id from session data
+    const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
+
+    // Validation of query and body of the request
     RequestValidationService.validateQuery(req.query, z.object({}))
     const body = RequestValidationService.validateBody(
       req.body,
@@ -121,24 +177,17 @@ export class PlayerController {
       PlayerObject.pick({ player_id: true }),
     )
 
-    const updatedPlayer = await PlayerModel.update(params.player_id, {
-      username: body.username,
-    })
-
-    const updatedPlayerResponse =
-      PlayerService.parsePlayerToResponse(updatedPlayer)
-
-    if (body.username) {
-      WebsocketService.emitToast(
-        `${body.username} changed name to ${updatedPlayerResponse.username}`,
-      )
+    // Throw an error if user attempts to update another user
+    if (params.player_id !== sessionPlayerId) {
+      throw new AuthenticationError("Not allowed", 403)
     }
 
-    // Emit an event to all connected clients to invalidate the players query
-    WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
-    WebsocketService.emitInvalidateQuery(
-      [QueryKeys.Players, QueryKeys.Detail],
-      updatedPlayer.player_id,
+    // Update player
+    const { updatedPlayerResponse } = await PlayerService.updatePlayer(
+      params.player_id,
+      {
+        username: body.username,
+      },
     )
 
     res.json(updatedPlayerResponse)

@@ -1,13 +1,17 @@
 {
   "_moduleAliases": {
-    "@app": "./dist"
+    "@server": "./dist"
   },
   "author": "alan-hadyk <alan.hadyk@gmail.com>",
   "description": "Server for Side-Stacker game",
   "dependencies": {
+    "argon2": "^0.30.3",
+    "connect-redis": "^7.1.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "lodash": "^4.17.21",
+    "redis": "^4.6.7",
     "slonik": "^34.0.1",
     "socket.io": "^4.7.1",
     "unique-names-generator": "^4.7.1",
@@ -15,6 +19,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
+    "@types/express-session": "^1.17.7",
     "@types/lodash": "^4.14.195",
     "@types/node": "^20.4.2",
     "@types/uuid": "^9.0.2",
@@ -45,9 +50,10 @@
     "db:reverse-migration": "NODE_ENV=development npm run db:start && ts-node-dev -r tsconfig-paths/register --project tsconfig.json src/db/scripts/reverseLastDbMigration.ts",
     "db:start": "docker-compose up db -d",
     "db:stop": "docker-compose down",
-    "dev": "NODE_ENV=development npm run db:start && ts-node-dev -r tsconfig-paths/register --project tsconfig.json src/index.ts",
+    "dev": "NODE_ENV=development npm run db:start && NODE_ENV=development npm run redis:start && NODE_ENV=development ts-node-dev -r tsconfig-paths/register --project tsconfig.json src/index.ts",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "redis:start": "docker-compose up redis -d",
     "start": "NODE_ENV=production node -r module-alias/register dist/index.js"
   },
   "version": "1.0.0"

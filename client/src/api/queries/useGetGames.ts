@@ -5,6 +5,7 @@ import { AxiosError } from "axios"
 import { GameResponse, GamesGetAllQueryParams } from "@server/@types/api"
 import { useToast } from "@client/hooks/useToast"
 import { getAxiosError } from "@client/helpers/api/getAxiosError"
+import { Path } from "@server/routes/paths"
 
 export const useGetGames = (
   params?: GamesGetAllQueryParams,
@@ -22,7 +23,7 @@ export const useGetGames = (
         })
       }
     },
-    queryFn: () => axiosGet<GameResponse[]>("/games", { params }),
+    queryFn: () => axiosGet<GameResponse[]>(Path.Games, { params }),
     queryKey: queryKeys.games.list(params),
     ...options,
   })

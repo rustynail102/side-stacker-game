@@ -1,3 +1,6 @@
 export const dbConfig = {
-  url: "postgresql://user:password@localhost:5432/database",
+  url:
+    process.env.NODE_ENV === "development"
+      ? "postgresql://user:password@localhost:5432/database"
+      : process.env.DB_URL,
 }

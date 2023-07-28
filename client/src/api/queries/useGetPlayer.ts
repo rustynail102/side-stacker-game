@@ -5,6 +5,7 @@ import { AxiosError } from "axios"
 import { PlayerResponse } from "@server/@types/api"
 import { useToast } from "@client/hooks/useToast"
 import { getAxiosError } from "@client/helpers/api/getAxiosError"
+import { Path } from "@server/routes/paths"
 
 export const useGetPlayer = (
   params?: Pick<PlayerResponse, "player_id">,
@@ -24,7 +25,9 @@ export const useGetPlayer = (
       }
     },
     queryFn: () =>
-      axiosGet<PlayerResponse>(`/players/${params?.player_id || ""}`),
+      axiosGet<PlayerResponse>(
+        Path.Player.replace(":player_id", params?.player_id || ""),
+      ),
     queryKey: queryKeys.players.detail(params?.player_id),
     ...options,
   })

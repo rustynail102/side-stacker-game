@@ -4,9 +4,9 @@ import {
   ButtonVariant,
 } from "@client/components/atoms/Button/@types/Button"
 import { Button } from "@client/components/atoms/Button/Button"
-import { CardVariant } from "@client/components/molecules/Card/@types/Card"
 import { Card } from "@client/components/molecules/Card/Card"
 import { DropdownProps } from "@client/components/molecules/Dropdown/@types/Dropdown"
+import { DropdownMenu } from "@client/components/molecules/DropdownMenu/DropdownMenu"
 import { useRef, useState } from "react"
 import { FiMenu, FiX } from "react-icons/fi"
 import { useOnClickOutside } from "usehooks-ts"
@@ -36,19 +36,10 @@ export const Dropdown: React.FC<DropdownProps> = ({ children, items }) => {
       </Button>
 
       {isOpen && (
-        <Card
-          className="z-[1] w-52 absolute top-14 right-0"
-          variant={CardVariant.Secondary}
-        >
+        <Card className="z-[1] w-52 absolute top-14 right-0">
           {children}
 
-          <ul tabIndex={0} className="menu bg-base-100 w-full p-0 mt-2">
-            {items.map(({ text, onClick }, index) => (
-              <li key={`${index}-${text}`}>
-                <a onClick={onClick}>{text}</a>
-              </li>
-            ))}
-          </ul>
+          <DropdownMenu items={items} />
         </Card>
       )}
     </div>

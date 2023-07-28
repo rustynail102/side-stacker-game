@@ -5,6 +5,7 @@ export const PlayerObject = z
     created_at: z.number(),
     deleted_at: z.number().nullable(),
     last_active_at: z.number(),
+    password: z.string(),
     player_id: z.string().uuid(),
     username: z.string().max(100),
   })

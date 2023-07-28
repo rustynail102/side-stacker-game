@@ -1,4 +1,6 @@
 import { Err } from "@server/@types/errors"
+import { AuthenticationError } from "@server/errors/authenticationError"
+import { InternalServerError } from "@server/errors/internalServerError"
 import { ValidationError } from "@server/errors/validationError"
 import { NextFunction, Request, Response } from "express"
 import {
@@ -52,6 +54,8 @@ export const httpErrorsMiddleware = (
       break
 
     case error instanceof ValidationError:
+    case error instanceof AuthenticationError:
+    case error instanceof InternalServerError:
       if ("errors" in error) {
         errorMessages = error.errors.map((error) =>
           typeof error === "string" ? error : error.message,
@@ -61,6 +65,10 @@ export const httpErrorsMiddleware = (
   }
 
   switch (true) {
+    case error instanceof ZodError:
+      status = 400
+      break
+
     case error instanceof NotFoundError:
       status = 404
       break

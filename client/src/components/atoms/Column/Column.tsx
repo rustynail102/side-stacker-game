@@ -1,10 +1,12 @@
 import {
+  ColumnFlexBasis,
+  ColumnFlexGrow,
   ColumnProps,
-  ColumnType,
 } from "@client/components/atoms/Column/@types/Column"
 
 export const Column: React.FC<ColumnProps> = ({
   children,
   className = "",
-  type = ColumnType.Default,
-}) => <div className={`${type} ${className}`}>{children}</div>
+  flexBasis = ColumnFlexBasis.Basis0,
+  flexGrow = ColumnFlexGrow.Grow0,
+}) => <div className={`${flexBasis} ${flexGrow} ${className}`}>{children}</div>

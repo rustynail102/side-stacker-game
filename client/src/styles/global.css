@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .menu li.disabled > *:not(ul):not(details):active, .menu li.disabled > *:not(ul):not(details).active, .menu li.disabled > details > summary:active {
+        background-color: transparent;
+    }
+}

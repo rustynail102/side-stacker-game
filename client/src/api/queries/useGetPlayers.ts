@@ -5,6 +5,7 @@ import { AxiosError } from "axios"
 import { PlayerResponse, PlayersGetAllQueryParams } from "@server/@types/api"
 import { getAxiosError } from "@client/helpers/api/getAxiosError"
 import { useToast } from "@client/hooks/useToast"
+import { Path } from "@server/routes/paths"
 
 export const useGetPlayers = (
   params?: PlayersGetAllQueryParams,
@@ -22,7 +23,7 @@ export const useGetPlayers = (
         })
       }
     },
-    queryFn: () => axiosGet<PlayerResponse[]>("/players", { params }),
+    queryFn: () => axiosGet<PlayerResponse[]>(Path.Players, { params }),
     queryKey: queryKeys.players.list(params),
     ...options,
   })

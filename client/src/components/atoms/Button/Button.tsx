@@ -29,7 +29,7 @@ export const Button: React.FC<ButtonProps> = ({
       <>
         <span
           className={`loading loading-spinner ${mapButtonSizeToSpinnerSize[size]}`}
-        ></span>
+        />
         Loading..
       </>
     ) : (

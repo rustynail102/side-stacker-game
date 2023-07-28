@@ -23,11 +23,15 @@ import {
   uniqueNamesGenerator,
   adjectives,
   starWars,
+  Config,
 } from "unique-names-generator"
+import { PlayerModel } from "@server/features/players/playerModel"
 
 export class GameService {
+  // Board size
   static readonly BOARD_SIZE = 7
 
+  // Calculates the state of the board after the next move is made
   static calculateBoardStatusAfterNextMove = (
     current_board_status: MoveTypeEnumType[][],
     position_y: Move["position_y"],
@@ -41,6 +45,7 @@ export class GameService {
     return currentBoardStatus
   }
 
+  // Calculates all the possible moves that can be made in the next turn
   static calculateNextPossibleMoves = (
     currentBoardStatus?: MoveTypeEnumType[][],
   ) => {
@@ -82,6 +87,8 @@ export class GameService {
     return nextPossibleMoves
   }
 
+  // Calculates if there is a sequence of 4 same symbols (vertical, horizontal, diagonal)
+  // If such a sequence exists, the game is won
   static calculateWinningMoves = (boardStatus: MoveTypeEnumType[][]) => {
     // Vertical and horizontal checks
     for (let rowIndex = 0; rowIndex < boardStatus.length; rowIndex++) {
@@ -144,6 +151,8 @@ export class GameService {
     return []
   }
 
+  // Determines the current state of the game
+  // The game can be in three states: waiting for players, in progress, finished
   static determineCurrentGameState = (
     game: Pick<Game, "finished_at" | "player1_id" | "player2_id">,
   ) => {
@@ -158,7 +167,63 @@ export class GameService {
     return GameStateEnum.enum.waiting_for_players
   }
 
-  // TODO - Remove if unused
+  // Calculates the new game state after the next move is made
+  // The game state is updated based on the current board status
+  // and the position of the next move
+  static calculateGameAfterNextMove = (
+    parsedGame: GameResponse,
+    position_y: number,
+    position_x: number,
+    player_id: string,
+  ) => {
+    const numberOfMoves = parsedGame.number_of_moves + 1
+
+    const moveType =
+      numberOfMoves % 2 !== 0 ? MoveTypeEnum.enum.X : MoveTypeEnum.enum.O
+
+    const newBoardStatus = GameService.calculateBoardStatusAfterNextMove(
+      parsedGame.current_board_status,
+      position_y,
+      position_x,
+      moveType,
+    )
+
+    const nextPossibleMoves =
+      GameService.calculateNextPossibleMoves(newBoardStatus)
+
+    const winningMoves = GameService.calculateWinningMoves(newBoardStatus)
+
+    const updatedGame: Required<
+      Pick<
+        Game,
+        "current_board_status" | "next_possible_moves" | "number_of_moves"
+      >
+    > &
+      Partial<
+        Pick<
+          Game,
+          "finished_at" | "current_game_state" | "winner_id" | "winning_moves"
+        >
+      > = {
+      current_board_status: JSON.stringify(newBoardStatus),
+      next_possible_moves: JSON.stringify(nextPossibleMoves),
+      number_of_moves: numberOfMoves,
+    }
+
+    if (isEmpty(nextPossibleMoves) || !isEmpty(winningMoves)) {
+      updatedGame.finished_at = 1
+      updatedGame.current_game_state = GameStateEnum.enum.finished
+
+      if (!isEmpty(winningMoves)) {
+        updatedGame.winner_id = player_id
+        updatedGame.winning_moves = JSON.stringify(winningMoves)
+      }
+    }
+
+    return { moveType, updatedGame, winningMoves }
+  }
+
+  // Transforms the game object to an object that can be used by models
   static parseRequestToGame = (game: Partial<GameResponse>) => {
     const {
       current_board_status,
@@ -182,6 +247,7 @@ export class GameService {
     }
   }
 
+  // Transforms the game response object to a format that is suitable for the client
   static parseGameToResponse = (game: Game): GameResponse => {
     const {
       current_board_status,
@@ -205,6 +271,7 @@ export class GameService {
     }
   }
 
+  // Removes a player from all active games they are participating in
   static removePlayerFromActiveGames = async (
     player_id: Player["player_id"],
   ) => {
@@ -252,14 +319,78 @@ export class GameService {
           return game
         }),
       )
+
+      WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
     }
   }
 
-  static generateGameName = () =>
-    uniqueNamesGenerator({
+  // Generates a unique name for a game
+  static generateGameName = () => {
+    const config: Config = {
       dictionaries: [adjectives, starWars],
       length: 2,
       separator: " ",
       style: "capital",
+    }
+
+    try {
+      return uniqueNamesGenerator(config)
+    } catch (error) {
+      console.error("Error generating game name: ", error)
+      return "Game" // Fallback name
+    }
+  }
+
+  // Updates the game players if needed
+  static updateGamePlayersIfNeeded = async (
+    game: Game,
+    player_id?: Player["player_id"] | null,
+  ) => {
+    if (player_id) {
+      await GameService.removePlayerFromActiveGames(player_id)
+      const player1 = await PlayerModel.update(player_id, {})
+
+      WebsocketService.emitToast(`${player1.username} joined ${game.name}`)
+
+      WebsocketService.emitInvalidateQuery(
+        [QueryKeys.Players, QueryKeys.Detail],
+        player_id,
+      )
+    }
+  }
+
+  // Updates the game with new properties and invalidates the cached games queries
+  static updateGame = async (
+    game_id: Game["game_id"],
+    fields: Partial<Omit<Game, "created_at" | "game_id" | "name">>,
+  ) => {
+    const updatedGame = await GameModel.update(game_id, fields)
+
+    // Emit an event to all connected clients to invalidate the games query
+    WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
+    WebsocketService.emitInvalidateQuery(
+      [QueryKeys.Games, QueryKeys.Detail],
+      game_id,
+    )
+
+    return { updatedGame }
+  }
+
+  // Creates a new game, invalidates the cached games queries and emits a toast message
+  static createNewGame = async ({ player1_id }: Pick<Game, "player1_id">) => {
+    const newGame = await GameModel.create({
+      current_game_state: GameStateEnum.enum.waiting_for_players,
+      name: GameService.generateGameName(),
+      next_possible_moves: JSON.stringify(
+        GameService.calculateNextPossibleMoves(),
+      ),
+      player1_id,
     })
+
+    WebsocketService.emitToast(`New Game available - ${newGame.name}`)
+    // Emit an event to all connected clients to invalidate the games query
+    WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
+
+    return { newGame }
+  }
 }

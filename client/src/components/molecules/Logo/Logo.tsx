@@ -1,7 +1,10 @@
 import { Typography } from "@client/components/atoms/Typography/Typography"
 import logo from "@client/assets/images/logo.svg"
 import { Img } from "@client/components/atoms/Img/Img"
-import { TypographyVariant } from "@client/components/atoms/Typography/@types/Typography"
+import {
+  TypographyAlignment,
+  TypographyVariant,
+} from "@client/components/atoms/Typography/@types/Typography"
 import {
   LogoProps,
   LogoSize,
@@ -28,7 +31,7 @@ export const Logo: React.FC<LogoProps> = ({
 
     case LogoSize.Lg:
       return (
-        <>
+        <div className="flex flex-col items-center gap-2 ">
           <Img
             alt="Side-Stacker logo"
             className={`
@@ -38,10 +41,13 @@ export const Logo: React.FC<LogoProps> = ({
             `}
             src={logo}
           />
-          <Typography variant={TypographyVariant.Title}>
+          <Typography
+            variant={TypographyVariant.Title}
+            alignment={TypographyAlignment.Center}
+          >
             Side-Stacker
           </Typography>
-        </>
+        </div>
       )
   }
 }

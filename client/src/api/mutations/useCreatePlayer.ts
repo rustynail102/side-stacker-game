@@ -1,22 +1,23 @@
 import { axiosPost } from "@client/helpers/api/axiosPost"
 import { getAxiosError } from "@client/helpers/api/getAxiosError"
 import { useToast } from "@client/hooks/useToast"
-import { PlayerResponse } from "@server/@types/api"
+import { CreatePlayerPostBody, PlayerResponse } from "@server/@types/api"
 import { MutateOptions, useMutation } from "@tanstack/react-query"
+import { Path } from "@server/routes/paths"
 
 export const useCreatePlayer = () => {
   const { mutate, ...createPlayerMutation } = useMutation({
-    mutationFn: (body: Pick<PlayerResponse, "username">) =>
-      axiosPost<PlayerResponse>("/players", body),
+    mutationFn: (body: CreatePlayerPostBody) =>
+      axiosPost<PlayerResponse>(Path.Players, body),
   })
   const { errorToast } = useToast()
 
   const createPlayer = (
-    body: Pick<PlayerResponse, "username">,
+    body: CreatePlayerPostBody,
     options?: MutateOptions<
       PlayerResponse,
       unknown,
-      Pick<PlayerResponse, "username">,
+      CreatePlayerPostBody,
       unknown
     >,
   ) =>

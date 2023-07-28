@@ -14,6 +14,7 @@ export const queryKeys = {
     ],
   },
   players: {
+    current: [QueryKeys.Players, QueryKeys.Current],
     detail: (player_id?: PlayerResponse["player_id"]) => [
       QueryKeys.Players,
       QueryKeys.Detail,

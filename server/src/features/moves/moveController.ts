@@ -1,19 +1,23 @@
-import { QueryKeys } from "@server/@types/api"
-import { Game } from "@server/@types/gameObject"
+import { AuthenticationError } from "@server/errors/authenticationError"
 import { GameModel } from "@server/features/games/gameModel"
-import { MoveTypeEnum, GameStateEnum } from "@server/features/games/gameObject"
 import { MoveModel } from "@server/features/moves/moveModel"
 import { MoveObject } from "@server/features/moves/moveObject"
-import { PlayerModel } from "@server/features/players/playerModel"
 import { GameService } from "@server/services/gameService"
+import { PlayerService } from "@server/services/playerService"
 import { RequestValidationService } from "@server/services/requestValidationService"
+import { SessionService } from "@server/services/sessionService"
 import { WebsocketService } from "@server/services/websocketService"
-import { Request } from "express"
+import { Request, Response } from "express"
 import isEmpty from "lodash/isEmpty"
 import { z } from "zod"
 
 export class MoveController {
-  static create = async (req: Request) => {
+  // Define method for creating a new move
+  static create = async (req: Request, res: Response) => {
+    // Retrieve player id from session data
+    const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
+
+    // Validate request query and body, ensuring they meet the expected format
     RequestValidationService.validateQuery(req.query, z.object({}))
     const { game_id, player_id, position_x, position_y } =
       RequestValidationService.validateBody(
@@ -26,69 +30,46 @@ export class MoveController {
         }),
       )
 
+    // Check if the player making the request is the same as the one in the session
+    if (player_id !== sessionPlayerId) {
+      throw new AuthenticationError("Not allowed", 403)
+    }
+
+    // Retrieve the game by its id
     const game = await GameModel.getById(game_id)
+    // Parse the game to a response-friendly format
     const parsedGame = GameService.parseGameToResponse(game)
-    const numberOfMoves = parsedGame.number_of_moves + 1
 
-    const moveType =
-      numberOfMoves % 2 !== 0 ? MoveTypeEnum.enum.X : MoveTypeEnum.enum.O
+    // Calculate the game state after the proposed move
+    const { moveType, updatedGame, winningMoves } =
+      GameService.calculateGameAfterNextMove(
+        parsedGame,
+        position_y,
+        position_x,
+        player_id,
+      )
 
-    const newBoardStatus = GameService.calculateBoardStatusAfterNextMove(
-      parsedGame.current_board_status,
-      position_y,
-      position_x,
-      moveType,
-    )
+    // Update the game with the new state
+    await GameService.updateGame(game_id, updatedGame)
 
-    const nextPossibleMoves =
-      GameService.calculateNextPossibleMoves(newBoardStatus)
-
-    const winningMoves = GameService.calculateWinningMoves(newBoardStatus)
-
-    const updatedGame: Partial<Game> = {
-      current_board_status: JSON.stringify(newBoardStatus),
-      next_possible_moves: JSON.stringify(nextPossibleMoves),
-      number_of_moves: numberOfMoves,
-    }
-
-    if (isEmpty(nextPossibleMoves) || !isEmpty(winningMoves)) {
-      updatedGame.finished_at = 1
-      updatedGame.current_game_state = GameStateEnum.enum.finished
-
-      if (!isEmpty(winningMoves)) {
-        updatedGame.winner_id = player_id
-        updatedGame.winning_moves = JSON.stringify(winningMoves)
-      }
-    }
-
-    await GameModel.update(game_id, updatedGame)
-
-    await MoveModel.create({
+    // Create the move in the database
+    const move = await MoveModel.create({
       game_id,
-      move_number: numberOfMoves,
+      move_number: updatedGame.number_of_moves,
       move_type: moveType,
       player_id,
       position_x,
       position_y,
     })
 
-    const updatedPlayer = await PlayerModel.update(player_id, {})
+    // Mark the player as active (update last_active_at)
+    const { player } = await PlayerService.markActivity(player_id)
 
+    // If there are winning moves, emit a toast notification
     if (!isEmpty(winningMoves)) {
-      WebsocketService.emitToast(
-        `${updatedPlayer.username} just won ${game.name}!`,
-      )
+      WebsocketService.emitToast(`${player.username} just won ${game.name}!`)
     }
 
-    WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
-    WebsocketService.emitInvalidateQuery(
-      [QueryKeys.Games, QueryKeys.Detail],
-      game_id,
-    )
-    WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
-    WebsocketService.emitInvalidateQuery(
-      [QueryKeys.Players, QueryKeys.Detail],
-      player_id,
-    )
+    res.json(move)
   }
 }

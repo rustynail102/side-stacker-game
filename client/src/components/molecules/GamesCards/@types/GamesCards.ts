@@ -1,6 +1,6 @@
-import { GameResponse } from "@server/@types/api"
+import { GameCardProps } from "@client/components/molecules/GameCard/@types/GameCard"
 
 export interface GamesCardsProps {
-  games?: GameResponse[]
+  games?: GameCardProps["game"][]
   isLoading?: boolean
 }
