@@ -5,6 +5,7 @@ export const Table: React.FC<TableProps> = ({
   className = "",
   headers,
   isLoading = false,
+  loaderRows,
   rows = [],
 }) => (
   <div className={`overflow-x-auto ${className}`}>
@@ -19,7 +20,7 @@ export const Table: React.FC<TableProps> = ({
 
       <tbody>
         {isLoading ? (
-          <TableLoader columns={headers.length} />
+          <TableLoader columns={headers.length} rows={loaderRows} />
         ) : (
           rows?.map((row, rowIndex) => (
             <tr key={rowIndex}>

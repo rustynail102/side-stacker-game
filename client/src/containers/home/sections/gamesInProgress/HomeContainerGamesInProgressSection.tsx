@@ -10,9 +10,13 @@ import { FiFrown } from "react-icons/fi"
 
 export const HomeContainerGamesInProgressSection: React.FC = () => {
   const { games: gamesInProgress, isInitialLoading } = useGetGames({
-    filters: {
-      current_game_state: GameStateEnum.in_progress,
-    },
+    filters: [
+      {
+        conditions: {
+          current_game_state: GameStateEnum.in_progress,
+        },
+      },
+    ],
     limit: 100,
   })
 

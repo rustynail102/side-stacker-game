@@ -8,9 +8,13 @@ import { FiPlay, FiRefreshCw, FiCheckCircle } from "react-icons/fi"
 export const HomeContainerStatsSection: React.FC = () => {
   const { games: openGames, isInitialLoading: isInitialLoadingOpenGames } =
     useGetGames({
-      filters: {
-        current_game_state: GameStateEnum.waiting_for_players,
-      },
+      filters: [
+        {
+          conditions: {
+            current_game_state: GameStateEnum.waiting_for_players,
+          },
+        },
+      ],
       limit: 100,
     })
 
@@ -18,9 +22,13 @@ export const HomeContainerStatsSection: React.FC = () => {
     games: gamesInProgress,
     isInitialLoading: isInitialLoadingGamesInProgress,
   } = useGetGames({
-    filters: {
-      current_game_state: GameStateEnum.in_progress,
-    },
+    filters: [
+      {
+        conditions: {
+          current_game_state: GameStateEnum.in_progress,
+        },
+      },
+    ],
     limit: 100,
   })
 
@@ -28,9 +36,13 @@ export const HomeContainerStatsSection: React.FC = () => {
     games: finishedGames,
     isInitialLoading: isInitialLoadingFinishedGames,
   } = useGetGames({
-    filters: {
-      current_game_state: GameStateEnum.finished,
-    },
+    filters: [
+      {
+        conditions: {
+          current_game_state: GameStateEnum.finished,
+        },
+      },
+    ],
     limit: 100,
   })
 

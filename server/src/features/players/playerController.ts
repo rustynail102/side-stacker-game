@@ -65,7 +65,8 @@ export class PlayerController {
   // Gets all players
   static getAll = async (req: Request, res: Response) => {
     // Validate session data
-    SessionService.getSessionData(req)
+    const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
+    await PlayerService.markAsOnline(sessionPlayerId, false)
 
     // Validation of query and body of the request
     const { limit, offset, orderBy, orderDirection } =
@@ -113,7 +114,8 @@ export class PlayerController {
   // Gets a player by id
   static getById = async (req: Request, res: Response) => {
     // Validate session data
-    SessionService.getSessionData(req)
+    const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
+    await PlayerService.markAsOnline(sessionPlayerId, false)
 
     // Validation of query and body of the request
     RequestValidationService.validateQuery(req.query, z.object({}))
@@ -151,7 +153,7 @@ export class PlayerController {
     const player = await PlayerModel.getById(player_id)
 
     // Mark player as "online"
-    await PlayerService.markAsOnline(player)
+    await PlayerService.markAsOnline(player.player_id)
 
     // Parse player to response
     const playerResponse = PlayerService.parsePlayerToResponse(player, true)
@@ -163,6 +165,7 @@ export class PlayerController {
   static update = async (req: Request, res: Response) => {
     // Retrieve player id from session data
     const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
+    await PlayerService.markAsOnline(sessionPlayerId)
 
     // Validation of query and body of the request
     RequestValidationService.validateQuery(req.query, z.object({}))

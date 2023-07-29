@@ -11,6 +11,9 @@ export const useGetCurrentPlayer = (
   const getCurrentPlayerQuery = useQuery({
     queryFn: () => axiosGet<PlayerResponse>(Path.CurrentPlayer),
     queryKey: queryKeys.players.current,
+    refetchOnWindowFocus: false,
+    retry: false,
+    staleTime: Infinity,
     ...options,
   })
 

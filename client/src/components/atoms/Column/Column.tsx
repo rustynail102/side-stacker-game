@@ -9,4 +9,14 @@ export const Column: React.FC<ColumnProps> = ({
   className = "",
   flexBasis = ColumnFlexBasis.Basis0,
   flexGrow = ColumnFlexGrow.Grow0,
-}) => <div className={`${flexBasis} ${flexGrow} ${className}`}>{children}</div>
+  gap,
+}) => (
+  <div
+    className={`
+      ${flexBasis} ${flexGrow} ${className} 
+      ${gap ? `flex flex-col ${gap}` : ""}
+    `}
+  >
+    {children}
+  </div>
+)

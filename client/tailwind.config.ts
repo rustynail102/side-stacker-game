@@ -29,6 +29,10 @@ const tailwindConfig: Config = {
       borderWidth: {
         "1": "1px",
       },
+      boxShadow: {
+        "inner-primary": "inset 0px 0px 24px 0px rgba(101, 195, 200, 1)",
+        "inner-secondary": "inset 0px 0px 20px 0px rgba(239, 159, 188, 0.4)",
+      },
       keyframes: {
         "bg-gradient": {
           "0%": { backgroundPosition: "0% 50%" },

@@ -6,11 +6,13 @@ import { HomeContainerFinishedGamesSection } from "@client/containers/home/secti
 import { HomeContainerGamesInProgressSection } from "@client/containers/home/sections/gamesInProgress/HomeContainerGamesInProgressSection"
 import { HomeContainerOpenGamesSection } from "@client/containers/home/sections/openGames/HomeContainerOpenGamesSection"
 import { HomeContainerStatsSection } from "@client/containers/home/sections/stats/HomeContainerStatsSection"
+import { HomeContainerCurrentPlayerGamesSection } from "@client/containers/home/sections/currentPlayerGames/HomeContainerCurrentPlayerGamesSection"
 
 export const HomeContainer: React.FC = () => (
   <PageTemplate>
     <Column flexBasis={ColumnFlexBasis.Basis75}>
       <HomeContainerStatsSection />
+      <HomeContainerCurrentPlayerGamesSection />
       <HomeContainerOpenGamesSection />
       <HomeContainerGamesInProgressSection />
       <HomeContainerFinishedGamesSection />

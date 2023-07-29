@@ -3,6 +3,7 @@ import { websocketsServer } from "@server/clients/websocketsServer"
 import { AuthenticationError } from "@server/errors/authenticationError"
 import { InternalServerError } from "@server/errors/internalServerError"
 import { Request, Response } from "express"
+import { Session } from "express-session"
 
 // SessionService is responsible for managing the HTTP sessions
 export class SessionService {
@@ -30,7 +31,9 @@ export class SessionService {
       throw new AuthenticationError("Invalid credentials")
     }
 
-    return req.session
+    return req.session as Session & {
+      player_id: string
+    }
   }
 
   // Destroys the session and disconnects all sockets associated with the session

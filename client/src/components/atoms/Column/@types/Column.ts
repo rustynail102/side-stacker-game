@@ -12,9 +12,16 @@ export enum ColumnFlexGrow {
   Grow0 = "grow-0",
 }
 
+export enum ColumnGap {
+  Gap4 = "gap-4",
+  Gap8 = "gap-8",
+  Gap16 = "gap-16",
+}
+
 export interface ColumnProps {
   children: ReactNode | ReactNode[]
   className?: string
   flexBasis?: ColumnFlexBasis
   flexGrow?: ColumnFlexGrow
+  gap?: ColumnGap
 }

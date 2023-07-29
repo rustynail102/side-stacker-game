@@ -11,17 +11,17 @@ export const MoveTypeEnum = z.enum(["X", "O", "empty"])
 export const GameObject = z
   .object({
     created_at: z.number(),
-    current_board_status: z.string(),
+    current_board_status: z.array(z.array(MoveTypeEnum)),
     current_game_state: GameStateEnum,
     finished_at: z.number().optional().nullable(),
     game_id: z.string().uuid(),
     name: z.string(),
-    next_possible_moves: z.string(),
+    next_possible_moves: z.array(z.array(z.number())),
     number_of_moves: z.number(),
     player1_id: z.string().uuid().optional().nullable(),
     player2_id: z.string().uuid().optional().nullable(),
     winner_id: z.string().uuid().optional().nullable(),
-    winning_moves: z.string().optional().nullable(),
+    winning_moves: z.array(z.array(z.number())).optional().nullable(),
   })
   .strict()
 

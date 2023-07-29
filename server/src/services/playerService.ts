@@ -4,7 +4,6 @@ import { AuthenticationError } from "@server/errors/authenticationError"
 import { ValidationError } from "@server/errors/validationError"
 import { PlayerModel } from "@server/features/players/playerModel"
 import { convertObjectToObjectWithIsoDates } from "@server/helpers/objects/convertObjectToObjectWithIsoDates"
-import { GameService } from "@server/services/gameService"
 import { PasswordService } from "@server/services/passwordService"
 import { RedisService } from "@server/services/redisService"
 import { WebsocketService } from "@server/services/websocketService"
@@ -63,28 +62,24 @@ export class PlayerService {
   }
 
   /*
-    Updates the player's status (last active) in the database and sends a WebSocket message to invalidate the client's cached player list and player details.
+    Updates the player's status (last active) in the database and Redis cache to 'online', sends a WebSocket message to invalidate the client's cached player list and player details.
   */
-  static markActivity = async (player_id: Player["player_id"]) => {
+  static markAsOnline = async (
+    player_id: Player["player_id"],
+    emitEvents = true,
+  ) => {
     const player = await PlayerModel.update(player_id, {})
-
-    WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
-    WebsocketService.emitInvalidateQuery(
-      [QueryKeys.Players, QueryKeys.Detail],
-      player_id,
-    )
-
-    return { player }
-  }
-
-  /*
-    Updates the player's status (last active) in the database and Redis cache to 'online', sends a WebSocket message to invalidate the client's cached player list and player details, and sends a 'toast' message to notify clients that the player is online.
-  */
-  static markAsOnline = async (player: Player) => {
-    await PlayerService.markActivity(player.player_id)
     await RedisService.addOnlineUser(player.player_id)
 
-    WebsocketService.emitToast(`${player.username} is online`)
+    if (emitEvents) {
+      WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
+      WebsocketService.emitInvalidateQuery(
+        [QueryKeys.Players, QueryKeys.Detail],
+        player_id,
+      )
+    }
+
+    return { player }
   }
 
   /*
@@ -144,8 +139,6 @@ export class PlayerService {
   */
   static deletePlayer = async (player_id: Player["player_id"]) => {
     const deletedPlayer = await PlayerModel.delete(player_id)
-
-    await GameService.removePlayerFromActiveGames(deletedPlayer.player_id)
 
     await PlayerService.markAsOffline(deletedPlayer.player_id)
   }

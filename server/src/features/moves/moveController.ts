@@ -1,5 +1,6 @@
 import { AuthenticationError } from "@server/errors/authenticationError"
 import { GameModel } from "@server/features/games/gameModel"
+import { MoveTypeEnum } from "@server/features/games/gameObject"
 import { MoveModel } from "@server/features/moves/moveModel"
 import { MoveObject } from "@server/features/moves/moveObject"
 import { GameService } from "@server/services/gameService"
@@ -15,25 +16,19 @@ export class MoveController {
   // Define method for creating a new move
   static create = async (req: Request, res: Response) => {
     // Retrieve player id from session data
-    const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
+    const { player_id } = SessionService.getSessionData(req)
 
     // Validate request query and body, ensuring they meet the expected format
     RequestValidationService.validateQuery(req.query, z.object({}))
-    const { game_id, player_id, position_x, position_y } =
+    const { game_id, position_x, position_y } =
       RequestValidationService.validateBody(
         req.body,
         MoveObject.pick({
           game_id: true,
-          player_id: true,
           position_x: true,
           position_y: true,
         }),
       )
-
-    // Check if the player making the request is the same as the one in the session
-    if (player_id !== sessionPlayerId) {
-      throw new AuthenticationError("Not allowed", 403)
-    }
 
     // Retrieve the game by its id
     const game = await GameModel.getById(game_id)
@@ -49,6 +44,15 @@ export class MoveController {
         player_id,
       )
 
+    // Check if the correct player is making the next move
+    if (
+      (moveType === MoveTypeEnum.enum.X &&
+        player_id !== parsedGame.player1_id) ||
+      (moveType === MoveTypeEnum.enum.O && player_id !== parsedGame.player2_id)
+    ) {
+      throw new AuthenticationError("Not allowed", 403)
+    }
+
     // Update the game with the new state
     await GameService.updateGame(game_id, updatedGame)
 
@@ -63,7 +67,7 @@ export class MoveController {
     })
 
     // Mark the player as active (update last_active_at)
-    const { player } = await PlayerService.markActivity(player_id)
+    const { player } = await PlayerService.markAsOnline(player_id)
 
     // If there are winning moves, emit a toast notification
     if (!isEmpty(winningMoves)) {

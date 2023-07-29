@@ -12,8 +12,15 @@ export enum BadgeType {
   Warning = "badge-warning",
 }
 
+export enum BadgeSize {
+  Sm = "badge-sm",
+  Md = "badge-md",
+  Lg = "badge-lg",
+}
+
 export interface BadgeProps {
   children: ReactNode | ReactNode[]
   className?: string
+  size?: BadgeSize
   type?: BadgeType
 }

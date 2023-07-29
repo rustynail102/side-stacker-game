@@ -1,15 +1,21 @@
 import { Game, GameStateEnum } from "@server/@types/gameObject"
-import { OrderDirection } from "@server/@types/models"
+import { FilterType, OrderDirection } from "@server/@types/models"
 import { PrimitiveValueExpression } from "slonik"
 
+type Condition = {
+  current_game_state?: GameStateEnum
+  player1_id?: string
+  player2_id?: string
+  winner_id?: string
+}
+
+interface Filter {
+  conditions: Condition
+  filterType?: FilterType
+}
+
 export interface GameModelGetAll {
-  filters?: {
-    player1_id?: string | null
-    player2_id?: string | null
-    current_game_state?: GameStateEnum | GameStateEnum[]
-    winner_id?: string | null
-  }
-  filterType?: "AND" | "OR"
+  filters?: Filter[]
   limit?: number
   offset?: number
   orderBy?: keyof Game

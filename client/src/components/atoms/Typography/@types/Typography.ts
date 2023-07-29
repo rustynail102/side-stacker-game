@@ -6,7 +6,6 @@ export enum TypographyVariant {
   Paragraph,
   Subtitle,
   Span,
-  Text,
 }
 
 export enum TypographyAlignment {
@@ -22,6 +21,7 @@ export enum TypographyColor {
   Inherit = "text-inherit",
   Current = "text-current",
   Info = "text-info",
+  Neutral = "text-neutral-content",
 }
 
 export enum TypographyWeight {

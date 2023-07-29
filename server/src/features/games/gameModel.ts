@@ -1,5 +1,5 @@
 import { databasePool } from "@server/db/databasePool"
-import { OrderDirection } from "@server/@types/models"
+import { FilterType, OrderDirection } from "@server/@types/models"
 import {
   GameModelGetAll,
   GameModelUpdateFieldsReturnType,
@@ -109,7 +109,7 @@ export class GameModel {
             ${current_game_state || GameStateEnum.enum.waiting_for_players}, 
             ${sql.json(current_board_status)}, 
             ${name},
-            ${next_possible_moves}, 
+            ${sql.json(next_possible_moves)}, 
             ${0}, 
             NULL, 
             NULL, 
@@ -125,7 +125,6 @@ export class GameModel {
 
   static getAll = ({
     filters,
-    filterType = "AND",
     limit = 40,
     offset = 0,
     orderBy = "created_at",
@@ -135,20 +134,25 @@ export class GameModel {
       const filtersFragments = []
 
       if (filters) {
-        for (const [key, value] of Object.entries(filters)) {
-          if (value !== undefined) {
-            if (Array.isArray(value)) {
-              value.forEach((val) => {
-                filtersFragments.push(
-                  sql.fragment`${sql.identifier([key])} = ${val}`,
-                )
-              })
-            } else {
-              filtersFragments.push(
+        for (const filter of filters) {
+          const filterFragments = []
+
+          for (const [key, value] of Object.entries(filter.conditions)) {
+            if (value !== undefined) {
+              filterFragments.push(
                 sql.fragment`${sql.identifier([key])} = ${value}`,
               )
             }
           }
+
+          filtersFragments.push(
+            sql.fragment`(${sql.join(
+              filterFragments,
+              filter.filterType === FilterType.AND
+                ? sql.unsafe` AND `
+                : sql.unsafe` OR `,
+            )})`,
+          )
         }
       }
 
@@ -157,10 +161,7 @@ export class GameModel {
       const query = sql.typeAlias("game")`
         SELECT * 
         FROM games 
-        WHERE ${sql.join(
-          filtersFragments,
-          filterType === "AND" ? sql.unsafe`, ` : sql.unsafe` OR `,
-        )}
+        WHERE ${sql.join(filtersFragments, sql.unsafe` OR `)}
         ORDER BY ${sql.identifier([orderBy])} ${sql.unsafe([direction])} 
         LIMIT ${limit} 
         OFFSET ${offset}

@@ -21,7 +21,7 @@ export class AuthenticationController {
       password,
     )
 
-    await PlayerService.markAsOnline(player)
+    await PlayerService.markAsOnline(player.player_id)
 
     SessionService.setSessionData(req, {
       player_id: player.player_id,

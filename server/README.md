@@ -152,14 +152,13 @@ This section provides a list of API endpoints for the application.
 
 ##### Query Parameters
 
-> | name       |  type     | data type               | description                                                           |
-> |------------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | filterType |  optional | enum(["AND", "OR"])     | N/A                                                                   |
-> | filters    |  optional | object({ current_game_state, player1_id, player2_id, winner_id })    | N/A                      |
-> | limit         | optional  | number                  | Pagination limit                                    |
-> | offset        | optional  | number                  | Pagination offset                                   |
-> | orderBy       | optional  | enum(["created_at", "current_game_state", "finished_at"])                  | N/A                |
-> | orderDirection| optional  | enum(["ASC", "DESC"])                  | N/A                                                                   |
+> | name          |  type     | data type                                                                                                                              | description          |
+> |---------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------|----------------------|
+> | filters       | optional  | array( object({ conditions: object({ current_game_state, player1_id, player2_id, winner_id }), filterType: enum(["AND", "OR"]) }) )    | N/A                  |
+> | limit         | optional  | number                                                                                                                                 | Pagination limit     |
+> | offset        | optional  | number                                                                                                                                 | Pagination offset    |
+> | orderBy       | optional  | enum(["created_at", "current_game_state", "finished_at"])                                                                              | N/A                  |
+> | orderDirection| optional  | enum(["ASC", "DESC"])                                                                                                                  | N/A                  |
 
 
 ##### Responses
@@ -231,7 +230,6 @@ This section provides a list of API endpoints for the application.
 > | name       |  type     | data type               | description                                                           |
 > |------------|-----------|-------------------------|-----------------------------------------------------------------------|
 > | game_id    | required  | string                  | ID of the game                                                                   |
-> | player_id  | required  | string                  | ID of the player that made a move                                          |
 > | position_x | required  | number                  | X coordinate of the move                                          |
 > | position_y | required  | number                  | Y coordinate of the move                                          |
 

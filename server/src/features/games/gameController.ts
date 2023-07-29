@@ -1,10 +1,10 @@
 import { GameModel } from "@server/features/games/gameModel"
-import { GameObject } from "@server/features/games/gameObject"
+import { GameObject, GameStateEnum } from "@server/features/games/gameObject"
 import { RequestValidationService } from "@server/services/requestValidationService"
 import { Request, Response } from "express"
 import { GameService } from "@server/services/gameService"
 import { z } from "zod"
-import { OrderDirection } from "@server/@types/models"
+import { FilterType, OrderDirection } from "@server/@types/models"
 import { SessionService } from "@server/services/sessionService"
 import { AuthenticationError } from "@server/errors/authenticationError"
 import { PlayerService } from "@server/services/playerService"
@@ -36,7 +36,7 @@ export class GameController {
 
     // Mark player activity
     if (player1_id) {
-      await PlayerService.markActivity(player1_id)
+      await PlayerService.markAsOnline(player1_id)
     }
 
     // Prepare response
@@ -48,20 +48,27 @@ export class GameController {
   // Get all games
   static getAll = async (req: Request, res: Response) => {
     // Validate session
-    SessionService.getSessionData(req)
+    const { player_id } = SessionService.getSessionData(req)
+    await PlayerService.markAsOnline(player_id)
 
     // Validate and extract request parameters
-    const { filterType, filters, limit, offset, orderBy, orderDirection } =
+    const { filters, limit, offset, orderBy, orderDirection } =
       RequestValidationService.validateQuery(
         req.query,
         z.object({
-          filterType: z.enum(["AND", "OR"]).optional(),
-          filters: GameObject.pick({
-            current_game_state: true,
-            player1_id: true,
-            player2_id: true,
-            winner_id: true,
-          }).optional(),
+          filters: z
+            .array(
+              z.object({
+                conditions: z.object({
+                  current_game_state: GameStateEnum.optional(),
+                  player1_id: z.string().optional(),
+                  player2_id: z.string().optional(),
+                  winner_id: z.string().optional(),
+                }),
+                filterType: z.enum([FilterType.AND, FilterType.OR]).optional(),
+              }),
+            )
+            .optional(),
           limit: z.number().optional(),
           offset: z.number().optional(),
           orderBy: z
@@ -76,7 +83,6 @@ export class GameController {
 
     // Get all games
     const games = await GameModel.getAll({
-      filterType,
       filters,
       limit,
       offset,
@@ -93,7 +99,8 @@ export class GameController {
   // Get game by ID
   static getById = async (req: Request, res: Response) => {
     // Validate session
-    SessionService.getSessionData(req)
+    const { player_id } = SessionService.getSessionData(req)
+    await PlayerService.markAsOnline(player_id)
 
     // Validate request
     RequestValidationService.validateQuery(req.query, z.object({}))
@@ -116,6 +123,7 @@ export class GameController {
   static update = async (req: Request, res: Response) => {
     // Get player ID from session
     const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
+    await PlayerService.markAsOnline(sessionPlayerId)
 
     // Validate request
     RequestValidationService.validateQuery(req.query, z.object({}))
@@ -139,9 +147,14 @@ export class GameController {
       // Cannot remove other player from the game
       (player1_id === null && currentGame.player1_id !== sessionPlayerId) ||
       (player2_id === null && currentGame.player2_id !== sessionPlayerId) ||
+      // The same player cannot join 2 spots
+      (player1_id && currentGame.player2_id === player1_id) ||
+      (player2_id && currentGame.player1_id === player2_id) ||
       // Cannot add himself to the game if the spot is not available
       (player1_id && currentGame.player1_id) ||
-      (player2_id && currentGame.player2_id)
+      (player2_id && currentGame.player2_id) ||
+      // Updating a finished game is not allowed
+      currentGame.finished_at
     ) {
       throw new AuthenticationError("Not allowed", 403)
     }

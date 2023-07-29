@@ -1,3 +1,5 @@
+import { BadgeType } from "@client/components/atoms/Badge/@types/Badge"
+import { Badge } from "@client/components/atoms/Badge/Badge"
 import {
   TypographyVariant,
   TypographyWeight,
@@ -14,6 +16,7 @@ export const Card: React.FC<CardProps> = ({
   className = "",
   contentBottom,
   contentTop,
+  isLoading = false,
   title,
   type = CardType.Normal,
   variant = CardVariant.Primary,
@@ -32,7 +35,18 @@ export const Card: React.FC<CardProps> = ({
     {contentTop}
 
     <div className="card-body">
-      {title && (
+      {isLoading && (
+        <Badge
+          className={
+            "w-3/4 h-[28px] animate-bg-gradient-slow bg-gradient-to-r bg-400% from-secondary-focus to-success"
+          }
+          type={BadgeType.Default}
+        >
+          {" "}
+        </Badge>
+      )}
+
+      {title && !isLoading && (
         <Typography
           className="truncate max-w-full"
           variant={TypographyVariant.Callout}
@@ -41,6 +55,7 @@ export const Card: React.FC<CardProps> = ({
           {title}
         </Typography>
       )}
+
       {children}
     </div>
 

@@ -3,11 +3,7 @@ import {
   Game,
 } from "@server/@types/gameObject"
 import { GameModel } from "@server/features/games/gameModel"
-import {
-  MoveTypeEnum,
-  GameStateEnum,
-  gameObjectKeys,
-} from "@server/features/games/gameObject"
+import { MoveTypeEnum, GameStateEnum } from "@server/features/games/gameObject"
 import { Player } from "@server/@types/playerObject"
 import { WebsocketService } from "@server/services/websocketService"
 import { convertObjectToObjectWithIsoDates } from "@server/helpers/objects/convertObjectToObjectWithIsoDates"
@@ -16,7 +12,8 @@ import { Move } from "@server/@types/moveObject"
 import isEmpty from "lodash/isEmpty"
 import {
   GameResponse,
-  GameStateEnum as GameStateEnumType,
+  GameStateEnum as ApiGameStateEnum,
+  MoveTypeEnum as ApiMoveTypeEnum,
   QueryKeys,
 } from "@server/@types/api"
 import {
@@ -25,7 +22,7 @@ import {
   starWars,
   Config,
 } from "unique-names-generator"
-import { PlayerModel } from "@server/features/players/playerModel"
+import { PlayerService } from "@server/services/playerService"
 
 export class GameService {
   // Board size
@@ -205,8 +202,8 @@ export class GameService {
           "finished_at" | "current_game_state" | "winner_id" | "winning_moves"
         >
       > = {
-      current_board_status: JSON.stringify(newBoardStatus),
-      next_possible_moves: JSON.stringify(nextPossibleMoves),
+      current_board_status: newBoardStatus,
+      next_possible_moves: nextPossibleMoves,
       number_of_moves: numberOfMoves,
     }
 
@@ -216,7 +213,7 @@ export class GameService {
 
       if (!isEmpty(winningMoves)) {
         updatedGame.winner_id = player_id
-        updatedGame.winning_moves = JSON.stringify(winningMoves)
+        updatedGame.winning_moves = winningMoves
       }
     }
 
@@ -254,73 +251,18 @@ export class GameService {
       current_game_state,
       created_at,
       finished_at,
-      next_possible_moves,
       winning_moves,
     } = game
 
     return {
       ...game,
-      current_board_status: JSON.parse(current_board_status),
-      current_game_state: current_game_state as GameStateEnumType,
-      next_possible_moves: JSON.parse(next_possible_moves),
-      winning_moves: winning_moves ? JSON.parse(winning_moves) : undefined,
+      current_board_status: current_board_status as ApiMoveTypeEnum[][],
+      current_game_state: current_game_state as ApiGameStateEnum,
+      winning_moves: winning_moves ?? undefined,
       ...convertObjectToObjectWithIsoDates(
         { created_at, finished_at: finished_at ? finished_at : null },
         ["created_at", "finished_at"],
       ),
-    }
-  }
-
-  // Removes a player from all active games they are participating in
-  static removePlayerFromActiveGames = async (
-    player_id: Player["player_id"],
-  ) => {
-    const activeGamesWithPlayer = await GameModel.getAll({
-      filterType: "OR",
-      filters: {
-        current_game_state: [
-          GameStateEnum.enum.in_progress,
-          GameStateEnum.enum.waiting_for_players,
-        ],
-        player1_id: player_id,
-        player2_id: player_id,
-      },
-    })
-
-    if (activeGamesWithPlayer.length > 0) {
-      await Promise.all(
-        activeGamesWithPlayer.map(async (game) => {
-          const fieldsToUpdate = Object.entries(game)
-            .filter(
-              ([key, value]) =>
-                value === player_id &&
-                gameObjectKeys.includes(key as keyof Game),
-            )
-            .map(([key]) => key)
-
-          if (fieldsToUpdate.length > 0) {
-            // Create an object with the fields to update
-            const updateObject = Object.fromEntries(
-              fieldsToUpdate.map((field) => [field, ""]),
-            )
-
-            // Add the current_game_state field to the update object
-            updateObject.current_game_state =
-              GameStateEnum.enum.waiting_for_players
-
-            await GameModel.update(game.game_id, updateObject)
-
-            WebsocketService.emitInvalidateQuery(
-              [QueryKeys.Games, QueryKeys.Detail],
-              game.game_id,
-            )
-          }
-
-          return game
-        }),
-      )
-
-      WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
     }
   }
 
@@ -347,15 +289,9 @@ export class GameService {
     player_id?: Player["player_id"] | null,
   ) => {
     if (player_id) {
-      await GameService.removePlayerFromActiveGames(player_id)
-      const player1 = await PlayerModel.update(player_id, {})
+      const { player } = await PlayerService.markAsOnline(player_id)
 
-      WebsocketService.emitToast(`${player1.username} joined ${game.name}`)
-
-      WebsocketService.emitInvalidateQuery(
-        [QueryKeys.Players, QueryKeys.Detail],
-        player_id,
-      )
+      WebsocketService.emitToast(`${player.username} joined ${game.name}`)
     }
   }
 
@@ -381,9 +317,7 @@ export class GameService {
     const newGame = await GameModel.create({
       current_game_state: GameStateEnum.enum.waiting_for_players,
       name: GameService.generateGameName(),
-      next_possible_moves: JSON.stringify(
-        GameService.calculateNextPossibleMoves(),
-      ),
+      next_possible_moves: GameService.calculateNextPossibleMoves(),
       player1_id,
     })
 

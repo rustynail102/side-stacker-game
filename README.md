@@ -185,11 +185,11 @@ Fields:
 
 2. **User enters username**: The user enters their chosen username and clicks on the "Confirm" button. A session is created for the user, and they are taken to the main game lobby.
 
-3. **User waits in the game lobby**: The user waits in the game lobby. They can see a list of games in progress, as well as a list of finished games. In the top, there might be also a game that they are currently participating in.
+3. **User waits in the game lobby**: The user waits in the game lobby. They can see a list of open games, games in progress, as well as a list of finished games. In the top, there might be also a list of games that they are currently participating in.
 
 4. **User creates a new game or joins an existing one**
-- A: **User creates a new game**: User clicks on "New Game" button. New game is created, and user is redirected to a route with a new game. They are assigned as Player 1 and there's no Player 2 yet. User waits for another player to join. If they are currently participating in another game, they are removed from that other game.
-- B: **User joins an existing game**: User clicks on one of the games in progress. They are redirected to a route with an existing game. If there's a free spot, user clicks on "Join Game" button. If they are currently participating in another game, they are removed from that other game. User is assigned as Player 1 or Player 2. If there isn't any free spot, user can watch the game.
+- A: **User creates a new game**: User clicks on "New Game" button. New game is created, and user is redirected to a route with a new game. They are assigned as Player 1 and there's no Player 2 yet. User waits for another player to join. 
+- B: **User joins an existing game**: User clicks on one of the games in progress. They are redirected to a route with an existing game. If there's a free spot, user clicks on "Join Game" button. User is assigned as Player 1 or Player 2. If there isn't any free spot, user can watch the game.
 
 5. **Game starts**: The game board is displayed, and Player 1 is prompted to make the first move.
 
@@ -197,7 +197,7 @@ Fields:
 
 7. **Game ends**: The game ends when one player wins or the game is a draw. The result is displayed on the screen. Players might inspect the board, or return to the game lobby.
 
-8. **User leaves the application**: The user can choose to create another game, join another existing game or leave the application. If they click on "Leave" button, their session ends. If they refresh the page or come back to the application later, their session will persist.
+8. **User leaves the application**: The user can choose to create another game, join another existing game or leave the application. If they click on "Leave Game" button, their participation in game ends. If they refresh the page or come back to the application later, their game session will persist.
 
 ### Implementation Plan
 
@@ -218,8 +218,8 @@ Fields:
 - [x] [Client - game lobby](https://github.com/alan-hadyk/side-stacker-game/pull/16)
 - [x] [Client - toasts and error handling](https://github.com/alan-hadyk/side-stacker-game/pull/17)
 - [x] [Authentication](https://github.com/alan-hadyk/side-stacker-game/pull/18)
-- [ ] Client - game creation and game board
-- [ ] Client - game joining logic
+- [x] [Client - game creation and game board](https://github.com/alan-hadyk/side-stacker-game/pull/19)
+- [x] [Client - game joining logic](https://github.com/alan-hadyk/side-stacker-game/pull/19)
 - [ ] Client - game play (making moves) logic
 - [ ] Client - game end (win/draw) logic
 - [ ] Client - 404 page

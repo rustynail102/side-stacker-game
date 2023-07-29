@@ -15,6 +15,7 @@ export interface CardProps {
   className?: string
   contentBottom?: ReactNode | ReactNode[]
   contentTop?: ReactNode | ReactNode[]
+  isLoading?: boolean
   title?: string
   type?: CardType
   variant?: CardVariant
