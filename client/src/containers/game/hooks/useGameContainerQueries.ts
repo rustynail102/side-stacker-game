@@ -5,9 +5,14 @@ import { useParams } from "@tanstack/router"
 
 export const useGameContainerQueries = () => {
   const { game_id } = useParams()
-  const { game, isInitialLoading: isInitialLoadingGame } = useGetGame({
-    game_id,
-  })
+  const { game, isInitialLoading: isInitialLoadingGame } = useGetGame(
+    {
+      game_id,
+    },
+    {
+      keepPreviousData: true,
+    },
+  )
   const { isInitialLoading: isInitialLoadingPlayer1, player: player1 } =
     useGetPlayer(
       { player_id: game?.player1_id ?? "" },

@@ -1,6 +1,11 @@
-import { gameRoute, homeRoute, rootRoute } from "@client/routing/routes"
+import {
+  gameRoute,
+  homeRoute,
+  notFoundRoute,
+  rootRoute,
+} from "@client/routing/routes"
 import { Router } from "@tanstack/router"
 
-const routeTree = rootRoute.addChildren([homeRoute, gameRoute])
+const routeTree = rootRoute.addChildren([homeRoute, gameRoute, notFoundRoute])
 
-export const router = new Router({ routeTree })
+export const router = new Router({ defaultPreload: "intent", routeTree })

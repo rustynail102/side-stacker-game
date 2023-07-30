@@ -1,6 +1,6 @@
 import { Toaster } from "react-hot-toast"
 
-const withToastsProvider =
+export const withToastsProvider =
   (WrappedComponent: React.FC<Record<string, unknown>>) =>
   (props: Record<string, unknown>) => (
     <>
@@ -10,5 +10,3 @@ const withToastsProvider =
       </div>
     </>
   )
-
-export { withToastsProvider }

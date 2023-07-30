@@ -222,7 +222,7 @@ Fields:
 - [x] [Client - game joining logic](https://github.com/alan-hadyk/side-stacker-game/pull/19)
 - [x] [Client - game play (making moves) logic](https://github.com/alan-hadyk/side-stacker-game/pull/20)
 - [x] [Client - game end (win/draw) logic](https://github.com/alan-hadyk/side-stacker-game/pull/20)
-- [ ] Client - 404 page
+- [x] [Client - 404 page](https://github.com/alan-hadyk/side-stacker-game/pull/21)
 - [ ] Remove obsolete code
 - [ ] Testing of all routes, controllers, and user interfaces
 - [ ] Missing documentation

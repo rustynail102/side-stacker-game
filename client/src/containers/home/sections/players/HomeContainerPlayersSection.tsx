@@ -16,10 +16,15 @@ export const HomeContainerPlayersSection: React.FC = () => {
   const { limit, offset, setOffset } = usePagination({
     limit: 10,
   })
-  const { isInitialLoading, players, total } = useGetPlayers({
-    limit,
-    offset,
-  })
+  const { isInitialLoading, players, total } = useGetPlayers(
+    {
+      limit,
+      offset,
+    },
+    {
+      keepPreviousData: true,
+    },
+  )
 
   const { currentPlayer } = useGetCurrentPlayer()
   const rows = mapPlayersToRows(currentPlayer?.player_id, players)

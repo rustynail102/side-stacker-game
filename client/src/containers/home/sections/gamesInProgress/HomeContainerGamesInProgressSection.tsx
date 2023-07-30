@@ -17,17 +17,22 @@ export const HomeContainerGamesInProgressSection: React.FC = () => {
     games: gamesInProgress,
     isInitialLoading,
     total,
-  } = useGetGames({
-    filters: [
-      {
-        conditions: {
-          current_game_state: GameStateEnum.in_progress,
+  } = useGetGames(
+    {
+      filters: [
+        {
+          conditions: {
+            current_game_state: GameStateEnum.in_progress,
+          },
         },
-      },
-    ],
-    limit,
-    offset,
-  })
+      ],
+      limit,
+      offset,
+    },
+    {
+      keepPreviousData: true,
+    },
+  )
 
   return (
     <Section title="Games In Progress">

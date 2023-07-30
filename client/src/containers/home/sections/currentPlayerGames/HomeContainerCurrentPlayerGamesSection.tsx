@@ -20,40 +20,45 @@ export const HomeContainerCurrentPlayerGamesSection: React.FC = () => {
     games: currentPlayerGames,
     isInitialLoading,
     total,
-  } = useGetGames({
-    filters: [
-      {
-        conditions: {
-          current_game_state: GameStateEnum.in_progress,
-          player1_id: currentPlayer?.player_id,
+  } = useGetGames(
+    {
+      filters: [
+        {
+          conditions: {
+            current_game_state: GameStateEnum.in_progress,
+            player1_id: currentPlayer?.player_id,
+          },
+          filterType: FilterType.AND,
         },
-        filterType: FilterType.AND,
-      },
-      {
-        conditions: {
-          current_game_state: GameStateEnum.waiting_for_players,
-          player1_id: currentPlayer?.player_id,
+        {
+          conditions: {
+            current_game_state: GameStateEnum.waiting_for_players,
+            player1_id: currentPlayer?.player_id,
+          },
+          filterType: FilterType.AND,
         },
-        filterType: FilterType.AND,
-      },
-      {
-        conditions: {
-          current_game_state: GameStateEnum.in_progress,
-          player2_id: currentPlayer?.player_id,
+        {
+          conditions: {
+            current_game_state: GameStateEnum.in_progress,
+            player2_id: currentPlayer?.player_id,
+          },
+          filterType: FilterType.AND,
         },
-        filterType: FilterType.AND,
-      },
-      {
-        conditions: {
-          current_game_state: GameStateEnum.waiting_for_players,
-          player2_id: currentPlayer?.player_id,
+        {
+          conditions: {
+            current_game_state: GameStateEnum.waiting_for_players,
+            player2_id: currentPlayer?.player_id,
+          },
+          filterType: FilterType.AND,
         },
-        filterType: FilterType.AND,
-      },
-    ],
-    limit,
-    offset,
-  })
+      ],
+      limit,
+      offset,
+    },
+    {
+      keepPreviousData: true,
+    },
+  )
 
   return (
     <Section title="Your Games">

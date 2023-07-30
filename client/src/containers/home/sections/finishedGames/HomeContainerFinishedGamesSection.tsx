@@ -16,17 +16,22 @@ export const HomeContainerFinishedGamesSection: React.FC = () => {
     games: finishedGames,
     isInitialLoading,
     total,
-  } = useGetGames({
-    filters: [
-      {
-        conditions: {
-          current_game_state: GameStateEnum.finished,
+  } = useGetGames(
+    {
+      filters: [
+        {
+          conditions: {
+            current_game_state: GameStateEnum.finished,
+          },
         },
-      },
-    ],
-    limit,
-    offset,
-  })
+      ],
+      limit,
+      offset,
+    },
+    {
+      keepPreviousData: true,
+    },
+  )
 
   return (
     <Section title="Finished Games">

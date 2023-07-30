@@ -13,7 +13,7 @@ export const GamesCardsLoader: React.FC = () =>
         key={index}
         contentTop={
           <figure
-            className={`bg-base-300 h-[152px] ${commonClassNames} from-primary to-secondary`}
+            className={`bg-base-300 h-[206px] ${commonClassNames} from-primary to-secondary`}
           />
         }
       >

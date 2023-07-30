@@ -17,17 +17,22 @@ export const HomeContainerOpenGamesSection: React.FC = () => {
     games: openGames,
     isInitialLoading,
     total,
-  } = useGetGames({
-    filters: [
-      {
-        conditions: {
-          current_game_state: GameStateEnum.waiting_for_players,
+  } = useGetGames(
+    {
+      filters: [
+        {
+          conditions: {
+            current_game_state: GameStateEnum.waiting_for_players,
+          },
         },
-      },
-    ],
-    limit,
-    offset,
-  })
+      ],
+      limit,
+      offset,
+    },
+    {
+      keepPreviousData: true,
+    },
+  )
 
   return (
     <Section title="Open Games">
