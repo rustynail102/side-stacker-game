@@ -37,13 +37,13 @@ export class PlayerService {
     username: string,
     password: string,
   ) => {
-    const existingPlayers = await PlayerModel.getAll({
+    const { players } = await PlayerModel.getAll({
       filters: {
         username,
       },
     })
 
-    const player = existingPlayers[0]
+    const player = players[0]
 
     if (!player) {
       throw new AuthenticationError("Incorrect username or password", 401)
@@ -123,13 +123,13 @@ export class PlayerService {
     Makes sure that username is available. If it's not, it throws ValidationError. 
   */
   static validateUsername = async (username: Player["username"]) => {
-    const existingPlayers = await PlayerModel.getAll({
+    const { players } = await PlayerModel.getAll({
       filters: {
         username,
       },
     })
 
-    if (existingPlayers.length > 0) {
+    if (players.length > 0) {
       throw new ValidationError(`${username} is not available`)
     }
   }

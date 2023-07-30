@@ -6,6 +6,7 @@ import {
 } from "@client/components/atoms/Typography/@types/Typography"
 import { Typography } from "@client/components/atoms/Typography/Typography"
 import {
+  CardPosition,
   CardProps,
   CardType,
   CardVariant,
@@ -17,13 +18,15 @@ export const Card: React.FC<CardProps> = ({
   contentBottom,
   contentTop,
   isLoading = false,
+  position = CardPosition.Default,
   title,
   type = CardType.Normal,
   variant = CardVariant.Primary,
 }) => (
   <div
     className={`
-      card z-[1] compact shadow ${variant} rounded-box
+      card z-[1] compact shadow ${variant} rounded-box ${position}
+      ${position === CardPosition.Sticky ? "top-0" : ""}
       ${
         type === CardType.Link
           ? "transition-all ease-in-out duration-150 hover:shadow-xl active:shadow cursor-pointer"

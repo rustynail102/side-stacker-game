@@ -37,6 +37,7 @@
     "prettier": "^3.0.0",
     "tailwindcss": "^3.3.3",
     "tailwindcss-3d": "^0.2.6",
+    "ts-prune": "^0.10.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.0",
     "vite-tsconfig-paths": "^4.2.0"
@@ -49,6 +50,7 @@
   "private": true,
   "scripts": {
     "build": "tsc && vite build",
+    "dead-code": "ts-prune",
     "dev": "vite",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

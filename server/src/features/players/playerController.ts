@@ -92,7 +92,7 @@ export class PlayerController {
     RequestValidationService.validateBody(req.body, z.object({}))
 
     // Get players
-    const players = await PlayerModel.getAll({
+    const { players, total } = await PlayerModel.getAll({
       limit,
       offset,
       orderBy,
@@ -108,7 +108,10 @@ export class PlayerController {
       return PlayerService.parsePlayerToResponse(player, is_online)
     })
 
-    res.json(playersResponse)
+    res.json({
+      players: playersResponse,
+      total,
+    })
   }
 
   // Gets a player by id

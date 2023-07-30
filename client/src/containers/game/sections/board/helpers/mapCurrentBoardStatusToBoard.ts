@@ -1,6 +1,17 @@
-import { GameResponse } from "@server/@types/api"
+import {
+  CreateMovePostBody,
+  GameResponse,
+  MoveResponse,
+} from "@server/@types/api"
+import { MutateOptions } from "@tanstack/react-query"
 
 export const mapCurrentBoardStatusToBoard = (
+  createMove: (
+    body: CreateMovePostBody,
+    options?:
+      | MutateOptions<MoveResponse, unknown, CreateMovePostBody, unknown>
+      | undefined,
+  ) => void,
   game?: GameResponse,
   hasCurrentUserNextMove?: boolean,
 ) =>
@@ -17,7 +28,12 @@ export const mapCurrentBoardStatusToBoard = (
         isNextPossibleMove,
         ...(hasCurrentUserNextMove &&
           isNextPossibleMove && {
-            onClick: () => false,
+            onClick: () =>
+              createMove({
+                game_id: game.game_id,
+                position_x: cellIndex,
+                position_y: rowIndex,
+              }),
           }),
       }
     }),

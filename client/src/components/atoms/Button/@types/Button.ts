@@ -13,6 +13,7 @@ export enum ButtonFill {
 }
 
 export enum ButtonVariant {
+  Default = "",
   Neutral = "btn-neutral",
   Primary = "btn-primary",
   Secondary = "btn-secondary",

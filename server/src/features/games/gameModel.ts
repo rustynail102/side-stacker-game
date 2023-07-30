@@ -20,9 +20,11 @@ import {
 import { ZodTypeAny, z } from "zod"
 import { MoveTypeEnum as MoveTypeEnumType } from "@server/@types/api"
 import { Game } from "@server/@types/gameObject"
+import { CountObject } from "@server/db/utils/objects/countObject"
 
 const sql = createSqlTag({
   typeAliases: {
+    count: CountObject,
     game: GameObject,
     null: z.null(),
   },
@@ -129,7 +131,10 @@ export class GameModel {
     offset = 0,
     orderBy = "created_at",
     orderDirection = OrderDirection.DESC,
-  }: GameModelGetAll): Promise<readonly Game[]> =>
+  }: GameModelGetAll): Promise<{
+    games: readonly Game[]
+    total: number
+  }> =>
     databasePool.connect(async (connection) => {
       const filtersFragments = []
 
@@ -167,9 +172,20 @@ export class GameModel {
         OFFSET ${offset}
       `
 
-      const { rows } = await connection.query(query)
+      const countQuery = sql.typeAlias("count")`
+        SELECT COUNT(*) 
+        FROM games 
+        WHERE ${sql.join(filtersFragments, sql.unsafe` OR `)}
+      `
 
-      return rows
+      const { rows } = await connection.query(query)
+      const countResult = await connection.query(countQuery)
+      const total = parseInt(countResult.rows[0].count, 10)
+
+      return {
+        games: rows,
+        total,
+      }
     })
 
   static getById = (game_id: Game["game_id"]): Promise<Game> =>

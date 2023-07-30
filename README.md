@@ -220,11 +220,12 @@ Fields:
 - [x] [Authentication](https://github.com/alan-hadyk/side-stacker-game/pull/18)
 - [x] [Client - game creation and game board](https://github.com/alan-hadyk/side-stacker-game/pull/19)
 - [x] [Client - game joining logic](https://github.com/alan-hadyk/side-stacker-game/pull/19)
-- [ ] Client - game play (making moves) logic
-- [ ] Client - game end (win/draw) logic
+- [x] [Client - game play (making moves) logic](https://github.com/alan-hadyk/side-stacker-game/pull/20)
+- [x] [Client - game end (win/draw) logic](https://github.com/alan-hadyk/side-stacker-game/pull/20)
 - [ ] Client - 404 page
-- [ ] Server - abandoned games
+- [ ] Remove obsolete code
 - [ ] Testing of all routes, controllers, and user interfaces
+- [ ] Missing documentation
 
 ### Potential additional features
 
@@ -259,5 +260,3 @@ TODO
 4. **Cheating**: Players might try to cheat by modifying the client code or sending fake requests to the server. This can be addressed by validating all moves on the server and checking that they come from the player whose turn it is.
 
 5. **User experience**: Creating a user interface that is intuitive and responsive can be challenging. This can be addressed by using a modern front-end framework, and by testing the user interface with real users and iterating based on their feedback.
-
-6. **Abandoned games**: If a given user participates in a game, and then closes the browser or loses connection while the game is still in progress, and never comes back, there might a "ghost game" with that player assigned, and without the possibility to finish the game. To prevent this, there might be a CRON job that frequently checks all games in progress, and removes players that weren't active for a given period of time.

@@ -13,7 +13,9 @@ export const Table: React.FC<TableProps> = ({
       <thead>
         <tr>
           {headers.map((header, index) => (
-            <th key={index}>{header}</th>
+            <th className="align-middle" key={index}>
+              {header}
+            </th>
           ))}
         </tr>
       </thead>
@@ -25,7 +27,9 @@ export const Table: React.FC<TableProps> = ({
           rows?.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell}</td>
+                <td className="align-middle" key={cellIndex}>
+                  {cell}
+                </td>
               ))}
             </tr>
           ))

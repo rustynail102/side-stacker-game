@@ -4,6 +4,7 @@ import {
   InterServerEvents,
   SocketData,
 } from "@server/@types/websocketsServer"
+import { config } from "@server/config"
 import { IncomingMessage, Server, ServerResponse } from "http"
 import { Server as SocketIOServer } from "socket.io"
 
@@ -29,11 +30,7 @@ export const createWebsocketsServer = (
       // whether to skip middlewares upon successful recovery
       skipMiddlewares: true,
     },
-    cors: {
-      credentials: true, // allow credentials (cookies)
-      origin:
-        process.env.NODE_ENV === "development" ? true : process.env.ORIGIN, // allow requests from all origins - needed for testing & development
-    },
+    cors: config.appConfig.cors,
   })
 
   return websocketsServer

@@ -10,9 +10,11 @@ import {
   createSqlTag,
 } from "slonik"
 import { ZodTypeAny, z } from "zod"
+import { CountObject } from "@server/db/utils/objects/countObject"
 
 const sql = createSqlTag({
   typeAliases: {
+    count: CountObject,
     null: z.null(),
     player: PlayerObject,
     playerWithoutPassword: PlayerObject.omit({ password: true }),
@@ -89,7 +91,10 @@ export class PlayerModel {
     offset = 0,
     orderBy = "last_active_at",
     orderDirection = OrderDirection.DESC,
-  }: PlayerModelGetAll): Promise<readonly Player[]> =>
+  }: PlayerModelGetAll): Promise<{
+    players: readonly Player[]
+    total: number
+  }> =>
     databasePool.connect(async (connection) => {
       const filtersFragments = []
 
@@ -112,25 +117,38 @@ export class PlayerModel {
       }
 
       const direction = orderDirection === OrderDirection.ASC ? "ASC" : "DESC"
+
+      const whereFragment =
+        filtersFragments.length > 0
+          ? sql.fragment`WHERE deleted_at IS NULL AND (${sql.join(
+              filtersFragments,
+              filterType === "AND" ? sql.unsafe`, ` : sql.unsafe` OR `,
+            )})`
+          : sql.fragment`WHERE deleted_at IS NULL`
+
       const query = sql.typeAlias("player")`
         SELECT * 
         FROM players
-        ${
-          filtersFragments.length > 0
-            ? sql.fragment`WHERE deleted_at IS NULL AND (${sql.join(
-                filtersFragments,
-                filterType === "AND" ? sql.unsafe`, ` : sql.unsafe` OR `,
-              )})`
-            : sql.fragment`WHERE deleted_at IS NULL`
-        } 
+        ${whereFragment} 
         ORDER BY ${sql.identifier([orderBy])} ${sql.unsafe([direction])} 
         LIMIT ${limit} 
         OFFSET ${offset}
       `
 
-      const { rows } = await connection.query(query)
+      const countQuery = sql.typeAlias("count")`
+        SELECT COUNT(*)
+        FROM players
+        ${whereFragment} 
+      `
 
-      return rows
+      const { rows } = await connection.query(query)
+      const countResult = await connection.query(countQuery)
+      const total = parseInt(countResult.rows[0].count, 10)
+
+      return {
+        players: rows,
+        total,
+      }
     })
 
   static getById = (player_id: Player["player_id"]): Promise<Player> =>

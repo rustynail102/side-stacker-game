@@ -6,7 +6,7 @@ import { IconType } from "react-icons"
 import { FiPlay, FiRefreshCw, FiCheckCircle } from "react-icons/fi"
 
 export const HomeContainerStatsSection: React.FC = () => {
-  const { games: openGames, isInitialLoading: isInitialLoadingOpenGames } =
+  const { isInitialLoading: isInitialLoadingOpenGames, total: totalOpenGames } =
     useGetGames({
       filters: [
         {
@@ -15,11 +15,11 @@ export const HomeContainerStatsSection: React.FC = () => {
           },
         },
       ],
-      limit: 100,
+      limit: 1,
     })
 
   const {
-    games: gamesInProgress,
+    total: totalGamesInProgress,
     isInitialLoading: isInitialLoadingGamesInProgress,
   } = useGetGames({
     filters: [
@@ -29,11 +29,11 @@ export const HomeContainerStatsSection: React.FC = () => {
         },
       },
     ],
-    limit: 100,
+    limit: 1,
   })
 
   const {
-    games: finishedGames,
+    total: totalFinishedGames,
     isInitialLoading: isInitialLoadingFinishedGames,
   } = useGetGames({
     filters: [
@@ -43,7 +43,7 @@ export const HomeContainerStatsSection: React.FC = () => {
         },
       },
     ],
-    limit: 100,
+    limit: 1,
   })
 
   return (
@@ -53,21 +53,21 @@ export const HomeContainerStatsSection: React.FC = () => {
           icon: FiPlay as IconType,
           isLoading: isInitialLoadingOpenGames,
           title: "Open Games",
-          value: openGames?.length ?? 0,
+          value: totalOpenGames ?? 0,
           variant: StatVariant.Primary,
         },
         {
           icon: FiRefreshCw as IconType,
           isLoading: isInitialLoadingGamesInProgress,
           title: "Games In Progress",
-          value: gamesInProgress?.length ?? 0,
+          value: totalGamesInProgress ?? 0,
           variant: StatVariant.Secondary,
         },
         {
           icon: FiCheckCircle as IconType,
           isLoading: isInitialLoadingFinishedGames,
           title: "Finished Games",
-          value: finishedGames?.length ?? 0,
+          value: totalFinishedGames ?? 0,
           variant: StatVariant.Accent,
         },
       ]}

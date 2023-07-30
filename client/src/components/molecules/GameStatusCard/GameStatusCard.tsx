@@ -9,15 +9,16 @@ import {
 } from "@client/components/atoms/Typography/@types/Typography"
 import { Typography } from "@client/components/atoms/Typography/Typography"
 import { Card } from "@client/components/molecules/Card/Card"
-import { NextMoveCardProps } from "@client/components/molecules/NextMoveCard/@types/NextMoveCard"
+import { GameStatusCardProps } from "@client/components/molecules/GameStatusCard/@types/GameStatusCard"
 
-export const NextMoveCard: React.FC<NextMoveCardProps> = ({
+export const GameStatusCard: React.FC<GameStatusCardProps> = ({
+  finalResult,
   hasPlayer1NextMove,
   hasPlayer2NextMove,
   isLoading,
-  winnerName,
+  title,
 }) => (
-  <Card isLoading={isLoading} title={winnerName ? "Winner" : "Next Move"}>
+  <Card isLoading={isLoading} title={title}>
     <div className="mt-2 flex items-center justify-center">
       {isLoading ? (
         <Badge
@@ -36,6 +37,7 @@ export const NextMoveCard: React.FC<NextMoveCardProps> = ({
               fill="currentColor"
             />
           )}
+
           {hasPlayer2NextMove && (
             <OIcon
               className="block w-12 h-12 text-secondary"
@@ -44,13 +46,13 @@ export const NextMoveCard: React.FC<NextMoveCardProps> = ({
             />
           )}
 
-          {winnerName && (
+          {finalResult && (
             <Typography
               alignment={TypographyAlignment.Center}
               variant={TypographyVariant.Callout}
               weight={TypographyWeight.Bold}
             >
-              {winnerName}
+              {finalResult}
             </Typography>
           )}
         </>

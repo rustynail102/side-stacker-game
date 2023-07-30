@@ -1,3 +1,4 @@
+import { FlexRow } from "@client/components/atoms/FlexRow/FlexRow"
 import { IndicatorType } from "@client/components/atoms/Indicator/@types/Indicator"
 import { Indicator } from "@client/components/atoms/Indicator/Indicator"
 import {
@@ -20,19 +21,21 @@ export const mapPlayersToRows = (
     player_id === authenticated_user_id
 
   return players.map(({ is_online, last_active_at, username, player_id }) => [
-    <Indicator
-      type={is_online ? IndicatorType.Success : IndicatorType.Neutral}
-    />,
-    <Typography
-      variant={TypographyVariant.Span}
-      weight={
-        isAuthenticatedUser(player_id)
-          ? TypographyWeight.Bold
-          : TypographyWeight.Normal
-      }
-    >
-      {username}
-    </Typography>,
+    <FlexRow>
+      <Indicator
+        type={is_online ? IndicatorType.Success : IndicatorType.Neutral}
+      />
+      <Typography
+        variant={TypographyVariant.Span}
+        weight={
+          isAuthenticatedUser(player_id)
+            ? TypographyWeight.Bold
+            : TypographyWeight.Normal
+        }
+      >
+        {username}
+      </Typography>
+    </FlexRow>,
     dayjs(last_active_at).fromNow(),
   ])
 }

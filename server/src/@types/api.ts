@@ -54,6 +54,11 @@ export interface PlayerResponse {
   username: string
 }
 
+export type PlayersResponse = {
+  players: PlayerResponse[]
+  total: number
+}
+
 export type GameResponse = {
   created_at: string
   current_board_status: MoveTypeEnum[][]
@@ -67,6 +72,11 @@ export type GameResponse = {
   player2_id?: string | null
   winner_id?: string | null
   winning_moves?: number[][]
+}
+
+export type GamesResponse = {
+  games: GameResponse[]
+  total: number
 }
 
 export interface MoveResponse {
@@ -111,3 +121,9 @@ export type CreateGamePostBody = {
 }
 
 export type UpdateGamePutBody = Pick<GameResponse, "player1_id" | "player2_id">
+
+export type CreateMovePostBody = {
+  game_id: GameResponse["game_id"]
+  position_x: number
+  position_y: number
+}

@@ -1,3 +1,4 @@
+import { useCreateMove } from "@client/api/mutations/useCreateMove"
 import { GameBoard } from "@client/components/molecules/GameBoard/GameBoard"
 import { useGameContainerQueries } from "@client/containers/game/hooks/useGameContainerQueries"
 import { calculateNextMoveType } from "@client/containers/game/sections/board/helpers/calculateNextMoveType"
@@ -21,7 +22,13 @@ export const GameContainerBoardSection: React.FC = () => {
     hasPlayer2NextMove,
   )
 
-  const board = mapCurrentBoardStatusToBoard(game, hasCurrentUserNextMove)
+  const { createMove } = useCreateMove()
+
+  const board = mapCurrentBoardStatusToBoard(
+    createMove,
+    game,
+    hasCurrentUserNextMove,
+  )
 
   return (
     <GameBoard

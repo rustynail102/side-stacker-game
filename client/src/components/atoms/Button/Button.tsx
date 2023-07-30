@@ -22,7 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
   <button
     disabled={disabled || isLoading}
     className={`btn 
-      ${size} ${shape} ${fill} ${variant} 
+      ${size} ${shape} ${fill} ${disabled ? "btn-disabled" : variant}
       ${className}
     `}
     onClick={onClick}

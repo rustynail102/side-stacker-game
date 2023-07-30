@@ -2,6 +2,10 @@ import { useCreateGame } from "@client/api/mutations/useCreateGame"
 import { useSignOut } from "@client/api/mutations/useSignOut"
 import { useGetCurrentPlayer } from "@client/api/queries/useGetCurrentPlayer"
 import { queryKeys } from "@client/api/queryKeys"
+import {
+  ButtonFill,
+  ButtonVariant,
+} from "@client/components/atoms/Button/@types/Button"
 import { Button } from "@client/components/atoms/Button/Button"
 import {
   TypographyAlignment,
@@ -10,10 +14,11 @@ import {
 import { Typography } from "@client/components/atoms/Typography/Typography"
 import { Dropdown } from "@client/components/molecules/Dropdown/Dropdown"
 import { Header } from "@client/components/organisms/Header/Header"
-import { gameRoute } from "@client/routing/routes"
+import { gameRoute, homeRoute } from "@client/routing/routes"
 import { useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/router"
 import isEqual from "lodash/isEqual"
+import { useCallback } from "react"
 
 export const RootContainerHeaderSection: React.FC = () => {
   const { currentPlayer } = useGetCurrentPlayer()
@@ -35,20 +40,20 @@ export const RootContainerHeaderSection: React.FC = () => {
   const { createGame, isLoading: isCreatingGame } = useCreateGame()
   const navigate = useNavigate()
 
-  const handleCreateGame = () => {
+  const handleCreateGame = useCallback(() => {
     if (currentPlayer?.player_id) {
       createGame(
         {
           player1_id: currentPlayer.player_id,
         },
         {
-          onSuccess: async (game) => {
+          onSuccess: (game) => {
             queryClient.setQueriesData(
               queryKeys.games.detail(game.game_id),
               game,
             )
 
-            await navigate({
+            void navigate({
               params: {
                 game_id: game.game_id,
               },
@@ -58,7 +63,13 @@ export const RootContainerHeaderSection: React.FC = () => {
         },
       )
     }
-  }
+  }, [createGame, currentPlayer?.player_id, navigate, queryClient])
+
+  const navigateToGameLobby = useCallback(() => {
+    void navigate({
+      to: homeRoute.to,
+    })
+  }, [navigate])
 
   return (
     <Header>
@@ -68,6 +79,14 @@ export const RootContainerHeaderSection: React.FC = () => {
         onClick={handleCreateGame}
       >
         New Game
+      </Button>
+      <Button
+        fill={ButtonFill.Outline}
+        isLoading={isCreatingGame}
+        onClick={navigateToGameLobby}
+        variant={ButtonVariant.Neutral}
+      >
+        Game Lobby
       </Button>
       <Dropdown
         items={[

@@ -103,7 +103,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Player data`                                                       |
+> | `200`         | `application/json`                | `PlayerResponse`                                                       |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["Incorrect username or password"]}`          |
 
@@ -140,7 +140,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Game data`                                                         |
+> | `200`         | `application/json`                | `GameResponse`                                                         |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["AuthenticationError"]}`                     |
 > | `403`         | `application/json`                | `{"code":403,"errors":["Not allowed"]}`                             |
@@ -165,7 +165,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Game data[]`                                                        |
+> | `200`         | `application/json`                | `{ games: GameResponse[], total: number }`                                                        |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["AuthenticationError"]}`                     |
 
@@ -185,7 +185,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Game data`                                                        |
+> | `200`         | `application/json`                | `GameResponse`                                                        |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["AuthenticationError"]}`                     |
 
@@ -211,7 +211,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Game data`                                |
+> | `200`         | `application/json`                | `GameResponse`                                |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["AuthenticationError"]}`                     |
 > | `403`         | `application/json`                | `{"code":403,"errors":["Not allowed"]}`                             |
@@ -237,7 +237,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Move data`                                |
+> | `200`         | `application/json`                | `MoveResponse`                                |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["AuthenticationError"]}`                     |
 > | `403`         | `application/json`                | `{"code":403,"errors":["Not allowed"]}`                             |
@@ -262,7 +262,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Player data`                                |
+> | `200`         | `application/json`                | `PlayerResponse`                                |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 
 </details>
@@ -304,7 +304,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Player data[]`                                                        |
+> | `200`         | `application/json`                | `{ players: PlayerResponse[], total: number }`                                                        |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["AuthenticationError"]}`                     |
 
@@ -317,7 +317,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Player data`                                                        |
+> | `200`         | `application/json`                | `PlayerResponse`                                                        |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["AuthenticationError"]}`                     |
 
@@ -336,7 +336,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Player data`                                                        |
+> | `200`         | `application/json`                | `PlayerResponse`                                                        |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["AuthenticationError"]}`                     |
 
@@ -361,7 +361,7 @@ This section provides a list of API endpoints for the application.
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | `Player data`                                                        |
+> | `200`         | `application/json`                | `PlayerResponse`                                                        |
 > | `400`         | `application/json`                | `{"code":400,"errors":["ValidationError"]}`                     |
 > | `401`         | `application/json`                | `{"code":401,"errors":["AuthenticationError"]}`                     |
 > | `403`         | `application/json`                | `{"code":403,"errors":["Not allowed"]}`                             |

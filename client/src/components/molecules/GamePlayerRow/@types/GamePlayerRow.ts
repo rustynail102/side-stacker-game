@@ -2,6 +2,7 @@ interface GamePlayerRowBasicProps {
   hasNextMove?: boolean
   isCurrentUser?: boolean
   isDisabled?: boolean
+  isWinner?: boolean
   onJoin?: () => void
   onLeave?: () => void
   player?: {

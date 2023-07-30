@@ -35,7 +35,7 @@ export class GameService {
     position_x: Move["position_x"],
     moveType: MoveTypeEnumType,
   ) => {
-    const currentBoardStatus = { ...current_board_status }
+    const currentBoardStatus = [...current_board_status]
 
     currentBoardStatus[position_y][position_x] = moveType
 
@@ -46,12 +46,10 @@ export class GameService {
   static calculateNextPossibleMoves = (
     currentBoardStatus?: MoveTypeEnumType[][],
   ) => {
-    const boardStatusRowInit = new Array(GameService.BOARD_SIZE).fill(
-      MoveTypeEnum.enum.empty,
+    const boardStatusInit: MoveTypeEnumType[][] = Array.from(
+      { length: GameService.BOARD_SIZE },
+      () => new Array(GameService.BOARD_SIZE).fill(MoveTypeEnum.enum.empty),
     )
-    const boardStatusInit: MoveTypeEnumType[][] = new Array(
-      GameService.BOARD_SIZE,
-    ).fill(boardStatusRowInit)
 
     const boardStatus = currentBoardStatus || boardStatusInit
 

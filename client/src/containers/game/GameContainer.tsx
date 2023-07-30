@@ -9,7 +9,7 @@ import { PageTemplate } from "@client/components/templates/PageTemplate/PageTemp
 import { useGameContainerQueries } from "@client/containers/game/hooks/useGameContainerQueries"
 import { GameContainerBoardSection } from "@client/containers/game/sections/board/GameContainerBoardSection"
 import { GameContainerInfoSection } from "@client/containers/game/sections/info/GameContainerInfoSection"
-import { GameContainerNextMoveSection } from "@client/containers/game/sections/nextMove/GameContainerNextMoveSection"
+import { GameContainerStatusSection } from "@client/containers/game/sections/status/GameContainerStatusSection"
 import { GameContainerPlayersSection } from "@client/containers/game/sections/players/GameContainerPlayersSection"
 import { IconType } from "react-icons"
 import { FiAlertCircle } from "react-icons/fi"
@@ -27,7 +27,7 @@ export const GameContainer: React.FC = () => {
           <Column flexBasis={ColumnFlexBasis.Basis25} gap={ColumnGap.Gap4}>
             <GameContainerInfoSection />
             <GameContainerPlayersSection />
-            <GameContainerNextMoveSection />
+            <GameContainerStatusSection />
           </Column>
         </>
       ) : (

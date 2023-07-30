@@ -3,43 +3,42 @@
 @tailwind utilities;
 
 @layer components {
-    .menu li.disabled > *:not(ul):not(details):active, .menu li.disabled > *:not(ul):not(details).active, .menu li.disabled > details > summary:active {
-        background-color: transparent;
-    }
+  .menu li.disabled > *:not(ul):not(details):active, .menu li.disabled > *:not(ul):not(details).active, .menu li.disabled > details > summary:active {
+    background-color: transparent;
+  }
 
-    .diagonal-lines {
-        background: repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 9px,
-            transparent 5px,
-            rgba(208, 202, 211, 0.25) 12px
-        );
-    }
+  .diagonal-lines {
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 9px,
+        transparent 5px,
+        rgba(208, 202, 211, 0.25) 12px
+    );
+  }
 
-    .winning-cell::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        opacity: 0.5;
-      }
+  .winning-cell::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 
-      .winning-cell-horizontal::after {
-        background: linear-gradient(0deg, transparent 48%, #EBA219 48%, #EBA219 52%, transparent 52%);
-      }
-      
-      .winning-cell-vertical::after {
-        background: linear-gradient(90deg, transparent 48%, #EBA219 48%, #EBA219 52%, transparent 52%);
-      }
-      
-      .winning-cell-diagonal::after {
-        background: linear-gradient(45deg, transparent 48%, #EBA219 48%, #EBA219 52%, transparent 52%);
-      }
-      
-      .winning-cell-reverse-diagonal::after {
-        background: linear-gradient(-45deg, transparent 48%, #EBA219 48%, #EBA219 52%, transparent 52%);
-      }
+  .winning-cell-horizontal::after {
+    background: linear-gradient(0deg, transparent 48%, hsl(var(--a)) 48%, hsl(var(--a)) 52%, transparent 52%);
+  }
+
+  .winning-cell-vertical::after {
+    background: linear-gradient(90deg, transparent 48%, hsl(var(--a)) 48%, hsl(var(--a)) 52%, transparent 52%);
+  }
+
+  .winning-cell-diagonal::after {
+    background: linear-gradient(45deg, transparent 48%, hsl(var(--a)) 48%, hsl(var(--a)) 52%, transparent 52%);
+  }
+
+  .winning-cell-reverse-diagonal::after {
+    background: linear-gradient(-45deg, transparent 48%, hsl(var(--a)) 48%, hsl(var(--a)) 52%, transparent 52%);
+  }
 }

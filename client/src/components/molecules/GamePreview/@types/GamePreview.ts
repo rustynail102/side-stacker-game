@@ -1,3 +1,6 @@
+import { GameBoardProps } from "@client/components/molecules/GameBoard/@types/GameBoard"
+
 export interface GamePreviewProps {
-  boardStatus: ("X" | "O" | "empty")[][]
+  board?: GameBoardProps["board"]
+  winningMoves?: GameBoardProps["winningMoves"]
 }

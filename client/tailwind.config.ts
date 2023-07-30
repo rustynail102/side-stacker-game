@@ -22,6 +22,7 @@ const tailwindConfig: Config = {
     extend: {
       animation: {
         "bg-gradient-slow": "bg-gradient 1500ms ease infinite",
+        "fade-in": "fade-in 300ms ease-in-out",
       },
       backgroundSize: {
         "400%": "400%",
@@ -31,13 +32,17 @@ const tailwindConfig: Config = {
       },
       boxShadow: {
         "inner-primary": "inset 0px 0px 24px 0px rgba(101, 195, 200, 1)",
-        "inner-secondary": "inset 0px 0px 20px 0px rgba(239, 159, 188, 0.4)",
+        "inner-secondary": "inset 0px 0px 20px 0px rgba(239, 159, 188, 1)",
       },
       keyframes: {
         "bg-gradient": {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
       },
     },

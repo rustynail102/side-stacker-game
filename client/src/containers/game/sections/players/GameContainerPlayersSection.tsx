@@ -7,6 +7,7 @@ import { usePlayersSectionActions } from "@client/containers/game/sections/playe
 
 export const GameContainerPlayersSection: React.FC = () => {
   const {
+    game,
     hasPlayer1NextMove,
     hasPlayer2NextMove,
     isCurrentUserPlayer1,
@@ -29,6 +30,7 @@ export const GameContainerPlayersSection: React.FC = () => {
       hasNextMove: hasPlayer1NextMove,
       isCurrentUser: isCurrentUserPlayer1,
       isDisabled: isUpdatingGame,
+      isWinner: game?.winner_id === player1?.player_id,
       onJoin: joinAsPlayer1,
       onLeave: leaveAsPlayer1,
       player: player1,
@@ -38,6 +40,7 @@ export const GameContainerPlayersSection: React.FC = () => {
       hasNextMove: hasPlayer2NextMove,
       isCurrentUser: isCurrentUserPlayer2,
       isDisabled: isUpdatingGame,
+      isWinner: game?.winner_id === player2?.player_id,
       onJoin: joinAsPlayer2,
       onLeave: leaveAsPlayer2,
       player: player2,

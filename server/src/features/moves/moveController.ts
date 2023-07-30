@@ -4,6 +4,7 @@ import { MoveTypeEnum } from "@server/features/games/gameObject"
 import { MoveModel } from "@server/features/moves/moveModel"
 import { MoveObject } from "@server/features/moves/moveObject"
 import { GameService } from "@server/services/gameService"
+import { MoveService } from "@server/services/moveService"
 import { PlayerService } from "@server/services/playerService"
 import { RequestValidationService } from "@server/services/requestValidationService"
 import { SessionService } from "@server/services/sessionService"
@@ -74,6 +75,8 @@ export class MoveController {
       WebsocketService.emitToast(`${player.username} just won ${game.name}!`)
     }
 
-    res.json(move)
+    const moveResponse = MoveService.parseMoveToResponse(move)
+
+    res.json(moveResponse)
   }
 }

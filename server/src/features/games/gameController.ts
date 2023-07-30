@@ -82,7 +82,7 @@ export class GameController {
     RequestValidationService.validateBody(req.body, z.object({}))
 
     // Get all games
-    const games = await GameModel.getAll({
+    const { games, total } = await GameModel.getAll({
       filters,
       limit,
       offset,
@@ -93,7 +93,10 @@ export class GameController {
     // Prepare response
     const gamesResponse = games.map(GameService.parseGameToResponse)
 
-    res.json(gamesResponse)
+    res.json({
+      games: gamesResponse,
+      total,
+    })
   }
 
   // Get game by ID
