@@ -1,5 +1,8 @@
 import { z } from "zod"
 
+/**
+ * Zod schema for a Migration object.
+ */
 export const MigrationObject = z
   .object({
     executed_at: z.number(),
@@ -8,7 +11,3 @@ export const MigrationObject = z
     type: z.string(),
   })
   .strict()
-
-export const migrationObjectKeys = MigrationObject.keyof()._def.values
-
-export type Migration = z.infer<typeof MigrationObject>

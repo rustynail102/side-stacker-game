@@ -9,6 +9,9 @@ import { Typography } from "@client/components/atoms/Typography/Typography"
 import { PlayerResponse } from "@server/@types/api"
 import dayjs from "dayjs"
 
+/**
+ * Function that maps players to rows for the players table in the home page.
+ */
 export const mapPlayersToRows = (
   authenticated_user_id?: PlayerResponse["player_id"],
   players?: PlayerResponse[],
@@ -16,9 +19,6 @@ export const mapPlayersToRows = (
   if (!players) {
     return []
   }
-
-  const isAuthenticatedUser = (player_id: PlayerResponse["player_id"]) =>
-    player_id === authenticated_user_id
 
   return players.map(({ is_online, last_active_at, username, player_id }) => [
     <FlexRow>
@@ -28,7 +28,7 @@ export const mapPlayersToRows = (
       <Typography
         variant={TypographyVariant.Span}
         weight={
-          isAuthenticatedUser(player_id)
+          player_id === authenticated_user_id
             ? TypographyWeight.Bold
             : TypographyWeight.Normal
         }

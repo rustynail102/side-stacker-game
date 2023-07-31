@@ -21,6 +21,9 @@ import {
 import { ReactNode } from "react"
 import { FaMedal } from "react-icons/fa"
 
+/**
+ * A row component that displays information about a player in a game.
+ */
 export const GamePlayerRow = ({
   hasNextMove,
   isCurrentUser,
@@ -73,6 +76,7 @@ export const GamePlayerRow = ({
     <>
       {player && isCurrentUser && onLeave && (
         <Button
+          ariaLabel="Leave game"
           fill={ButtonFill.Outline}
           disabled={isDisabled}
           onClick={onLeave}
@@ -83,7 +87,12 @@ export const GamePlayerRow = ({
         </Button>
       )}
       {!player && onJoin && (
-        <Button disabled={isDisabled} onClick={onJoin} size={ButtonSize.Xs}>
+        <Button
+          ariaLabel="Join game"
+          disabled={isDisabled}
+          onClick={onJoin}
+          size={ButtonSize.Xs}
+        >
           Join
         </Button>
       )}

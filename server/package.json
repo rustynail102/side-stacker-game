@@ -33,6 +33,7 @@
     "module-alias": "^2.2.3",
     "prettier": "^3.0.0",
     "ts-node-dev": "^2.0.0",
+    "ts-prune": "^0.10.3",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6"
   },
@@ -50,6 +51,7 @@
     "db:reverse-migration": "NODE_ENV=development npm run db:start && ts-node-dev -r tsconfig-paths/register --project tsconfig.json src/db/scripts/reverseLastDbMigration.ts",
     "db:start": "docker-compose up db -d",
     "db:stop": "docker-compose down",
+    "dead-code": "ts-prune",
     "dev": "NODE_ENV=development npm run db:start && NODE_ENV=development npm run redis:start && NODE_ENV=development ts-node-dev -r tsconfig-paths/register --project tsconfig.json src/index.ts",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",

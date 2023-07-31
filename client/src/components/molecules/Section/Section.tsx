@@ -2,6 +2,9 @@ import { TypographyVariant } from "@client/components/atoms/Typography/@types/Ty
 import { Typography } from "@client/components/atoms/Typography/Typography"
 import { SectionProps } from "@client/components/molecules/Section/@types/Section"
 
+/**
+ * A section component that groups related content together.
+ */
 export const Section: React.FC<SectionProps> = ({ children, title }) => (
   <div className="my-12">
     <div className="divider mb-4 mt-0 h-8">

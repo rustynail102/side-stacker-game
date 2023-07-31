@@ -1,11 +1,10 @@
 import { z } from "zod"
 
+/**
+ * Zod schema for a Count object. It includes one property: count (a string).
+ */
 export const CountObject = z
   .object({
     count: z.string(),
   })
   .strict()
-
-export const countObjectKeys = CountObject.keyof()._def.values
-
-export type Count = z.infer<typeof CountObject>

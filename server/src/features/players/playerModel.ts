@@ -21,7 +21,17 @@ const sql = createSqlTag({
   },
 })
 
+/**
+ * PlayerModel contains methods for interacting with the players table in the database.
+ */
 export class PlayerModel {
+  /**
+   * Helper function for executing a database query and handling the NotFoundError.
+   * @param connection - The database connection to use for the query.
+   * @param query - The SQL query to execute.
+   * @returns The first row of the result set from the query.
+   * @throws NotFoundError - If no rows were returned by the query.
+   */
   private static async executeQuery(
     connection: DatabasePoolConnection,
     query: QuerySqlToken<ZodTypeAny>,
@@ -35,6 +45,11 @@ export class PlayerModel {
     return rows[0]
   }
 
+  /**
+   * Creates a new player in the database.
+   * @param Player - Player object with username and password
+   * @returns A Promise that resolves with the created Player.
+   */
   static create = ({
     password,
     username,
@@ -68,6 +83,11 @@ export class PlayerModel {
       return rows[0]
     })
 
+  /**
+   * Soft-deletes a player from the database.
+   * @param player_id - ID of the player to delete
+   * @returns A Promise that resolves with the deleted Player.
+   */
   static delete = (
     player_id: Player["player_id"],
   ): Promise<Omit<Player, "password">> =>
@@ -84,6 +104,11 @@ export class PlayerModel {
       return PlayerModel.executeQuery(connection, query)
     })
 
+  /**
+   * Retrieves all players from the database.
+   * @param options - An object containing the filters and pagination options for the query.
+   * @returns A Promise that resolves with an object containing the matching players and the total number of players.
+   */
   static getAll = ({
     filters,
     filterType = "AND",
@@ -151,6 +176,11 @@ export class PlayerModel {
       }
     })
 
+  /**
+   * Retrieves a player from the database by their ID.
+   * @param player_id - The ID of the player to retrieve.
+   * @returns A Promise that resolves with the player.
+   */
   static getById = (player_id: Player["player_id"]): Promise<Player> =>
     databasePool.connect(async (connection) =>
       connection.one(
@@ -162,6 +192,12 @@ export class PlayerModel {
       ),
     )
 
+  /**
+   * Retrieves a player from the database by their ID.
+   * @param player_id - The ID of the player to update.
+   * @param fields - An object containing the fields to update and their new values.
+   * @returns A Promise that resolves with the updated player.
+   */
   static update = (
     player_id: Player["player_id"],
     { username }: Partial<Pick<Player, "username">>,
@@ -184,6 +220,9 @@ export class PlayerModel {
     })
 }
 
+/**
+ * PlayerModelSchema defines the SQL for creating the players table in the database.
+ */
 export const PlayerModelSchema = sql.unsafe`
   CREATE TABLE IF NOT EXISTS players (
     player_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

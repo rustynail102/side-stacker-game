@@ -1,33 +1,19 @@
-import { axiosPost } from "@client/helpers/api/axiosPost"
-import { getAxiosError } from "@client/helpers/api/getAxiosError"
-import { useToast } from "@client/hooks/useToast"
-import { MutateOptions, useMutation } from "@tanstack/react-query"
 import { Path } from "@server/routes/paths"
+import { useApiMutation } from "@client/hooks/useApiMutation"
+import { ApiMutationHttpMethod } from "@client/hooks/@types/useApiMutation"
 
+/**
+ * Hook used to sign out.
+ * @returns {Object} - The query object from React Query, with the signOut mutation added.
+ */
 export const useSignOut = () => {
-  const { mutate, ...signOutMutation } = useMutation({
-    mutationFn: () => axiosPost(Path.SignOut),
-  })
-  const { errorToast } = useToast()
-
-  const signOut = (
-    options?: MutateOptions<unknown, unknown, unknown, unknown>,
-  ) =>
-    mutate(undefined, {
-      onError: (error) => {
-        const apiError = getAxiosError(error)
-
-        if (apiError) {
-          apiError.errors.forEach((message) => {
-            errorToast(message)
-          })
-        }
-      },
-      ...options,
-    })
+  const { apiMutation, ...mutation } = useApiMutation<undefined, undefined>(
+    Path.SignOut,
+    ApiMutationHttpMethod.POST,
+  )
 
   return {
-    ...signOutMutation,
-    signOut,
+    ...mutation,
+    signOut: apiMutation,
   }
 }

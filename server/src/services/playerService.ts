@@ -8,10 +8,13 @@ import { PasswordService } from "@server/services/passwordService"
 import { RedisService } from "@server/services/redisService"
 import { WebsocketService } from "@server/services/websocketService"
 
+/**
+ * PlayerService is a class that contains static methods related to player logic.
+ */
 export class PlayerService {
-  /*
-    Transforms the player object to a response that can be sent to client.
-  */
+  /**
+   * parsePlayerToResponse transforms the player object to a response that can be sent to client.
+   */
   static parsePlayerToResponse = (
     player: Omit<Player, "password">,
     is_online?: boolean,
@@ -30,7 +33,7 @@ export class PlayerService {
     }
   }
 
-  /*
+  /**
     Retrieves the player with the provided username from the database, verifies that the provided password matches the one stored in the database, and returns the player object if the credentials are valid.
   */
   static validateUsernameAndPassword = async (
@@ -61,7 +64,7 @@ export class PlayerService {
     return { player }
   }
 
-  /*
+  /**
     Updates the player's status (last active) in the database and Redis cache to 'online', sends a WebSocket message to invalidate the client's cached player list and player details.
   */
   static markAsOnline = async (
@@ -82,7 +85,7 @@ export class PlayerService {
     return { player }
   }
 
-  /*
+  /**
     Updates the player's status in the database and Redis cache to 'offline', and sends websocket messages to update the client's state.
   */
   static markAsOffline = async (player_id: Player["player_id"]) => {
@@ -96,7 +99,7 @@ export class PlayerService {
     )
   }
 
-  /*
+  /**
     Hashes and salts the password. Creates a new player in the database. Updates player in Redis cache to 'online', and sends websocket messages to update the client's state. Emits a toast. Returns newPlayer along with parsed
     newPlayerResponse
   */
@@ -119,7 +122,7 @@ export class PlayerService {
     return { newPlayer, newPlayerResponse }
   }
 
-  /*
+  /**
     Makes sure that username is available. If it's not, it throws ValidationError. 
   */
   static validateUsername = async (username: Player["username"]) => {
@@ -134,7 +137,7 @@ export class PlayerService {
     }
   }
 
-  /*
+  /**
     Deletes player (soft delete). Remove player from active games. Mark player as offline. 
   */
   static deletePlayer = async (player_id: Player["player_id"]) => {
@@ -143,7 +146,7 @@ export class PlayerService {
     await PlayerService.markAsOffline(deletedPlayer.player_id)
   }
 
-  /*
+  /**
     Updates player. Parse player to response, emit toast if username is changed, emit events to invalidate players queries. 
   */
   static updatePlayer = async (

@@ -9,6 +9,12 @@ import { ErrorBoundary } from "react-error-boundary"
 import { IconType } from "react-icons"
 import { FiAlertCircle } from "react-icons/fi"
 
+/**
+ * Higher-order component that provides error boundary functionality to the wrapped component.
+ * It uses QueryErrorResetBoundary and react-error-boundary's ErrorBoundary.
+ * @param {React.FC<Record<string, unknown>>} WrappedComponent - The component to wrap with an error boundary.
+ * @returns {React.FC<Record<string, unknown>>} - The component wrapped with an error boundary.
+ */
 export const withErrorBoundary =
   (WrappedComponent: React.FC<Record<string, unknown>>) =>
   (props: Record<string, unknown>) => (
@@ -23,6 +29,7 @@ export const withErrorBoundary =
                 {error instanceof Error ? error?.message : ""}
               </Alert>
               <Button
+                ariaLabel="Reload the application"
                 onClick={resetErrorBoundary}
                 variant={ButtonVariant.Warning}
               >

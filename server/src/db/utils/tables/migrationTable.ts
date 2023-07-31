@@ -1,5 +1,8 @@
 import { sql } from "slonik"
 
+/**
+ * SQL query to create the migrations table if it does not exist.
+ */
 export const MigrationsTableInit = sql.unsafe`
     CREATE TABLE IF NOT EXISTS migrations (
     executed_at TIMESTAMP NOT NULL DEFAULT NOW(),

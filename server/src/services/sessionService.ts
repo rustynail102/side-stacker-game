@@ -5,9 +5,13 @@ import { InternalServerError } from "@server/errors/internalServerError"
 import { Request, Response } from "express"
 import { Session } from "express-session"
 
-// SessionService is responsible for managing the HTTP sessions
+/**
+    SessionService is responsible for managing the HTTP sessions
+  */
 export class SessionService {
-  // Stores the session data on the request
+  /**
+    Stores the session data on the request
+  */
   static setSessionData = (
     req: Request,
     { player_id }: Pick<Player, "player_id">,
@@ -23,7 +27,9 @@ export class SessionService {
     })
   }
 
-  // Retrieves the session data from the request
+  /**
+    Retrieves the session data from the request
+  */
   static getSessionData = (req: Request) => {
     const player_id = req.session.player_id
 
@@ -36,7 +42,9 @@ export class SessionService {
     }
   }
 
-  // Destroys the session and disconnects all sockets associated with the session
+  /**
+     Destroys the session and disconnects all sockets associated with the session
+  */
   static destroySession = (req: Request, res: Response) => {
     const sessionId = req.session.id
 

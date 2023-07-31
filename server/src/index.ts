@@ -12,6 +12,9 @@ import { Path } from "@server/routes/paths"
 import express from "express"
 import { createServer as createHttpServer } from "http"
 
+/**
+ * Starts the server.
+ */
 const startServer = async () => {
   const app = express()
 

@@ -30,7 +30,17 @@ const sql = createSqlTag({
   },
 })
 
+/**
+ * The GameModel class provides methods for performing database operations on the games table.
+ */
 export class GameModel {
+  /**
+   * Helper function for generating an array of SQL fragments for updating fields in the database.
+   * @param fields - An object containing the fields to update and their new values.
+   * @param keys - An array of keys representing the fields to update.
+   * @param types - An object mapping keys to their associated value types.
+   * @returns An array of SQL fragments for use in an update query.
+   */
   private static updateFields = (
     fields: Partial<Game>,
     keys: (keyof Omit<Game, "created_at" | "game_id" | "name">)[],
@@ -54,6 +64,13 @@ export class GameModel {
         }
       })
 
+  /**
+   * Helper function for executing a database query and handling the NotFoundError.
+   * @param connection - The database connection to use for the query.
+   * @param query - The SQL query to execute.
+   * @returns The first row of the result set from the query.
+   * @throws NotFoundError - If no rows were returned by the query.
+   */
   private static async executeQuery(
     connection: DatabasePoolConnection,
     query: QuerySqlToken<ZodTypeAny>,
@@ -67,6 +84,11 @@ export class GameModel {
     return rows[0]
   }
 
+  /**
+   * Inserts a new game record into the database.
+   * @param game - An object containing the details of the game to create.
+   * @returns A Promise that resolves with the created game.
+   */
   static create = ({
     player1_id,
     player2_id,
@@ -125,6 +147,11 @@ export class GameModel {
       return rows[0]
     })
 
+  /**
+   * Retrieves all game records from the database that match the provided filters.
+   * @param options - An object containing the filters and pagination options for the query.
+   * @returns A Promise that resolves with an object containing the matching games and the total number of games.
+   */
   static getAll = ({
     filters,
     limit = 40,
@@ -188,6 +215,11 @@ export class GameModel {
       }
     })
 
+  /**
+   * Retrieves a game record from the database by its ID.
+   * @param game_id - The ID of the game to retrieve.
+   * @returns A Promise that resolves with the game.
+   */
   static getById = (game_id: Game["game_id"]): Promise<Game> =>
     databasePool.connect(async (connection) =>
       connection.one(
@@ -199,6 +231,12 @@ export class GameModel {
       ),
     )
 
+  /**
+   * Updates a game record in the database.
+   * @param game_id - The ID of the game to update.
+   * @param fields - An object containing the fields to update and their new values.
+   * @returns A Promise that resolves with the updated game.
+   */
   static update = (
     game_id: Game["game_id"],
     fields: Partial<Omit<Game, "created_at" | "game_id" | "name">>,
@@ -241,6 +279,9 @@ export class GameModel {
     })
 }
 
+/**
+ * SQL query to create the games table in the database if it does not already exist.
+ */
 export const GameModelSchema = sql.unsafe`
     DO $$ BEGIN
         CREATE TYPE game_state AS ENUM ('waiting_for_players', 'in_progress', 'finished');

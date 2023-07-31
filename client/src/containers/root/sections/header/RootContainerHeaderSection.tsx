@@ -20,13 +20,25 @@ import { useNavigate } from "@tanstack/router"
 import isEqual from "lodash/isEqual"
 import { useCallback } from "react"
 
+// Define text constants
+const CREATE_GAME_ARIA_LABEL = "Create new game"
+const NAVIGATE_GAME_LOBBY_ARIA_LABEL = "Navigate to game lobby"
+const NEW_GAME_TEXT = "New Game"
+const GAME_LOBBY_TEXT = "Game Lobby"
+const SIGN_OUT_TEXT = "Sign Out"
+const GREETING_TEXT = "Hi, "
+
+/**
+ * Component that displays the header section of the root container. It handles the logic for signing out and creating new games.
+ * It uses the `useCreateGame` and `useSignOut` hooks for creating new games and signing out, respectively.
+ */
 export const RootContainerHeaderSection: React.FC = () => {
   const { currentPlayer } = useGetCurrentPlayer()
   const { isLoading: isSigningOut, signOut } = useSignOut()
   const queryClient = useQueryClient()
 
   const handleSignOut = () => {
-    signOut({
+    signOut(undefined, {
       onSettled: async () => {
         await queryClient.resetQueries({ queryKey: queryKeys.players.current })
         await queryClient.cancelQueries({
@@ -74,26 +86,28 @@ export const RootContainerHeaderSection: React.FC = () => {
   return (
     <Header>
       <Button
+        ariaLabel={CREATE_GAME_ARIA_LABEL}
         disabled={!currentPlayer?.player_id}
         isLoading={isCreatingGame}
         onClick={handleCreateGame}
       >
-        New Game
+        {NEW_GAME_TEXT}
       </Button>
       <Button
+        ariaLabel={NAVIGATE_GAME_LOBBY_ARIA_LABEL}
         fill={ButtonFill.Outline}
         isLoading={isCreatingGame}
         onClick={navigateToGameLobby}
         variant={ButtonVariant.Neutral}
       >
-        Game Lobby
+        {GAME_LOBBY_TEXT}
       </Button>
       <Dropdown
         items={[
           {
             isLoading: isSigningOut,
             onClick: handleSignOut,
-            text: "Sign Out",
+            text: SIGN_OUT_TEXT,
           },
         ]}
       >
@@ -101,7 +115,7 @@ export const RootContainerHeaderSection: React.FC = () => {
           alignment={TypographyAlignment.Center}
           variant={TypographyVariant.Callout}
         >
-          Hi, <strong>{currentPlayer?.username || "user"}</strong>
+          {GREETING_TEXT} <strong>{currentPlayer?.username || "user"}</strong>
         </Typography>
       </Dropdown>
     </Header>

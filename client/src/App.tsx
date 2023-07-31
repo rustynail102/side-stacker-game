@@ -7,6 +7,9 @@ import { withErrorBoundary } from "@client/hoc/withErrorBoundary"
 
 import "@client/styles/global.css"
 
+/**
+ * Defines the the main App component
+ */
 const _App: React.FC = () => <RouterProvider router={router} />
 
 export const App = composeFunctions<Record<string, unknown>>(

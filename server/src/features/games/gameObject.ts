@@ -1,13 +1,22 @@
 import { z } from "zod"
 
+/**
+ * GameStateEnum defines the possible states a game can be in.
+ */
 export const GameStateEnum = z.enum([
   "waiting_for_players",
   "in_progress",
   "finished",
 ])
 
+/**
+ * MoveTypeEnum defines the possible types of moves in a game.
+ */
 export const MoveTypeEnum = z.enum(["X", "O", "empty"])
 
+/**
+ * GameObject defines the schema for a game object.
+ */
 export const GameObject = z
   .object({
     created_at: z.number(),
@@ -24,5 +33,3 @@ export const GameObject = z
     winning_moves: z.array(z.array(z.number())).optional().nullable(),
   })
   .strict()
-
-export const gameObjectKeys = GameObject.keyof()._def.values

@@ -8,11 +8,15 @@ import { usePagination } from "@client/hooks/usePagination"
 import { GameStateEnum } from "@server/@types/api"
 import isEmpty from "lodash/isEmpty"
 import { IconType } from "react-icons"
-import { FiFrown } from "react-icons/fi"
+import { FiAlertCircle, FiFrown } from "react-icons/fi"
 
+/**
+ * Section component for the finished games in the home page. It displays the finished games and handles pagination.
+ */
 export const HomeContainerFinishedGamesSection: React.FC = () => {
   const { limit, offset, setOffset } = usePagination()
   const {
+    error,
     games: finishedGames,
     isInitialLoading,
     total,
@@ -50,9 +54,18 @@ export const HomeContainerFinishedGamesSection: React.FC = () => {
           )}
         </>
       ) : (
-        <Alert icon={FiFrown as IconType} type={AlertType.Accent}>
-          There are no Finished Games at the moment
-        </Alert>
+        <>
+          {error ? (
+            <Alert icon={FiAlertCircle as IconType} type={AlertType.Error}>
+              It seems that there's a problem with the service. Please try again
+              later.
+            </Alert>
+          ) : (
+            <Alert icon={FiFrown as IconType} type={AlertType.Accent}>
+              There are no Finished Games at the moment
+            </Alert>
+          )}
+        </>
       )}
     </Section>
   )

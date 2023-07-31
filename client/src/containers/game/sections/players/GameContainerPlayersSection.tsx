@@ -5,6 +5,9 @@ import { Table } from "@client/components/organisms/Table/Table"
 import { useGameContainerQueries } from "@client/containers/game/hooks/useGameContainerQueries"
 import { usePlayersSectionActions } from "@client/containers/game/sections/players/hooks/usePlayersSectionActions"
 
+/**
+ * Section component for the game players in the game page. It displays the game players and handles the join and leave actions for the players.
+ */
 export const GameContainerPlayersSection: React.FC = () => {
   const {
     game,

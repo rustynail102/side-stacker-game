@@ -6,6 +6,9 @@ import {
 } from "@client/components/atoms/GameBoardCell/@types/GameBoardCell"
 import { commonCellClassNames } from "@client/components/atoms/GameBoardCell/styles"
 
+/**
+ * A cell component for the game board. It can represent an "X", an "O", or an empty cell.
+ */
 export const GameBoardCell: React.FC<GameBoardCellProps> = ({
   cell,
   isLoading = false,
@@ -16,6 +19,7 @@ export const GameBoardCell: React.FC<GameBoardCellProps> = ({
   winDirection,
 }) => (
   <div
+    aria-label={cell}
     className={`
         flex items-center justify-center 
         border-r-2 last:border-r-0 border-base-300

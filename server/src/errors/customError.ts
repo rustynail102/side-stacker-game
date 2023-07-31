@@ -1,3 +1,6 @@
+/**
+ * Custom error class definition.
+ */
 export class CustomError extends Error {
   statusCode: number
   errors: string[]

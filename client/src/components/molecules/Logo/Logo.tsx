@@ -10,6 +10,9 @@ import {
   LogoSize,
 } from "@client/components/molecules/Logo/@types/Logo"
 
+/**
+ * A logo component that displays the application's logo and name.
+ */
 export const Logo: React.FC<LogoProps> = ({
   className,
   size = LogoSize.Lg,

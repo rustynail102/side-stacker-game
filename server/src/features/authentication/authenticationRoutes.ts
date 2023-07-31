@@ -3,6 +3,9 @@ import { requestAsyncHandlerMiddleware } from "@server/middlewares/http/requestA
 import { Path } from "@server/routes/paths"
 import express from "express"
 
+/**
+    Authentication router
+  */
 const authenticationRouter = express.Router()
 
 authenticationRouter.post(

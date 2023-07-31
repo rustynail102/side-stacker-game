@@ -4,6 +4,9 @@ import { GameBoardProps } from "@client/components/molecules/GameBoard/@types/Ga
 import { determineWinDirection } from "@client/components/molecules/GameBoard/helpers/determineWinDirection"
 import { GameBoardLoader } from "@client/components/molecules/GameBoard/loaders/GameBoardLoader"
 
+/**
+ * A game board component that displays the current state of a game.
+ */
 export const GameBoard: React.FC<GameBoardProps> = ({
   board = [],
   isLoading,

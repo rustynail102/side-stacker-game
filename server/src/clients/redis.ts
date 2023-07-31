@@ -1,8 +1,14 @@
 import RedisStore from "connect-redis"
 import { createClient } from "redis"
 
+/**
+ * Redis instance
+ */
 export const redisClient = createClient()
 
+/**
+ * Sets up a connection to a Redis instance and logs errors.
+ */
 export const connectToRedis = async () => {
   redisClient.on("error", (err) => console.log("Redis Client Error", err))
 

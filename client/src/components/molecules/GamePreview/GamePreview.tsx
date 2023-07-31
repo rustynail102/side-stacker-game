@@ -1,6 +1,9 @@
 import { GameBoard } from "@client/components/molecules/GameBoard/GameBoard"
 import { GamePreviewProps } from "@client/components/molecules/GamePreview/@types/GamePreview"
 
+/**
+ * A preview component that displays a snapshot of a game board.
+ */
 export const GamePreview: React.FC<GamePreviewProps> = ({
   board,
   winningMoves,

@@ -11,6 +11,9 @@ import dayjs from "dayjs"
 import { mapCurrentBoardStatusToBoard } from "@client/components/molecules/GameCard/helpers/mapCurrentBoardStatusToBoard"
 import { getResult } from "@client/components/molecules/GameCard/helpers/getResult"
 
+/**
+ * A card component that displays a preview of a game.
+ */
 export const GameCard: React.FC<GameCardProps> = ({ className = "", game }) => {
   const { game_id, number_of_moves, created_at, name, winning_moves } = game
   const numberOfPlayers = calculateNumberOfPlayersInGame(game)

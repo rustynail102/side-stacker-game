@@ -3,9 +3,16 @@ import { useGetGame } from "@client/api/queries/useGetGame"
 import { useGetPlayer } from "@client/api/queries/useGetPlayer"
 import { useParams } from "@tanstack/router"
 
+/**
+ * Custom hook that provides game container queries such as game, isInitialLoading, hasCurrentUserNextMove, hasPlayer1NextMove, and hasPlayer2NextMove.
+ */
 export const useGameContainerQueries = () => {
   const { game_id } = useParams()
-  const { game, isInitialLoading: isInitialLoadingGame } = useGetGame(
+  const {
+    error: errorGame,
+    game,
+    isInitialLoading: isInitialLoadingGame,
+  } = useGetGame(
     {
       game_id,
     },
@@ -13,20 +20,28 @@ export const useGameContainerQueries = () => {
       keepPreviousData: true,
     },
   )
-  const { isInitialLoading: isInitialLoadingPlayer1, player: player1 } =
-    useGetPlayer(
-      { player_id: game?.player1_id ?? "" },
-      {
-        enabled: Boolean(game?.player1_id),
-      },
-    )
-  const { isInitialLoading: isInitialLoadingPlayer2, player: player2 } =
-    useGetPlayer(
-      { player_id: game?.player2_id ?? "" },
-      {
-        enabled: Boolean(game?.player2_id),
-      },
-    )
+  const {
+    error: errorPlayer1,
+    isInitialLoading: isInitialLoadingPlayer1,
+    player: player1,
+  } = useGetPlayer(
+    { player_id: game?.player1_id ?? "" },
+    {
+      enabled: Boolean(game?.player1_id),
+    },
+  )
+  const {
+    error: errorPlayer2,
+    isInitialLoading: isInitialLoadingPlayer2,
+    player: player2,
+  } = useGetPlayer(
+    { player_id: game?.player2_id ?? "" },
+    {
+      enabled: Boolean(game?.player2_id),
+    },
+  )
+
+  const hasError = errorGame || errorPlayer1 || errorPlayer2
 
   const isInitialLoading =
     isInitialLoadingGame || isInitialLoadingPlayer1 || isInitialLoadingPlayer2
@@ -51,6 +66,7 @@ export const useGameContainerQueries = () => {
     currentPlayer,
     game,
     hasCurrentUserNextMove,
+    hasError,
     hasPlayer1NextMove,
     hasPlayer2NextMove,
     isCurrentUserPlayer1,

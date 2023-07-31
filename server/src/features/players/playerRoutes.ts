@@ -3,6 +3,10 @@ import { requestAsyncHandlerMiddleware } from "@server/middlewares/http/requestA
 import { Path } from "@server/routes/paths"
 import express from "express"
 
+/**
+ * playersRouter is an Express router that handles HTTP requests
+ * for player-related operations.
+ */
 const playersRouter = express.Router()
 
 playersRouter.post(

@@ -15,6 +15,11 @@ let websocketsServer: SocketIOServer<
   SocketData
 >
 
+/**
+ * Creates a new WebSocket server using the provided HTTP server.
+ * @param httpServer - The HTTP server to upgrade to a WebSocket server.
+ * @returns The newly created WebSocket server.
+ */
 export const createWebsocketsServer = (
   httpServer: Server<typeof IncomingMessage, typeof ServerResponse>,
 ) => {

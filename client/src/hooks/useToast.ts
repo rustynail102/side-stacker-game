@@ -6,6 +6,11 @@ const calculateAutoCloseTime = (message: string) => {
   return time <= 2000 ? 2000 : time
 }
 
+/**
+ * Hook that provides functions for showing success and error toasts.
+ * The duration of the toast is calculated based on the length of the message.
+ * @returns {Object} - The functions for showing success and error toasts.
+ */
 export const useToast = () => {
   const errorToast = (message: string) => {
     toast.error(message, {

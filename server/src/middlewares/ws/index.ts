@@ -9,6 +9,9 @@ import { handleSocketConnectionMiddleware } from "@server/middlewares/ws/handleS
 import { logWsErrorsMiddleware } from "@server/middlewares/ws/logWsErrors"
 import { Server as SocketIOServer } from "socket.io"
 
+/**
+ * useWsMiddlewares sets up the necessary middlewares for the WebSocket server.
+ */
 export const useWsMiddlewares = (
   websocketsServer: SocketIOServer<
     ClientToServerEvents,

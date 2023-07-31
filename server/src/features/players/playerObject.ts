@@ -1,5 +1,9 @@
 import { z } from "zod"
 
+/**
+ * PlayerObject is a Zod schema that validates an object for the properties
+ * of a player.
+ */
 export const PlayerObject = z
   .object({
     created_at: z.number(),
@@ -10,5 +14,3 @@ export const PlayerObject = z
     username: z.string().max(100),
   })
   .strict()
-
-export const playerObjectKeys = PlayerObject.keyof()._def.values

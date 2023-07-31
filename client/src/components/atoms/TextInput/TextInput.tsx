@@ -2,6 +2,9 @@ import { TextInputProps } from "@client/components/atoms/TextInput/@types/TextIn
 import { getInputColor } from "@client/components/atoms/TextInput/styles"
 import { forwardRef } from "react"
 
+/**
+ * A text input component with customizable classes.
+ */
 const _TextInput: React.ForwardRefRenderFunction<
   HTMLInputElement,
   TextInputProps

@@ -9,8 +9,15 @@ import { SessionService } from "@server/services/sessionService"
 import { RedisService } from "@server/services/redisService"
 import { AuthenticationError } from "@server/errors/authenticationError"
 
+/**
+ * PlayerController contains methods for handling HTTP requests related to players.
+ */
 export class PlayerController {
-  // Creates a new player
+  /**
+    Create a new player
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static create = async (req: Request, res: Response) => {
     // Validation of query and body of the request
     RequestValidationService.validateQuery(req.query, z.object({}))
@@ -37,7 +44,11 @@ export class PlayerController {
     res.json(newPlayerResponse)
   }
 
-  // Deletes an existing player (soft delete)
+  /**
+    Deletes an existing player (soft delete)
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static delete = async (req: Request, res: Response) => {
     // Retrieve player id from session data
     const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
@@ -62,7 +73,11 @@ export class PlayerController {
     SessionService.destroySession(req, res)
   }
 
-  // Gets all players
+  /**
+    Gets all players
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static getAll = async (req: Request, res: Response) => {
     // Validate session data
     const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
@@ -114,7 +129,11 @@ export class PlayerController {
     })
   }
 
-  // Gets a player by id
+  /**
+    Gets a player by id
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static getById = async (req: Request, res: Response) => {
     // Validate session data
     const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
@@ -143,7 +162,11 @@ export class PlayerController {
     res.json(playerResponse)
   }
 
-  // Gets the current player (the one in session)
+  /**
+    Gets the current player (the one in session)
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static getCurrent = async (req: Request, res: Response) => {
     // Retrieve player id from session data
     const { player_id } = SessionService.getSessionData(req)
@@ -164,7 +187,11 @@ export class PlayerController {
     res.json(playerResponse)
   }
 
-  // Updates a player's data
+  /**
+    Updates a player's data
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static update = async (req: Request, res: Response) => {
     // Retrieve player id from session data
     const { player_id: sessionPlayerId } = SessionService.getSessionData(req)

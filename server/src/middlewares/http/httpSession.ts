@@ -1,6 +1,10 @@
 import { redisStore } from "@server/clients/redis"
 import expressSession from "express-session"
 
+/**
+ * httpSessionMiddleware is an Express middleware that sets up a session using
+ * express-session, with Redis as the session store.
+ */
 export const httpSessionMiddleware = expressSession({
   cookie: {
     httpOnly: true,

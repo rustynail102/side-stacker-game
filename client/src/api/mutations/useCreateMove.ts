@@ -1,36 +1,20 @@
-import { axiosPost } from "@client/helpers/api/axiosPost"
-import { getAxiosError } from "@client/helpers/api/getAxiosError"
-import { useToast } from "@client/hooks/useToast"
 import { CreateMovePostBody, MoveResponse } from "@server/@types/api"
-import { MutateOptions, useMutation } from "@tanstack/react-query"
 import { Path } from "@server/routes/paths"
+import { useApiMutation } from "@client/hooks/useApiMutation"
+import { ApiMutationHttpMethod } from "@client/hooks/@types/useApiMutation"
 
+/**
+ * Hook to create a new move.
+ * @returns {Object} - The query object from React Query, with the createMove mutation added.
+ */
 export const useCreateMove = () => {
-  const { mutate, ...createMoveMutation } = useMutation({
-    mutationFn: (body: CreateMovePostBody) =>
-      axiosPost<MoveResponse>(Path.Moves, body),
-  })
-  const { errorToast } = useToast()
-
-  const createMove = (
-    body: CreateMovePostBody,
-    options?: MutateOptions<MoveResponse, unknown, CreateMovePostBody, unknown>,
-  ) =>
-    mutate(body, {
-      onError: (error) => {
-        const apiError = getAxiosError(error)
-
-        if (apiError) {
-          apiError.errors.forEach((message) => {
-            errorToast(message)
-          })
-        }
-      },
-      ...options,
-    })
+  const { apiMutation, ...mutation } = useApiMutation<
+    MoveResponse,
+    CreateMovePostBody
+  >(Path.Moves, ApiMutationHttpMethod.POST)
 
   return {
-    ...createMoveMutation,
-    createMove,
+    ...mutation,
+    createMove: apiMutation,
   }
 }

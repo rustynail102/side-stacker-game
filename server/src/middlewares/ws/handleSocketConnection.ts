@@ -9,6 +9,10 @@ import { RedisService } from "@server/services/redisService"
 import { WebsocketService } from "@server/services/websocketService"
 import { Socket } from "socket.io"
 
+/**
+ * handleSocketConnectionMiddleware is a middleware that handles a
+ * new WebSocket connection.
+ */
 export const handleSocketConnectionMiddleware = async (
   socket: Socket<
     ClientToServerEvents,

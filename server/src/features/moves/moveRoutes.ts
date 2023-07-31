@@ -3,6 +3,9 @@ import { requestAsyncHandlerMiddleware } from "@server/middlewares/http/requestA
 import { Path } from "@server/routes/paths"
 import express from "express"
 
+/**
+ * movesRouter sets up the routes for the moves resource.
+ */
 const movesRouter = express.Router()
 
 movesRouter.post(

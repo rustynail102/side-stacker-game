@@ -7,6 +7,10 @@ import { Logo } from "@client/components/molecules/Logo/Logo"
 import { AuthenticationTemplateProps } from "@client/components/templates/AuthenticationTemplate/@types/AuthenticationTemplate"
 import { Fragment } from "react"
 
+/**
+ * A template component for authentication-related pages. It displays a logo and provides a layout for forms or other content.
+ * The layout can be customized with props.
+ */
 export const AuthenticationTemplate: React.FC<AuthenticationTemplateProps> = ({
   children,
   dividerText = "OR",

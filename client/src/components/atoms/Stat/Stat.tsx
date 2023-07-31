@@ -6,6 +6,9 @@ import {
 } from "@client/components/atoms/Stat/@types/Stat"
 import { mapStatVariantToLoaderStyles } from "@client/components/atoms/Stat/styles"
 
+/**
+ * A stat component that displays an icon, a title, and a value. It can be in a loading state.
+ */
 export const Stat: React.FC<StatProps> = ({
   icon,
   isLoading,

@@ -3,6 +3,9 @@ import { getFinalResult } from "@client/containers/game/sections/status/helpers/
 import { useGameContainerQueries } from "@client/containers/game/hooks/useGameContainerQueries"
 import { getGameStatusCardTitle } from "@client/containers/game/sections/status/helpers/getGameStatusCardTitle"
 
+/**
+ * Section component for the game status in the game page. It displays the game status such as next move, final result, and game status card title.
+ */
 export const GameContainerStatusSection: React.FC = () => {
   const {
     game,

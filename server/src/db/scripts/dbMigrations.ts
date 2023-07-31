@@ -8,7 +8,9 @@ import path from "node:path"
 import { MigrationObject } from "@server/db/utils/objects/migrationObject"
 import { z } from "zod"
 
-// SQL tag for migrations, with type aliases for migration and null
+/**
+ * SQL tag for migrations, with type aliases for migration and null
+ */
 export const migrationsSql = createSqlTag({
   typeAliases: {
     migration: MigrationObject,
@@ -16,11 +18,19 @@ export const migrationsSql = createSqlTag({
   },
 })
 
-// Returns the directory path for the given migration type ("up" or "down")
+/**
+ * Returns the directory path for the given migration type ("up" or "down")
+ * @param {String} type - Path of migrations directory
+ * @returns {String} - Migrations directory
+ */
 export const getMigrationsDir = (type: "up" | "down") =>
   path.resolve(process.cwd(), `src/db/migrations/${type}`)
 
-// Reads and sorts the migration files in the given directory
+/**
+ * Reads and sorts the migration files in the given directory
+ * @param {String} migrationsDir - Path of migrations directory
+ * @returns {Promise<string[]>} - Array of migration files
+ */
 export const getMigrationFiles = async (migrationsDir: string) => {
   const migrationFiles = await readdir(migrationsDir)
 
@@ -29,7 +39,11 @@ export const getMigrationFiles = async (migrationsDir: string) => {
   return migrationFiles
 }
 
-// Fetches the names of all executed migrations from the database
+/**
+ * Fetches the names of all executed migrations from the database
+ * @param {DatabasePoolConnection} connection - The database pool connection to use.
+ * @returns {Promise<string[]>} - Array of executed migrations
+ */
 export const getExecutedMigrations = async (
   connection: DatabasePoolConnection,
 ) => {
@@ -42,7 +56,12 @@ export const getExecutedMigrations = async (
   return executedMigrations.rows.map((migration) => migration.name)
 }
 
-// Executes the given migration file within the provided transaction
+/**
+ * Executes the given migration file within the provided transaction.
+ * @param {DatabaseTransactionConnection} transactionConnection - The database transaction connection to use.
+ * @param {String} migrationsDir - The directory containing the migration files.
+ * @param {String} file - The name of the migration file to execute.
+ */
 export const executeMigration = async (
   transactionConnection: DatabaseTransactionConnection,
   migrationsDir: string,

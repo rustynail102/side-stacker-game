@@ -24,11 +24,16 @@ import {
 } from "unique-names-generator"
 import { PlayerService } from "@server/services/playerService"
 
+/**
+ * GameService is a class that contains static methods related to game logic
+ */
 export class GameService {
   // Board size
   static readonly BOARD_SIZE = 7
 
-  // Calculates the state of the board after the next move is made
+  /**
+   * calculateBoardStatusAfterNextMove calculates the state of the board after the next move is made.
+   */
   static calculateBoardStatusAfterNextMove = (
     current_board_status: MoveTypeEnumType[][],
     position_y: Move["position_y"],
@@ -42,7 +47,9 @@ export class GameService {
     return currentBoardStatus
   }
 
-  // Calculates all the possible moves that can be made in the next turn
+  /**
+   * calculateNextPossibleMoves calculates all the possible moves that can be made in the next turn.
+   */
   static calculateNextPossibleMoves = (
     currentBoardStatus?: MoveTypeEnumType[][],
   ) => {
@@ -82,8 +89,10 @@ export class GameService {
     return nextPossibleMoves
   }
 
-  // Calculates if there is a sequence of 4 same symbols (vertical, horizontal, diagonal)
-  // If such a sequence exists, the game is won
+  /**
+   * calculateWinningMoves checks if there is a sequence of 4 same symbols (vertical, horizontal, diagonal).
+   * If such a sequence exists, the game is won.
+   */
   static calculateWinningMoves = (boardStatus: MoveTypeEnumType[][]) => {
     // Vertical and horizontal checks
     for (let rowIndex = 0; rowIndex < boardStatus.length; rowIndex++) {
@@ -146,8 +155,10 @@ export class GameService {
     return []
   }
 
-  // Determines the current state of the game
-  // The game can be in three states: waiting for players, in progress, finished
+  /**
+   * determineCurrentGameState determines the current state of the game.
+   * The game can be in three states: waiting for players, in progress, finished.
+   */
   static determineCurrentGameState = (
     game: Pick<Game, "finished_at" | "player1_id" | "player2_id">,
   ) => {
@@ -162,9 +173,11 @@ export class GameService {
     return GameStateEnum.enum.waiting_for_players
   }
 
-  // Calculates the new game state after the next move is made
-  // The game state is updated based on the current board status
-  // and the position of the next move
+  /**
+   * calculateGameAfterNextMove calculates the new game state after the next move is made.
+   * The game state is updated based on the current board status
+   * and the position of the next move.
+   */
   static calculateGameAfterNextMove = (
     parsedGame: GameResponse,
     position_y: number,
@@ -218,7 +231,9 @@ export class GameService {
     return { moveType, updatedGame, winningMoves }
   }
 
-  // Transforms the game object to an object that can be used by models
+  /**
+   * parseRequestToGame transforms the game object to an object that can be used by models.
+   */
   static parseRequestToGame = (game: Partial<GameResponse>) => {
     const {
       current_board_status,
@@ -242,7 +257,9 @@ export class GameService {
     }
   }
 
-  // Transforms the game response object to a format that is suitable for the client
+  /**
+   * parseGameToResponse transforms the game response object to a format that is suitable for the client.
+   */
   static parseGameToResponse = (game: Game): GameResponse => {
     const {
       current_board_status,
@@ -264,7 +281,9 @@ export class GameService {
     }
   }
 
-  // Generates a unique name for a game
+  /**
+   * generateGameName generates a unique name for a game.
+   */
   static generateGameName = () => {
     const config: Config = {
       dictionaries: [adjectives, starWars],
@@ -281,7 +300,9 @@ export class GameService {
     }
   }
 
-  // Updates the game players if needed
+  /**
+   * updateGamePlayersIfNeeded updates the game players if needed.
+   */
   static updateGamePlayersIfNeeded = async (
     game: Game,
     player_id?: Player["player_id"] | null,
@@ -293,7 +314,9 @@ export class GameService {
     }
   }
 
-  // Updates the game with new properties and invalidates the cached games queries
+  /**
+   * updateGame updates the game with new properties and invalidates the cached games queries.
+   */
   static updateGame = async (
     game_id: Game["game_id"],
     fields: Partial<Omit<Game, "created_at" | "game_id" | "name">>,
@@ -310,7 +333,9 @@ export class GameService {
     return { updatedGame }
   }
 
-  // Creates a new game, invalidates the cached games queries and emits a toast message
+  /**
+   * createNewGame creates a new game, invalidates the cached games queries and emits a toast message.
+   */
   static createNewGame = async ({ player1_id }: Pick<Game, "player1_id">) => {
     const newGame = await GameModel.create({
       current_game_state: GameStateEnum.enum.waiting_for_players,

@@ -1,5 +1,8 @@
 import { DropdownMenuProps } from "@client/components/molecules/DropdownMenu/@types/DropdownMenu"
 
+/**
+ * A component that displays a list of items in a dropdown menu.
+ */
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({ items }) => (
   <ul tabIndex={0} className="menu w-full p-0 mt-2">
     {items.map(({ isLoading, text, onClick }, index) => (

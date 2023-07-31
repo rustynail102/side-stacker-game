@@ -11,6 +11,9 @@ import { useRef, useState } from "react"
 import { FiMenu, FiX } from "react-icons/fi"
 import { useOnClickOutside } from "usehooks-ts"
 
+/**
+ * A dropdown component that displays a list of items when clicked.
+ */
 export const Dropdown: React.FC<DropdownProps> = ({ children, items }) => {
   const [isOpen, setIsOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -24,6 +27,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ children, items }) => {
   return (
     <div className="relative z-[100]" ref={ref}>
       <Button
+        ariaLabel="Open and close dropdown"
         className={`swap swap-rotate ${swapActiveClassName}`}
         fill={ButtonFill.Outline}
         shape={ButtonShape.Circle}

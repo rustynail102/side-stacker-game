@@ -7,7 +7,11 @@ import {
 } from "@client/components/atoms/Button/@types/Button"
 import { mapButtonSizeToSpinnerSize } from "@client/components/atoms/Button/styles"
 
+/**
+ * A customizable button component.
+ */
 export const Button: React.FC<ButtonProps> = ({
+  ariaLabel,
   children,
   className = "",
   disabled,
@@ -20,6 +24,7 @@ export const Button: React.FC<ButtonProps> = ({
   variant = ButtonVariant.Success,
 }) => (
   <button
+    aria-label={ariaLabel}
     disabled={disabled || isLoading}
     className={`btn 
       ${size} ${shape} ${fill} ${disabled ? "btn-disabled" : variant}

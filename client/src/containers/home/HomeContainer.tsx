@@ -8,6 +8,9 @@ import { HomeContainerOpenGamesSection } from "@client/containers/home/sections/
 import { HomeContainerStatsSection } from "@client/containers/home/sections/stats/HomeContainerStatsSection"
 import { HomeContainerCurrentPlayerGamesSection } from "@client/containers/home/sections/currentPlayerGames/HomeContainerCurrentPlayerGamesSection"
 
+/**
+ * Container component for the home page (game lobby). It includes sections for stats, current player games, open games, games in progress, finished games, and players.
+ */
 export const HomeContainer: React.FC = () => (
   <PageTemplate>
     <Column flexBasis={ColumnFlexBasis.Basis75}>

@@ -6,6 +6,9 @@ import {
 } from "@client/components/molecules/Pagination/@types/Pagination"
 import { mapPaginationSizeToButtonSize } from "@client/components/molecules/Pagination/helpers/mapPaginationSizeToButtonSize"
 
+/**
+ * A pagination component that allows the user to navigate through a list of items.
+ */
 export const Pagination: React.FC<PaginationProps> = ({
   limit,
   offset,
@@ -25,6 +28,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     >
       <div className="join">
         <Button
+          ariaLabel="Previous page"
           className="join-item"
           disabled={offset === 0}
           onClick={onPreviousPage}
@@ -34,6 +38,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           «
         </Button>
         <Button
+          ariaLabel="Current page"
           className="join-item hover:bg-base-200 hover:border-base-200 cursor-default"
           variant={ButtonVariant.Default}
           size={buttonSize}
@@ -41,6 +46,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           Page {offset / limit + 1}
         </Button>
         <Button
+          ariaLabel="Next page"
           className="join-item"
           disabled={offset + limit >= total}
           onClick={onNextPage}

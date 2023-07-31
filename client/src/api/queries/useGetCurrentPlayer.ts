@@ -1,26 +1,31 @@
 import { queryKeys } from "@client/api/queryKeys"
-import { axiosGet } from "@client/helpers/api/axiosGet"
-import { useQuery, UseQueryOptions } from "@tanstack/react-query"
+import { UseQueryOptions } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { PlayerResponse } from "@server/@types/api"
 import { Path } from "@server/routes/paths"
+import { useApiQuery } from "@client/hooks/useApiQuery"
 
+/**
+ * Hook to get the current player.
+ * @param {Object} options - Additional options to pass to the React Query useQuery function.
+ * @returns {Object} - The query object from React Query, with the current player added.
+ */
 export const useGetCurrentPlayer = (
   options?: UseQueryOptions<PlayerResponse, AxiosError, PlayerResponse>,
 ) => {
-  const getCurrentPlayerQuery = useQuery({
-    queryFn: () => axiosGet<PlayerResponse>(Path.CurrentPlayer),
-    queryKey: queryKeys.players.current,
-    refetchOnWindowFocus: false,
-    retry: false,
-    staleTime: Infinity,
-    ...options,
-  })
-
-  const currentPlayer = getCurrentPlayerQuery.data
+  const { data, ...query } = useApiQuery<PlayerResponse, AxiosError>(
+    Path.CurrentPlayer,
+    queryKeys.players.current,
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: Infinity,
+      ...options,
+    },
+  )
 
   return {
-    ...getCurrentPlayerQuery,
-    currentPlayer,
+    ...query,
+    currentPlayer: data,
   }
 }

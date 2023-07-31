@@ -13,8 +13,15 @@ import { Request, Response } from "express"
 import isEmpty from "lodash/isEmpty"
 import { z } from "zod"
 
+/**
+ * MoveController contains methods for handling HTTP requests related to moves.
+ */
 export class MoveController {
-  // Define method for creating a new move
+  /**
+   * Handles a request to create a new move.
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static create = async (req: Request, res: Response) => {
     // Retrieve player id from session data
     const { player_id } = SessionService.getSessionData(req)

@@ -1,36 +1,20 @@
-import { axiosPost } from "@client/helpers/api/axiosPost"
-import { getAxiosError } from "@client/helpers/api/getAxiosError"
-import { useToast } from "@client/hooks/useToast"
 import { PlayerResponse, SignInPostBody } from "@server/@types/api"
-import { MutateOptions, useMutation } from "@tanstack/react-query"
 import { Path } from "@server/routes/paths"
+import { useApiMutation } from "@client/hooks/useApiMutation"
+import { ApiMutationHttpMethod } from "@client/hooks/@types/useApiMutation"
 
+/**
+ * Hook used to sign in.
+ * @returns {Object} - The query object from React Query, with the signIn mutation added.
+ */
 export const useSignIn = () => {
-  const { mutate, ...signInMutation } = useMutation({
-    mutationFn: (body: SignInPostBody) =>
-      axiosPost<PlayerResponse>(Path.SignIn, body),
-  })
-  const { errorToast } = useToast()
-
-  const signIn = (
-    body: SignInPostBody,
-    options?: MutateOptions<PlayerResponse, unknown, SignInPostBody, unknown>,
-  ) =>
-    mutate(body, {
-      onError: (error) => {
-        const apiError = getAxiosError(error)
-
-        if (apiError) {
-          apiError.errors.forEach((message) => {
-            errorToast(message)
-          })
-        }
-      },
-      ...options,
-    })
+  const { apiMutation, ...mutation } = useApiMutation<
+    PlayerResponse,
+    SignInPostBody
+  >(Path.SignIn, ApiMutationHttpMethod.POST)
 
   return {
-    ...signInMutation,
-    signIn,
+    ...mutation,
+    signIn: apiMutation,
   }
 }

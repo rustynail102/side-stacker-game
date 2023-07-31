@@ -1,36 +1,20 @@
-import { axiosPost } from "@client/helpers/api/axiosPost"
-import { getAxiosError } from "@client/helpers/api/getAxiosError"
-import { useToast } from "@client/hooks/useToast"
 import { CreateGamePostBody, GameResponse } from "@server/@types/api"
-import { MutateOptions, useMutation } from "@tanstack/react-query"
 import { Path } from "@server/routes/paths"
+import { useApiMutation } from "@client/hooks/useApiMutation"
+import { ApiMutationHttpMethod } from "@client/hooks/@types/useApiMutation"
 
+/**
+ * Hook to create a new game.
+ * @returns {Object} - The query object from React Query, with the createGame mutation added.
+ */
 export const useCreateGame = () => {
-  const { mutate, ...createGameMutation } = useMutation({
-    mutationFn: (body: CreateGamePostBody) =>
-      axiosPost<GameResponse>(Path.Games, body),
-  })
-  const { errorToast } = useToast()
-
-  const createGame = (
-    body: CreateGamePostBody,
-    options?: MutateOptions<GameResponse, unknown, CreateGamePostBody, unknown>,
-  ) =>
-    mutate(body, {
-      onError: (error) => {
-        const apiError = getAxiosError(error)
-
-        if (apiError) {
-          apiError.errors.forEach((message) => {
-            errorToast(message)
-          })
-        }
-      },
-      ...options,
-    })
+  const { apiMutation, ...mutation } = useApiMutation<
+    GameResponse,
+    CreateGamePostBody
+  >(Path.Games, ApiMutationHttpMethod.POST)
 
   return {
-    ...createGameMutation,
-    createGame,
+    ...mutation,
+    createGame: apiMutation,
   }
 }

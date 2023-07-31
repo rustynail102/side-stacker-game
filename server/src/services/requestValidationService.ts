@@ -5,9 +5,13 @@ import omitBy from "lodash/omitBy"
 import isUndefined from "lodash/isUndefined"
 import { ZodRawShape, z } from "zod"
 
-// RequestValidationService validates the incoming request data against a predefined schema
+/**
+    RequestValidationService validates the incoming request data against a predefined schema
+  */
 export class RequestValidationService {
-  // Validates an object against a given schema and transforms it to the correct types
+  /**
+    Validates an object against a given schema and transforms it to the correct types
+  */
   static validateObject = <T extends ZodRawShape>(
     object: Record<string, unknown>,
     schema: z.ZodObject<T>,
@@ -54,19 +58,25 @@ export class RequestValidationService {
     return transformedObject as z.infer<typeof schema>
   }
 
-  // Validates the body of a request against a given schema
+  /**
+    Validates the body of a request against a given schema
+  */
   static validateBody = <T extends ZodRawShape>(
     body: Request["body"],
     schema: z.ZodObject<T>,
   ) => this.validateObject(body, schema)
 
-  // Validates the parameters of a request against a given schema
+  /**
+    Validates the parameters of a request against a given schema
+  */
   static validateParams = <T extends ZodRawShape>(
     params: Request["params"],
     schema: z.ZodObject<T>,
   ) => this.validateObject(params, schema)
 
-  // Validates the query of a request against a given schema
+  /**
+    Validates the query of a request against a given schema
+  */
   static validateQuery = <T extends ZodRawShape>(
     query: Request["query"],
     schema: z.ZodObject<T>,

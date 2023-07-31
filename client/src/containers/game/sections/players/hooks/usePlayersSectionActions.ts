@@ -1,6 +1,9 @@
 import { useUpdateGame } from "@client/api/mutations/useUpdateGame"
 import { useGameContainerQueries } from "@client/containers/game/hooks/useGameContainerQueries"
 
+/**
+ * Custom hook that provides game players section actions such as isUpdatingGame, joinAsPlayer1, joinAsPlayer2, leaveAsPlayer1, and leaveAsPlayer2.
+ */
 export const usePlayersSectionActions = () => {
   const {
     currentPlayer,

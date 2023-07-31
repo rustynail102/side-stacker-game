@@ -1,3 +1,6 @@
+/**
+ * Configuration settings for the application server.
+ */
 export const appConfig = {
   cors: {
     credentials: true, // allow credentials (cookies)

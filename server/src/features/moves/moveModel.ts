@@ -1,5 +1,4 @@
 import { databasePool } from "@server/db/databasePool"
-import { MoveModelGetAll } from "@server/@types/moveModel"
 import { Move } from "@server/@types/moveObject"
 import { MoveObject } from "@server/features/moves/moveObject"
 import { createSqlTag } from "slonik"
@@ -10,7 +9,15 @@ const sql = createSqlTag({
   },
 })
 
+/**
+ * The MoveModel class provides methods for performing database operations on the moves table.
+ */
 export class MoveModel {
+  /**
+   * Inserts a new move record into the database.
+   * @param move - An object containing the details of the move to create.
+   * @returns A Promise that resolves with the created move.
+   */
   static create = ({
     game_id,
     move_number,
@@ -48,42 +55,11 @@ export class MoveModel {
 
       return rows[0]
     })
-
-  static getAll = ({ filters }: MoveModelGetAll): Promise<readonly Move[]> =>
-    databasePool.connect(async (connection) => {
-      const filtersFragments = []
-
-      if (filters) {
-        for (const [key, value] of Object.entries(filters)) {
-          if (value) {
-            filtersFragments.push(
-              sql.fragment`${sql.identifier([key])} = ${value}`,
-            )
-          }
-        }
-      }
-
-      const query = sql.typeAlias("move")`
-        SELECT * 
-        FROM moves 
-        WHERE ${sql.join(filtersFragments, sql.unsafe`, `)}
-      `
-
-      return connection.many(query)
-    })
-
-  static getById = (move_id: Move["move_id"]): Promise<Move> =>
-    databasePool.connect(async (connection) =>
-      connection.one(
-        sql.typeAlias("move")`
-            SELECT * 
-            FROM moves 
-            WHERE move_id = ${move_id}
-          `,
-      ),
-    )
 }
 
+/**
+ * SQL query to create the moves table in the database if it does not already exist.
+ */
 export const MoveModelSchema = sql.unsafe`
   DO $$ BEGIN
     CREATE TYPE move_type AS ENUM ('X', 'O');

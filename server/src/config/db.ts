@@ -1,3 +1,6 @@
+/**
+ * Configuration settings for the database.
+ */
 export const dbConfig = {
   url:
     process.env.NODE_ENV === "development"

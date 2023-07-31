@@ -8,6 +8,9 @@ import { getGameStateBadgeText } from "@client/components/molecules/GameInfoCard
 import { mapCurrentGameStateToBadgeProps } from "@client/components/molecules/GameInfoCard/helpers/mapCurrentGameStateToBadgeProps"
 import { commonLoaderClassNames } from "@client/components/molecules/GameInfoCard/styles"
 
+/**
+ * A card component that displays information about a game.
+ */
 export const GameInfoCard: React.FC<GameInfoCardProps> = ({
   game,
   isLoading,

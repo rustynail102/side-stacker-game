@@ -32,6 +32,7 @@ export enum ButtonShape {
 }
 
 export interface ButtonProps {
+  ariaLabel: string
   children: ReactNode | ReactNode[]
   className?: string
   disabled?: boolean

@@ -9,8 +9,15 @@ import { SessionService } from "@server/services/sessionService"
 import { AuthenticationError } from "@server/errors/authenticationError"
 import { PlayerService } from "@server/services/playerService"
 
+/**
+ * GameController contains methods for handling HTTP requests related to games.
+ */
 export class GameController {
-  // Create a new game
+  /**
+    Create a new game
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static create = async (req: Request, res: Response) => {
     // Get player ID from session
     const { player_id: sessionPlayerId } = SessionService.getSessionData(req)
@@ -45,7 +52,11 @@ export class GameController {
     res.json(newGameResponse)
   }
 
-  // Get all games
+  /**
+    Get all games
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static getAll = async (req: Request, res: Response) => {
     // Validate session
     const { player_id } = SessionService.getSessionData(req)
@@ -99,7 +110,11 @@ export class GameController {
     })
   }
 
-  // Get game by ID
+  /**
+    Get game by ID
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static getById = async (req: Request, res: Response) => {
     // Validate session
     const { player_id } = SessionService.getSessionData(req)
@@ -122,7 +137,11 @@ export class GameController {
     res.json(gameResponse)
   }
 
-  // Update game
+  /**
+    Update game
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   */
   static update = async (req: Request, res: Response) => {
     // Get player ID from session
     const { player_id: sessionPlayerId } = SessionService.getSessionData(req)

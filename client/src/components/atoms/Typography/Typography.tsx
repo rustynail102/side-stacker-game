@@ -6,6 +6,9 @@ import {
   TypographyWeight,
 } from "@client/components/atoms/Typography/@types/Typography"
 
+/**
+ * A typography component. It can represent different HTML elements like `<h1>`, `<h2>`, `<p>`, and `<span>`.
+ */
 export const Typography: React.FC<TypographyProps> = ({
   alignment = TypographyAlignment.Left,
   children,

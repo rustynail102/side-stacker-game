@@ -14,8 +14,11 @@ import { GameContainerPlayersSection } from "@client/containers/game/sections/pl
 import { IconType } from "react-icons"
 import { FiAlertCircle } from "react-icons/fi"
 
+/**
+ * Container component for the game page. It includes sections for game board, game info, game players, and game status.
+ */
 export const GameContainer: React.FC = () => {
-  const { game, isInitialLoading } = useGameContainerQueries()
+  const { game, hasError, isInitialLoading } = useGameContainerQueries()
 
   return (
     <PageTemplate>
@@ -32,7 +35,9 @@ export const GameContainer: React.FC = () => {
         </>
       ) : (
         <Alert icon={FiAlertCircle as IconType} type={AlertType.Error}>
-          Game Not Found
+          {hasError
+            ? "It seems that there's a problem with the service. Please try again later."
+            : "Game Not Found"}
         </Alert>
       )}
     </PageTemplate>

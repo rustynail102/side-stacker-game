@@ -17,6 +17,9 @@ import {
 } from "slonik"
 import { ZodError } from "zod"
 
+/**
+ * httpErrorsMiddleware is an Express middleware that handles HTTP errors.
+ */
 export const httpErrorsMiddleware = (
   error: Err,
   _req: Request,

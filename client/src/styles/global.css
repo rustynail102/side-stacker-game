@@ -3,10 +3,12 @@
 @tailwind utilities;
 
 @layer components {
+  /* Additional styles for dropdown */
   .menu li.disabled > *:not(ul):not(details):active, .menu li.disabled > *:not(ul):not(details).active, .menu li.disabled > details > summary:active {
     background-color: transparent;
   }
 
+  /* Styles for disabled cell on the game board */
   .diagonal-lines {
     background: repeating-linear-gradient(
         45deg,
@@ -17,6 +19,7 @@
     );
   }
 
+  /* Styles for winning cell on the game board */
   .winning-cell::after {
     content: "";
     position: absolute;

@@ -9,6 +9,10 @@ import isEmpty from "lodash/isEmpty"
 import { Typography } from "@client/components/atoms/Typography/Typography"
 import { TypographyVariant } from "@client/components/atoms/Typography/@types/Typography"
 
+/**
+ * A form component that handles user authentication. The form includes fields for the user's username and password.
+ * It also displays error messages if the form validation fails.
+ */
 export const AuthenticationForm: React.FC<AuthenticationFormProps> = ({
   buttonText = "Sign In",
   isLoading,
@@ -28,6 +32,7 @@ export const AuthenticationForm: React.FC<AuthenticationFormProps> = ({
       <Typography variant={TypographyVariant.Subtitle}>{title}</Typography>
 
       <TextInput
+        aria-label="Username field"
         autoComplete="on"
         className="mt-6 mb-2"
         disabled={isLoading}
@@ -37,6 +42,7 @@ export const AuthenticationForm: React.FC<AuthenticationFormProps> = ({
       />
 
       <TextInput
+        aria-label="Password field"
         autoComplete="on"
         className="mb-4"
         disabled={isLoading}
@@ -46,7 +52,12 @@ export const AuthenticationForm: React.FC<AuthenticationFormProps> = ({
         {...register("password", { required: true })}
       />
 
-      <Button disabled={hasErrors} isLoading={isLoading} type="submit">
+      <Button
+        ariaLabel="Submit form"
+        disabled={hasErrors}
+        isLoading={isLoading}
+        type="submit"
+      >
         {buttonText}
       </Button>
     </form>

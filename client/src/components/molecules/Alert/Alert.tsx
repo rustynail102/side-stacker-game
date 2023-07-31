@@ -4,6 +4,9 @@ import {
 } from "@client/components/molecules/Alert/@types/Alert"
 import { mapAlertTypeToStyles } from "@client/components/molecules/Alert/styles"
 
+/**
+ * An alert component that displays a message with an optional icon.
+ */
 export const Alert: React.FC<AlertProps> = ({
   children,
   icon: Icon,

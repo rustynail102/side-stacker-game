@@ -9,14 +9,18 @@ import { usePagination } from "@client/hooks/usePagination"
 import { FilterType, GameStateEnum } from "@server/@types/api"
 import isEmpty from "lodash/isEmpty"
 import { IconType } from "react-icons"
-import { FiFrown } from "react-icons/fi"
+import { FiAlertCircle, FiFrown } from "react-icons/fi"
 
+/**
+ * Section component for the current player's games in the home page. It displays the current player's games and handles pagination.
+ */
 export const HomeContainerCurrentPlayerGamesSection: React.FC = () => {
   const { currentPlayer } = useGetCurrentPlayer()
 
   const { limit, offset, setOffset } = usePagination()
 
   const {
+    error,
     games: currentPlayerGames,
     isInitialLoading,
     total,
@@ -77,9 +81,18 @@ export const HomeContainerCurrentPlayerGamesSection: React.FC = () => {
           )}
         </>
       ) : (
-        <Alert icon={FiFrown as IconType} type={AlertType.Secondary}>
-          You are not participating in any Game
-        </Alert>
+        <>
+          {error ? (
+            <Alert icon={FiAlertCircle as IconType} type={AlertType.Error}>
+              It seems that there's a problem with the service. Please try again
+              later.
+            </Alert>
+          ) : (
+            <Alert icon={FiFrown as IconType} type={AlertType.Secondary}>
+              You are not participating in any Game
+            </Alert>
+          )}
+        </>
       )}
     </Section>
   )

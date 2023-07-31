@@ -1,3 +1,6 @@
+/**
+ * Defines paths for API endpoints
+ */
 export enum Path {
   Games = "/games",
   Game = "/games/:game_id",

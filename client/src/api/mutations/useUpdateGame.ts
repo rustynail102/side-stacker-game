@@ -1,41 +1,26 @@
-import { getAxiosError } from "@client/helpers/api/getAxiosError"
-import { useToast } from "@client/hooks/useToast"
 import { UpdateGamePutBody, GameResponse } from "@server/@types/api"
-import { MutateOptions, useMutation } from "@tanstack/react-query"
 import { Path } from "@server/routes/paths"
-import { axiosPut } from "@client/helpers/api/axiosPut"
+import { useApiMutation } from "@client/hooks/useApiMutation"
+import { ApiMutationHttpMethod } from "@client/hooks/@types/useApiMutation"
 
+/**
+ * Hook used to update a particular game.
+ * @param {Object} params - Parameters for the game to update.
+ * @returns {Object} - The query object from React Query, with the updateGame mutation added.
+ */
 export const useUpdateGame = (
   params: Partial<Pick<GameResponse, "game_id">>,
 ) => {
-  const { mutate, ...updateGameMutation } = useMutation({
-    mutationFn: (body: UpdateGamePutBody) =>
-      axiosPut<GameResponse>(
-        Path.Game.replace(":game_id", params.game_id || ""),
-        body,
-      ),
-  })
-  const { errorToast } = useToast()
-
-  const updateGame = (
-    body: UpdateGamePutBody,
-    options?: MutateOptions<GameResponse, unknown, UpdateGamePutBody, unknown>,
-  ) =>
-    mutate(body, {
-      onError: (error) => {
-        const apiError = getAxiosError(error)
-
-        if (apiError) {
-          apiError.errors.forEach((message) => {
-            errorToast(message)
-          })
-        }
-      },
-      ...options,
-    })
+  const { apiMutation, ...mutation } = useApiMutation<
+    GameResponse,
+    UpdateGamePutBody
+  >(
+    Path.Game.replace(":game_id", params.game_id || ""),
+    ApiMutationHttpMethod.PUT,
+  )
 
   return {
-    ...updateGameMutation,
-    updateGame,
+    ...mutation,
+    updateGame: apiMutation,
   }
 }

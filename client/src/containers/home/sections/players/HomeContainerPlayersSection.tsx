@@ -10,13 +10,16 @@ import { mapPlayersToRows } from "@client/containers/home/sections/players/helpe
 import { usePagination } from "@client/hooks/usePagination"
 import isEmpty from "lodash/isEmpty"
 import { IconType } from "react-icons"
-import { FiUserX } from "react-icons/fi"
+import { FiAlertCircle, FiUserX } from "react-icons/fi"
 
+/**
+ * Section component for the players in the home page. It displays the players and handles pagination.
+ */
 export const HomeContainerPlayersSection: React.FC = () => {
   const { limit, offset, setOffset } = usePagination({
     limit: 10,
   })
-  const { isInitialLoading, players, total } = useGetPlayers(
+  const { error, isInitialLoading, players, total } = useGetPlayers(
     {
       limit,
       offset,
@@ -51,9 +54,18 @@ export const HomeContainerPlayersSection: React.FC = () => {
           )}
         </>
       ) : (
-        <Alert icon={FiUserX as IconType} type={AlertType.Accent}>
-          There are no active players
-        </Alert>
+        <>
+          {error ? (
+            <Alert icon={FiAlertCircle as IconType} type={AlertType.Error}>
+              It seems that there's a problem with the service. Please try again
+              later.
+            </Alert>
+          ) : (
+            <Alert icon={FiUserX as IconType} type={AlertType.Accent}>
+              There are no active players
+            </Alert>
+          )}
+        </>
       )}
     </Card>
   )

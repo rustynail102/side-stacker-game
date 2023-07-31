@@ -4,6 +4,9 @@ import {
   BadgeType,
 } from "@client/components/atoms/Badge/@types/Badge"
 
+/**
+ * A simple badge component.
+ */
 export const Badge: React.FC<BadgeProps> = ({
   children,
   className = "",

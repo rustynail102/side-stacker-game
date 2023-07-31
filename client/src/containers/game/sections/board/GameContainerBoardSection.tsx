@@ -4,6 +4,9 @@ import { useGameContainerQueries } from "@client/containers/game/hooks/useGameCo
 import { calculateNextMoveType } from "@client/containers/game/sections/board/helpers/calculateNextMoveType"
 import { mapCurrentBoardStatusToBoard } from "@client/containers/game/sections/board/helpers/mapCurrentBoardStatusToBoard"
 
+/**
+ * Section component for the game board in the game page. It handles the game board logic and updates the game board status.
+ */
 export const GameContainerBoardSection: React.FC = () => {
   const {
     game,

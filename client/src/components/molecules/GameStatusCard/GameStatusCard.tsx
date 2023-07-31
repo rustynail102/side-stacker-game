@@ -11,6 +11,9 @@ import { Typography } from "@client/components/atoms/Typography/Typography"
 import { Card } from "@client/components/molecules/Card/Card"
 import { GameStatusCardProps } from "@client/components/molecules/GameStatusCard/@types/GameStatusCard"
 
+/**
+ * A card component that displays the status of a game.
+ */
 export const GameStatusCard: React.FC<GameStatusCardProps> = ({
   finalResult,
   hasPlayer1NextMove,

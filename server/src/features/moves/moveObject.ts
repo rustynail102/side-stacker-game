@@ -1,6 +1,9 @@
 import { MoveTypeEnum } from "@server/features/games/gameObject"
 import { z } from "zod"
 
+/**
+ * MoveObject defines the schema for a move object.
+ */
 export const MoveObject = z
   .object({
     created_at: z.number(),
@@ -13,5 +16,3 @@ export const MoveObject = z
     position_y: z.number(),
   })
   .strict()
-
-export const moveObjectKeys = MoveObject.keyof()._def.values

@@ -12,6 +12,9 @@ import {
   CardVariant,
 } from "@client/components/molecules/Card/@types/Card"
 
+/**
+ * A card component that can contain different types of content.
+ */
 export const Card: React.FC<CardProps> = ({
   children,
   className = "",

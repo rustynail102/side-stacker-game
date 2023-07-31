@@ -4,6 +4,10 @@ import { useEffect } from "react"
 import { InvalidateQueryPayload } from "@server/@types/websocketsServer"
 import { useToast } from "@client/hooks/useToast"
 
+/**
+ * Hook that handles the setup of WebSockets connections and listeners.
+ * It also handles the teardown when the component unmounts.
+ */
 export const useWebsockets = () => {
   const queryClient = useQueryClient()
   const { successToast } = useToast()
@@ -18,7 +22,6 @@ export const useWebsockets = () => {
       websocketsClient.on(
         "invalidateQuery",
         async (data: InvalidateQueryPayload) => {
-          console.log("invalidateQuery event", { data })
           const queryKey = [...data.entity, data.id].filter(Boolean)
 
           await queryClient.invalidateQueries({ queryKey, refetchType: "all" })
@@ -29,8 +32,6 @@ export const useWebsockets = () => {
 
     if (!hasEventListener("toast")) {
       websocketsClient.on("toast", (message: string) => {
-        console.log("toast event", { message })
-
         successToast(message)
       })
     }

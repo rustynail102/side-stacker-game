@@ -1,6 +1,9 @@
 import { TableProps } from "@client/components/organisms/Table/@types/Table"
 import { TableLoader } from "@client/components/organisms/Table/loader/TableLoader"
 
+/**
+ * A table component that displays rows of data. It can also display a loading state.
+ */
 export const Table: React.FC<TableProps> = ({
   className = "",
   headers,

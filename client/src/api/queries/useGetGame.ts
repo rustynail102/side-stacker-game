@@ -1,41 +1,31 @@
 import { queryKeys } from "@client/api/queryKeys"
-import { axiosGet } from "@client/helpers/api/axiosGet"
-import { useQuery, UseQueryOptions } from "@tanstack/react-query"
+import { UseQueryOptions } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { GameResponse } from "@server/@types/api"
-import { useToast } from "@client/hooks/useToast"
-import { getAxiosError } from "@client/helpers/api/getAxiosError"
 import { Path } from "@server/routes/paths"
+import { useApiQuery } from "@client/hooks/useApiQuery"
 
+/**
+ * Hook to get a specific game.
+ * @param {Object} params - Parameters for the game to get.
+ * @param {Object} options - Additional options to pass to the React Query useQuery function.
+ * @returns {Object} - The query object from React Query, with the game added.
+ */
 export const useGetGame = (
   params: Partial<Pick<GameResponse, "game_id">>,
   options?: UseQueryOptions<GameResponse, AxiosError, GameResponse>,
 ) => {
-  const { errorToast } = useToast()
-
-  const getGameQuery = useQuery({
-    enabled: Boolean(params?.game_id),
-    onError: (error) => {
-      const apiError = getAxiosError(error)
-
-      if (apiError) {
-        apiError.errors.forEach((message) => {
-          errorToast(message)
-        })
-      }
+  const { data, ...query } = useApiQuery<GameResponse, AxiosError>(
+    Path.Game.replace(":game_id", params.game_id || ""),
+    queryKeys.games.detail(params.game_id),
+    {
+      enabled: Boolean(params?.game_id),
+      ...options,
     },
-    queryFn: () =>
-      axiosGet<GameResponse>(
-        Path.Game.replace(":game_id", params.game_id || ""),
-      ),
-    queryKey: queryKeys.games.detail(params.game_id),
-    ...options,
-  })
-
-  const game = getGameQuery.data
+  )
 
   return {
-    ...getGameQuery,
-    game,
+    ...query,
+    game: data,
   }
 }

@@ -4,6 +4,9 @@ import {
   ColumnProps,
 } from "@client/components/atoms/Column/@types/Column"
 
+/**
+ * A flexible column component for layout purposes.
+ */
 export const Column: React.FC<ColumnProps> = ({
   children,
   className = "",
