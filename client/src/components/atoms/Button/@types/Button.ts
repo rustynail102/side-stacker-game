@@ -35,9 +35,11 @@ export interface ButtonProps {
   ariaLabel: string
   children: ReactNode | ReactNode[]
   className?: string
+  dataTestId?: string
   disabled?: boolean
   fill?: ButtonFill
   isLoading?: boolean
+  name?: string
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   shape?: ButtonShape
   size?: ButtonSize

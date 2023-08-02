@@ -12,6 +12,6 @@ export interface GameCardProps {
     player1_id?: string | null
     player2_id?: string | null
     winner_id?: string | null
-    winning_moves?: number[][]
+    winning_moves?: number[][] | null
   }
 }

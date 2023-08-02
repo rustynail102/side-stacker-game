@@ -25,6 +25,7 @@ export const AuthenticationContainerSignUpSection: React.FC = () => {
   return (
     <AuthenticationForm
       buttonText="Create Account"
+      dataTestId="SignUpForm"
       isLoading={isCreatingPlayer}
       onSubmit={handleCreatePlayer}
       title="Sign Up"

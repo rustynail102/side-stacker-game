@@ -34,6 +34,7 @@ export interface TypographyProps {
   children: ReactNode | ReactNode[]
   className?: string
   color?: TypographyColor
+  dataTestId?: string
   variant: TypographyVariant
   weight?: TypographyWeight
 }

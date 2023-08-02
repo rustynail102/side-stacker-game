@@ -22,5 +22,11 @@ export const AuthenticationContainerSignInSection: React.FC = () => {
     })
   }
 
-  return <AuthenticationForm isLoading={isSigningIn} onSubmit={handleSignIn} />
+  return (
+    <AuthenticationForm
+      dataTestId="SignInForm"
+      isLoading={isSigningIn}
+      onSubmit={handleSignIn}
+    />
+  )
 }

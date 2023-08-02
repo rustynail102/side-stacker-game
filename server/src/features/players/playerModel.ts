@@ -226,6 +226,20 @@ export class PlayerModel {
 export const PlayerModelSchema = sql.unsafe`
   CREATE TABLE IF NOT EXISTS players (
     player_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    session_id UUID NOT NULL,
+    username TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    last_active_at TIMESTAMP,
+    deleted_at TIMESTAMP
+  )
+`
+
+/**
+ * Player Model - current schema. DO NOT USE - it's here only as a reference.
+ */
+export const PlayerModelCurrentSchema = sql.unsafe`
+  CREATE TABLE IF NOT EXISTS players (
+    player_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username TEXT NOT NULL,
     password TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),

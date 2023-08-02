@@ -23,7 +23,7 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ["vite.config.ts", "tailwind.config.ts"],
+      files: ["vite.config.ts", "tailwind.config.ts", "playwright.config.ts"],
       rules: {
         "import/no-default-export": "off",
       },

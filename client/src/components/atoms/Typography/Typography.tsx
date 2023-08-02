@@ -13,6 +13,7 @@ export const Typography: React.FC<TypographyProps> = ({
   alignment = TypographyAlignment.Left,
   children,
   color = TypographyColor.Inherit,
+  dataTestId,
   className = "",
   variant,
   weight,
@@ -28,6 +29,7 @@ export const Typography: React.FC<TypographyProps> = ({
           className={`text-5xl ${weightDefaultBold} ${commonClassNames.join(
             " ",
           )}`}
+          data-testid={dataTestId}
         >
           {children}
         </h1>
@@ -39,6 +41,7 @@ export const Typography: React.FC<TypographyProps> = ({
           className={`text-xl ${weightDefaultNormal} ${commonClassNames.join(
             " ",
           )}`}
+          data-testid={dataTestId}
         >
           {children}
         </p>
@@ -50,6 +53,7 @@ export const Typography: React.FC<TypographyProps> = ({
           className={`text-sm ${weightDefaultNormal} ${commonClassNames.join(
             " ",
           )}`}
+          data-testid={dataTestId}
         >
           {children}
         </p>
@@ -61,6 +65,7 @@ export const Typography: React.FC<TypographyProps> = ({
           className={`text-2xl ${weightDefaultBold} ${commonClassNames.join(
             " ",
           )}`}
+          data-testid={dataTestId}
         >
           {children}
         </h2>
@@ -70,6 +75,7 @@ export const Typography: React.FC<TypographyProps> = ({
       return (
         <span
           className={`${weightDefaultNormal} ${commonClassNames.join(" ")}`}
+          data-testid={dataTestId}
         >
           {children}
         </span>

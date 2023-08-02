@@ -25,3 +25,6 @@ dist-ssr
 
 # Vite
 .vite
+/test-results/
+/playwright-report/
+/playwright/.cache/

@@ -21,7 +21,11 @@ export const GameInfoCard: React.FC<GameInfoCardProps> = ({
   const gameStateBadgeText = getGameStateBadgeText(game)
 
   return (
-    <Card isLoading={isLoading} title={game?.name}>
+    <Card
+      isLoading={isLoading}
+      title={game?.name}
+      titleDataTestId="GameInfoCardTitle"
+    >
       {isLoading ? (
         <>
           <Badge

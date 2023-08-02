@@ -7,5 +7,5 @@ export interface GameBoardProps {
   >[][]
   isLoading?: boolean
   nextMoveType?: GameBoardCellProps["nextMoveType"]
-  winningMoves?: number[][]
+  winningMoves?: number[][] | null
 }

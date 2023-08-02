@@ -1,10 +1,13 @@
+import { config } from "@server/config"
 import RedisStore from "connect-redis"
 import { createClient } from "redis"
 
 /**
  * Redis instance
  */
-export const redisClient = createClient()
+export const redisClient = createClient({
+  url: config.redisConfig.url,
+})
 
 /**
  * Sets up a connection to a Redis instance and logs errors.

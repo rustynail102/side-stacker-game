@@ -18,8 +18,12 @@
     "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.36.2",
     "@tanstack/eslint-plugin-query": "^4.29.25",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^14.0.0",
     "@types/lodash": "^4.14.195",
+    "@types/node": "^20.4.5",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
@@ -27,6 +31,7 @@
     "@vitejs/plugin-react": "^4.0.1",
     "autoprefixer": "^10.4.14",
     "daisyui": "^3.2.1",
+    "dotenv": "^16.3.1",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
@@ -34,6 +39,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.1",
     "eslint-plugin-typescript-sort-keys": "^2.3.0",
+    "happy-dom": "^10.5.2",
     "postcss": "^8.4.26",
     "prettier": "^3.0.0",
     "tailwindcss": "^3.3.3",
@@ -41,7 +47,8 @@
     "ts-prune": "^0.10.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.0",
-    "vite-tsconfig-paths": "^4.2.0"
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.34.1"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -50,11 +57,15 @@
   "name": "client",
   "private": true,
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "rm -rf dist/ && tsc -p tsconfig.build.json && vite build",
     "dead-code": "ts-prune",
     "dev": "vite",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npx playwright install && playwright test",
+    "test:e2e:ui": "npx playwright install && playwright test --ui"
   },
   "type": "module",
   "version": "0.0.0"

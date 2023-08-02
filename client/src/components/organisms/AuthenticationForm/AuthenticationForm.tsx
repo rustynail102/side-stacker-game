@@ -15,6 +15,7 @@ import { TypographyVariant } from "@client/components/atoms/Typography/@types/Ty
  */
 export const AuthenticationForm: React.FC<AuthenticationFormProps> = ({
   buttonText = "Sign In",
+  dataTestId,
   isLoading,
   onSubmit,
   title = "Sign In",
@@ -28,7 +29,7 @@ export const AuthenticationForm: React.FC<AuthenticationFormProps> = ({
   const hasErrors = !isEmpty(Object.keys(errors))
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} data-testid={dataTestId}>
       <Typography variant={TypographyVariant.Subtitle}>{title}</Typography>
 
       <TextInput

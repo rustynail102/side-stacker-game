@@ -87,11 +87,8 @@ export const httpErrorsMiddleware = (
     case error instanceof ConnectionError:
     case error instanceof StatementCancelledError:
     case error instanceof TupleMovedToAnotherPartitionError:
-      status = 500
-      break
-
     case error instanceof StatementTimeoutError:
-      status = 504
+      status = 500
       break
   }
 

@@ -30,6 +30,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ children, items }) => {
         ariaLabel="Open and close dropdown"
         className={`swap swap-rotate ${swapActiveClassName}`}
         fill={ButtonFill.Outline}
+        dataTestId="Toggle-dropdown-button"
         shape={ButtonShape.Circle}
         onClick={() => setIsOpen((_isOpen) => !_isOpen)}
         variant={ButtonVariant.Neutral}

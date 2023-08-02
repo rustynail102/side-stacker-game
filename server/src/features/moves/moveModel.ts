@@ -61,6 +61,21 @@ export class MoveModel {
  * SQL query to create the moves table in the database if it does not already exist.
  */
 export const MoveModelSchema = sql.unsafe`
+  CREATE TABLE IF NOT EXISTS moves (
+    move_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    game_id UUID NOT NULL REFERENCES games(game_id),
+    player_id UUID NOT NULL REFERENCES players(player_id),
+    move_number INTEGER NOT NULL,
+    position_x INTEGER NOT NULL,
+    position_y INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+  );
+`
+
+/**
+ * Move Model - current schema. DO NOT USE - it's here only as a reference.
+ */
+export const MoveModelCurrentSchema = sql.unsafe`
   DO $$ BEGIN
     CREATE TYPE move_type AS ENUM ('X', 'O');
   EXCEPTION

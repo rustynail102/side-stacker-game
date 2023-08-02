@@ -23,6 +23,7 @@ export const Card: React.FC<CardProps> = ({
   isLoading = false,
   position = CardPosition.Default,
   title,
+  titleDataTestId,
   type = CardType.Normal,
   variant = CardVariant.Primary,
 }) => (
@@ -55,6 +56,7 @@ export const Card: React.FC<CardProps> = ({
       {title && !isLoading && (
         <Typography
           className="truncate max-w-full"
+          dataTestId={titleDataTestId}
           variant={TypographyVariant.Callout}
           weight={TypographyWeight.Bold}
         >

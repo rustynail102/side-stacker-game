@@ -1,0 +1,27 @@
+name: Client - unit & integration tests
+
+on: [push]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.0.0]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Test the client
+        working-directory: ./client
+        run: |
+          yarn install
+          yarn cache clean
+          yarn test

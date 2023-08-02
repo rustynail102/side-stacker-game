@@ -14,9 +14,11 @@ export const Button: React.FC<ButtonProps> = ({
   ariaLabel,
   children,
   className = "",
+  dataTestId,
   disabled,
   fill = ButtonFill.Full,
   isLoading,
+  name,
   onClick,
   shape = ButtonShape.Default,
   size = ButtonSize.Md,
@@ -25,11 +27,13 @@ export const Button: React.FC<ButtonProps> = ({
 }) => (
   <button
     aria-label={ariaLabel}
+    data-testid={dataTestId}
     disabled={disabled || isLoading}
     className={`btn 
       ${size} ${shape} ${fill} ${disabled ? "btn-disabled" : variant}
       ${className}
     `}
+    name={name || String(children)}
     onClick={onClick}
     type={type}
   >

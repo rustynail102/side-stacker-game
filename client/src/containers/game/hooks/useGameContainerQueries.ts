@@ -8,6 +8,7 @@ import { useParams } from "@tanstack/router"
  */
 export const useGameContainerQueries = () => {
   const { game_id } = useParams()
+
   const {
     error: errorGame,
     game,
@@ -30,6 +31,7 @@ export const useGameContainerQueries = () => {
       enabled: Boolean(game?.player1_id),
     },
   )
+
   const {
     error: errorPlayer2,
     isInitialLoading: isInitialLoadingPlayer2,
@@ -49,9 +51,13 @@ export const useGameContainerQueries = () => {
   const { currentPlayer } = useGetCurrentPlayer()
 
   const currentUserId = currentPlayer?.player_id
-  const isCurrentUserPlayer1 = player1?.player_id === currentUserId
-  const isCurrentUserPlayer2 = player2?.player_id === currentUserId
-  const isUserPlaying = isCurrentUserPlayer1 || isCurrentUserPlayer2
+  const isCurrentUserPlayer1 = Boolean(
+    currentUserId && player1?.player_id === currentUserId,
+  )
+  const isCurrentUserPlayer2 = Boolean(
+    currentUserId && player2?.player_id === currentUserId,
+  )
+  const isUserPlaying = Boolean(isCurrentUserPlayer1 || isCurrentUserPlayer2)
 
   const hasPlayer1NextMove =
     game && game.number_of_moves % 2 === 0 && !game.finished_at

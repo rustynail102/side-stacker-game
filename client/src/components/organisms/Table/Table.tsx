@@ -12,7 +12,7 @@ export const Table: React.FC<TableProps> = ({
   rows = [],
 }) => (
   <div className={`overflow-x-auto ${className}`}>
-    <table className="table">
+    <table className="table" role="table">
       <thead>
         <tr>
           {headers.map((header, index) => (

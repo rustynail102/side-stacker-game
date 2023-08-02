@@ -18,7 +18,7 @@ import {
   createSqlTag,
 } from "slonik"
 import { ZodTypeAny, z } from "zod"
-import { MoveTypeEnum as MoveTypeEnumType } from "@server/@types/api"
+import { MoveTypeEnum as ApiMoveTypeEnum } from "@server/@types/api"
 import { Game } from "@server/@types/gameObject"
 import { CountObject } from "@server/db/utils/objects/countObject"
 
@@ -107,7 +107,7 @@ export class GameModel {
       const current_board_status_row = new Array(7).fill(
         MoveTypeEnum.enum.empty,
       )
-      const current_board_status: MoveTypeEnumType[][] = new Array(7).fill(
+      const current_board_status: ApiMoveTypeEnum[][] = new Array(7).fill(
         current_board_status_row,
       )
 
@@ -190,20 +190,35 @@ export class GameModel {
 
       const direction = orderDirection === OrderDirection.ASC ? "ASC" : "DESC"
 
-      const query = sql.typeAlias("game")`
+      let query = sql.typeAlias("game")`
         SELECT * 
         FROM games 
-        WHERE ${sql.join(filtersFragments, sql.unsafe` OR `)}
         ORDER BY ${sql.identifier([orderBy])} ${sql.unsafe([direction])} 
         LIMIT ${limit} 
         OFFSET ${offset}
       `
 
-      const countQuery = sql.typeAlias("count")`
+      let countQuery = sql.typeAlias("count")`
         SELECT COUNT(*) 
         FROM games 
-        WHERE ${sql.join(filtersFragments, sql.unsafe` OR `)}
       `
+
+      if (filtersFragments.length > 0) {
+        query = sql.typeAlias("game")`
+          SELECT * 
+          FROM games 
+          WHERE ${sql.join(filtersFragments, sql.unsafe` OR `)}
+          ORDER BY ${sql.identifier([orderBy])} ${sql.unsafe([direction])} 
+          LIMIT ${limit} 
+          OFFSET ${offset}
+        `
+
+        countQuery = sql.typeAlias("count")`
+          SELECT COUNT(*) 
+          FROM games 
+          WHERE ${sql.join(filtersFragments, sql.unsafe` OR `)}
+        `
+      }
 
       const { rows } = await connection.query(query)
       const countResult = await connection.query(countQuery)
@@ -283,6 +298,30 @@ export class GameModel {
  * SQL query to create the games table in the database if it does not already exist.
  */
 export const GameModelSchema = sql.unsafe`
+  DO $$ BEGIN
+    CREATE TYPE game_state AS ENUM ('waiting_for_players', 'in_progress', 'finished');
+  EXCEPTION
+    WHEN duplicate_object THEN null;
+  END $$;
+
+  CREATE TABLE IF NOT EXISTS games (
+    game_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    player1_id UUID REFERENCES players(player_id),
+    player2_id UUID REFERENCES players(player_id),
+    current_player_id UUID REFERENCES players(player_id),
+    current_game_state game_state NOT NULL DEFAULT 'waiting_for_players',
+    current_board_status JSONB NOT NULL,
+    next_possible_moves JSONB NOT NULL,
+    winner_id UUID REFERENCES players(player_id),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    finished_at TIMESTAMP
+  );
+`
+
+/**
+ * Game Model - current schema. DO NOT USE - it's here only as a reference.
+ */
+export const GameModelCurrentSchema = sql.unsafe`
     DO $$ BEGIN
         CREATE TYPE game_state AS ENUM ('waiting_for_players', 'in_progress', 'finished');
     EXCEPTION

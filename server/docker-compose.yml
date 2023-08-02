@@ -9,7 +9,22 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: database
 
+  test_db:
+    build: ./db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: test_database
+
   redis:
     image: redis
+    command: redis-server --requirepass password
     ports:
       - "6379:6379"
+
+  test_redis:
+    image: redis
+    ports:
+      - "6380:6379"

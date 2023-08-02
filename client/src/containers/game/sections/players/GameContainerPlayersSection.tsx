@@ -52,7 +52,7 @@ export const GameContainerPlayersSection: React.FC = () => {
   ]
 
   return (
-    <Card title="Players">
+    <Card title="Players" titleDataTestId="GamePlayersSectionTitle">
       <Table
         headers={[" ", "Name", "Action"]}
         isLoading={isInitialLoading}

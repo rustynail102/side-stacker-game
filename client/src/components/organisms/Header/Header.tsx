@@ -8,7 +8,10 @@ import { Link } from "@tanstack/router"
  * The header component of the application. It contains a logo and space for additional children components.
  */
 export const Header: React.FC<HeaderProps> = ({ children }) => (
-  <header className="bg-base-300 sticky top-0 left-0 right-0 w-full shadow-md z-[100] h-20">
+  <header
+    className="bg-base-300 sticky top-0 left-0 right-0 w-full shadow-md z-[100] h-20"
+    data-testid="header"
+  >
     <div className="max-w-7xl p-4 mx-auto flex gap-4 items-center justify-between">
       <Link to={homeRoute.to}>
         <Logo

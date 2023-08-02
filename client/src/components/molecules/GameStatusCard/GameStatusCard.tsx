@@ -21,7 +21,11 @@ export const GameStatusCard: React.FC<GameStatusCardProps> = ({
   isLoading,
   title,
 }) => (
-  <Card isLoading={isLoading} title={title}>
+  <Card
+    isLoading={isLoading}
+    title={title}
+    titleDataTestId="GameStatusCardTitle"
+  >
     <div className="mt-2 flex items-center justify-center">
       {isLoading ? (
         <Badge

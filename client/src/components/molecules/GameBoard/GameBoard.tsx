@@ -14,16 +14,21 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   winningMoves = [],
 }) => {
   const winningMovesSet = new Set(
-    winningMoves.map(([row, col]) => `${row},${col}`), // Convert the moves to strings for easy comparison
+    winningMoves?.map(([row, col]) => `${row},${col}`), // Convert the moves to strings for easy comparison
   )
 
   const winDirection =
-    winningMoves.length > 0 ? determineWinDirection(winningMoves) : undefined
+    winningMoves && winningMoves.length > 0
+      ? determineWinDirection(winningMoves)
+      : undefined
 
   return isLoading ? (
     <GameBoardLoader />
   ) : (
-    <div className="flex items-center justify-stretch flex-col bg-white shadow rounded-box w-full overflow-hidden">
+    <div
+      className="flex items-center justify-stretch flex-col bg-white shadow rounded-box w-full overflow-hidden"
+      data-testid="GameBoard"
+    >
       {board.map((row, rowIndex) => (
         <GameBoardRow key={rowIndex}>
           {row.map(({ cell, isNextPossibleMove, onClick }, cellIndex) => {

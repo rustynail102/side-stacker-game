@@ -117,6 +117,8 @@ There are two databases in the system:
 11. **Day.js** - Day.js is a lightweight and fast alternative to Moment.js, a library for parsing, manipulating, and displaying dates and times in JavaScript. With a file size of just 2kB, it is incredibly efficient, making it a perfect choice for this game project, where reducing download and execution times is crucial for a smooth user experience. Day.js offers a modern API that is largely compatible with Moment.js, making it easy to use for developers who are already familiar with Moment.js. Additionally, Day.js follows an immutable pattern, meaning that all API operations that modify the Day.js object will return a new instance. This immutability helps prevent bugs and makes debugging sessions shorter and more efficient. 
 12. **react-icons** - React Icons is an essential tool for this project as it simplifies the process of including popular icons in React applications. It utilizes ES6 imports, enabling developers to include only the specific icons needed for the project, reducing the overall bundle size. Given the diverse set of icons commonly used in web applications, React Icons provides a wide range of icon libraries, ensuring that the game can leverage a variety of icons for different functionalities and user interface elements. The easy integration with React projects ensures that the game's frontend remains performant and responsive while delivering an engaging user experience with attractive and recognizable icons.
 13. **react-hot-toast** - An excellent addition to the project for displaying toast notifications in the frontend. The library provides toast notifications that are eye-catching and attention-grabbing, ensuring important messages are noticed by users. It offers a simple and intuitive API, making it effortless to implement toast notifications throughout the application. It allows developers to customize the appearance and behavior of toast notifications. Being a lightweight library, it won't add unnecessary bloat to the project, ensuring smooth performance and fast loading times.
+14. **Vitest** - A Vite-native unit test framework. It will allow developers to write efficient unit and integration tests. It's compatible with Vite and has out-of-box TypeScript support.
+15. **Playwright** - Playwright enables reliable end-to-end testing for modern web apps. Great end-to-end testing framework - Playwright creates a browser context for each test. This delivers full test isolation with zero overhead.
 
 #### The Backend
 
@@ -132,10 +134,12 @@ There are two databases in the system:
 10. **argon2** - Argon2 is a password hashing function that was selected as the winner of the Password Hashing Competition in July 2015. It's designed to be secure against a range of attacks and to be efficient to compute on modern hardware. Argon2 is suitable for hashing passwords for credential storage, key derivation, or other cryptographic applications.
 11. **Redis** - Redis (Remote Dictionary Server) is an in-memory data structure store used as a database, cache, and message broker. It supports various data structures and is perfect for high-performance tasks like caching. In this application, Redis could be used to store session data, game state, or other temporary, high-performance needs.
 12. **Express-Session** - express-session is a middleware for Express.js that handles session management. It provides mechanisms to store session data that persist across requests. In a game like Side-Stacker, express-session could be used to keep track of user authentication, game state, and other data that needs to persist between different requests from the same user.
+13. **Jest** - Jest is a comprehensive JavaScript testing framework that provides a full set of testing capabilities and a clean and intuitive API for structuring and writing tests. It has built-in support for mocking, which makes it easier to isolate the code under test and replace dependencies with mock objects, improving the reliability and speed of tests. In addition, Jest's snapshot testing feature allows developers to capture the state of the UI and then use it as a reference for future tests. This can be particularly useful for testing the correctness of the server's response. Jest also supports parallel test execution, which can significantly reduce the time it takes to run all tests. This is especially important in a large project like this one, where the test suite can grow quite large.
+14. **Supertest** - Supertest is a high-level abstraction for testing HTTP, built on the SuperAgent library. Supertest makes it easy to write tests for API endpoints, as it provides a fluent, chainable API for making requests and asserting responses. This can greatly simplify the process of testing routes and middleware in the server application. It's especially useful in this project, where the server exposes various RESTful endpoints for game state management. With Supertest, developers can easily make requests to these endpoints and assert the responses, helping ensure that the server behaves as expected under various conditions. Supertest integrates seamlessly with Jest, allowing developers to leverage Jest's features for structuring and running tests, and its assertion library for validating responses.
 
 #### Additional tools
 
-Real and production-level application could also have additional tools, such as a tool for managing the environment variables (like Dotenv), testing frameworks (like Jest or Cypress), API documentation (like Swagger) and logging. However, given the scope and time constraints of this project, they probably won't be implemented.
+Real and production-level application could also have additional tools, such as a tool for managing the environment variables (like Dotenv), API documentation (like Swagger) and logging. However, given the scope and time constraints of this project, they probably won't be implemented.
 
 ### Data Model
 
@@ -147,7 +151,7 @@ Data model consists of three main entities: `Player`, `Game`, and `Move`.
 Fields:
     - `player_id` (UUID, required): A unique identifier for each player. This is the primary key.
     - `username` (TEXT, required): The player's chosen username.
-    - `created_at` (TIMESTAMP, required): The time when given player joined.
+    - `created_at` (TIMESTAMP, required): The time when given player was created.
     - `last_active_at` (TIMESTAMP, required): The time when player last time made any activity (made a move, joined a game, etc.)
     - `deleted_at` (TIMESTAMP, optional): The time when player was deleted.
 
@@ -224,7 +228,7 @@ Fields:
 - [x] [Client - game end (win/draw) logic](https://github.com/alan-hadyk/side-stacker-game/pull/20)
 - [x] [Client - 404 page](https://github.com/alan-hadyk/side-stacker-game/pull/21)
 - [x] [Remove obsolete code](https://github.com/alan-hadyk/side-stacker-game/pull/22)
-- [ ] Testing of all routes, controllers, and user interfaces
+- [x] [Testing - client & server](https://github.com/alan-hadyk/side-stacker-game/pull/23)
 - [ ] Missing documentation
 
 ### Potential additional features

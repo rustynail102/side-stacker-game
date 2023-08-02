@@ -113,6 +113,7 @@ export const RootContainerHeaderSection: React.FC = () => {
       >
         <Typography
           alignment={TypographyAlignment.Center}
+          dataTestId="Greeting text"
           variant={TypographyVariant.Callout}
         >
           {GREETING_TEXT} <strong>{currentPlayer?.username || "user"}</strong>

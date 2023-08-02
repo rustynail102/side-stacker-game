@@ -41,6 +41,54 @@ yarn start
 
 **Note: Production Build is not fully implemented and might not work. Requires further work.**
 
+## Available Scripts
+
+### `yarn build`
+Builds the app for production
+
+### `yarn db:reverse-migration`
+Reverses the last database migration
+
+### `yarn db:test:start`
+Starts a Docker container with a PostgreSQL database used for tests
+
+### `yarn db:start`
+Starts a Docker container with a PostgreSQL database used for development
+
+### `yarn docker:stop`
+Stops all Docker containers and removes containers, networks, volumes, and images
+
+### `yarn dead-code`
+Displays a list with unused code
+
+### `yarn dev`
+Starts Docker containers with Redis and PostgreSQL for development, and then starts the app in development mode
+
+### `yarn lint`
+Lints the entire app with ESLint
+
+### `yarn lint:fix`
+Lints the entire app with ESLint, and then fixes all fixable issues
+
+### `yarn redis:test:start`
+Starts a Docker container with Redis storage used for tests
+
+### `yarn redis:start`
+Starts a Docker container with Redis storage used for development
+
+### `yarn start`
+Starts the app in production mode
+
+### `yarn test`
+Starts Docker containers with Redis and PostgreSQL for testing, and then runs all tests
+
+### `yarn test:ci`
+Runs all tests in CI
+
+### `yarn test:watch`
+Starts Docker containers with Redis and PostgreSQL for testing, and then runs all tests in watch mode
+
+
 # Documentation
 
 

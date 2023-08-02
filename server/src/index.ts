@@ -10,16 +10,22 @@ import { httpErrorsMiddleware } from "@server/middlewares/http/httpErrors"
 import { useWsMiddlewares } from "@server/middlewares/ws"
 import { Path } from "@server/routes/paths"
 import express from "express"
-import { createServer as createHttpServer } from "http"
+import {
+  createServer as createHttpServer,
+  IncomingMessage,
+  ServerResponse,
+  Server,
+} from "http"
+
+const app = express()
+let httpServer: Server<typeof IncomingMessage, typeof ServerResponse>
 
 /**
  * Starts the server.
  */
 const startServer = async () => {
-  const app = express()
-
   // Create http and ws servers
-  const httpServer = createHttpServer(app)
+  httpServer = createHttpServer(app)
   const websocketsServer = createWebsocketsServer(httpServer)
 
   // Initializers
@@ -41,12 +47,15 @@ const startServer = async () => {
   const { appConfig } = config
   const { host, port } = appConfig.httpServer
 
-  // Run ws & http server
-  websocketsServer.listen(port)
+  // Run http server
   httpServer.listen(port, host, () => {
     console.log(`HTTP server running at http://${host}:${port}/`)
     console.log(`WS server running at ws://${host}:${port}/`)
   })
 }
 
-startServer()
+if (process.env["NODE_ENV"] !== "test") {
+  startServer()
+}
+
+export { app, startServer, httpServer }

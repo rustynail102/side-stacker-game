@@ -273,7 +273,7 @@ export class GameService {
       ...game,
       current_board_status: current_board_status as ApiMoveTypeEnum[][],
       current_game_state: current_game_state as ApiGameStateEnum,
-      winning_moves: winning_moves ?? undefined,
+      winning_moves: winning_moves ?? null,
       ...convertObjectToObjectWithIsoDates(
         { created_at, finished_at: finished_at ? finished_at : null },
         ["created_at", "finished_at"],

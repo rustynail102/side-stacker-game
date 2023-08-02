@@ -71,7 +71,7 @@ export type GameResponse = {
   player1_id?: string | null
   player2_id?: string | null
   winner_id?: string | null
-  winning_moves?: number[][]
+  winning_moves?: number[][] | null
 }
 
 export type GamesResponse = {

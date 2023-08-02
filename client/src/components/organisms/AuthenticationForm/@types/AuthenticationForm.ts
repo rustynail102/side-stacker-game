@@ -5,6 +5,7 @@ export interface AuthenticationFormValues {
 
 export interface AuthenticationFormProps {
   buttonText?: string
+  dataTestId?: string
   isLoading?: boolean
   onSubmit: (values: AuthenticationFormValues) => void
   title?: string

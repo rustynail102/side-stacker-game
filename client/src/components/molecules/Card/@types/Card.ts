@@ -23,6 +23,7 @@ export interface CardProps {
   isLoading?: boolean
   position?: CardPosition
   title?: string
+  titleDataTestId?: string
   type?: CardType
   variant?: CardVariant
 }
