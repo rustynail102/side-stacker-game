@@ -1,4 +1,4 @@
-import { QueryKeys } from "@server/@types/api"
+import { QueryKey } from "@server/@types/api"
 import {
   ClientToServerEvents,
   ServerToClientEvents,
@@ -38,9 +38,9 @@ export const handleSocketConnectionMiddleware = async (
     if (player_id) {
       await RedisService.removeOnlineUser(player_id)
 
-      WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
+      WebsocketService.emitInvalidateQuery([QueryKey.Players, QueryKey.List])
       WebsocketService.emitInvalidateQuery(
-        [QueryKeys.Players, QueryKeys.Detail],
+        [QueryKey.Players, QueryKey.Detail],
         player_id,
       )
     }

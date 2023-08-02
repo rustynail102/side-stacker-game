@@ -14,7 +14,7 @@ import {
   GameResponse,
   GameStateEnum as ApiGameStateEnum,
   MoveTypeEnum as ApiMoveTypeEnum,
-  QueryKeys,
+  QueryKey,
 } from "@server/@types/api"
 import {
   uniqueNamesGenerator,
@@ -324,9 +324,9 @@ export class GameService {
     const updatedGame = await GameModel.update(game_id, fields)
 
     // Emit an event to all connected clients to invalidate the games query
-    WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
+    WebsocketService.emitInvalidateQuery([QueryKey.Games, QueryKey.List])
     WebsocketService.emitInvalidateQuery(
-      [QueryKeys.Games, QueryKeys.Detail],
+      [QueryKey.Games, QueryKey.Detail],
       game_id,
     )
 
@@ -346,7 +346,7 @@ export class GameService {
 
     WebsocketService.emitToast(`New Game available - ${newGame.name}`)
     // Emit an event to all connected clients to invalidate the games query
-    WebsocketService.emitInvalidateQuery([QueryKeys.Games, QueryKeys.List])
+    WebsocketService.emitInvalidateQuery([QueryKey.Games, QueryKey.List])
 
     return { newGame }
   }

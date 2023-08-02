@@ -3,7 +3,7 @@ import {
   GamesGetAllQueryParams,
   PlayerResponse,
   PlayersGetAllQueryParams,
-  QueryKeys,
+  QueryKey,
 } from "@server/@types/api"
 
 /**
@@ -22,26 +22,26 @@ import {
 export const queryKeys = {
   games: {
     detail: (game_id?: GameResponse["game_id"]) => [
-      QueryKeys.Games,
-      QueryKeys.Detail,
+      QueryKey.Games,
+      QueryKey.Detail,
       game_id,
     ],
     list: (params?: GamesGetAllQueryParams) => [
-      QueryKeys.Games,
-      QueryKeys.List,
+      QueryKey.Games,
+      QueryKey.List,
       params,
     ],
   },
   players: {
-    current: [QueryKeys.Players, QueryKeys.Current],
+    current: [QueryKey.Players, QueryKey.Current],
     detail: (player_id?: PlayerResponse["player_id"]) => [
-      QueryKeys.Players,
-      QueryKeys.Detail,
+      QueryKey.Players,
+      QueryKey.Detail,
       player_id,
     ],
     list: (params?: PlayersGetAllQueryParams) => [
-      QueryKeys.Players,
-      QueryKeys.List,
+      QueryKey.Players,
+      QueryKey.List,
       params,
     ],
   },

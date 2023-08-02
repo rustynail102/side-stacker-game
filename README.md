@@ -1,8 +1,28 @@
 # Side-Stacker Game
 
-Side-Stacker Game - Monadical Application - Take-home project
+## Table of Contents
+- [Important note](#important-note)
+- [Architecture Implementation Plan](#architecture-implementation-plan)
+    - [Project Overview](#project-overview)
+    - [Technical Requirements](#technical-requirements)
+        - [The Frontend](#the-frontend)
+        - [The Backend](#the-backend)
+    - [System Architecture](#system-architecture)
+        - [Client-side](#client-side)
+        - [Server-side](#server-side)
+        - [Databases](#databases)
+    - [Technology Stack](#technology-stack)
+        - [The Frontend](#the-frontend)
+        - [The Backend](#the-backend)
+        - [Additional tools](#additional-tools)
+    - [Data Model](#data-model)
+    - [User Flow](#user-flow)
+    - [Implementation Plan](#implementation-plan)
+    - [Potential additional features](#potential-additional-features)
+    - [Testing Strategy](#testing-strategy)
+    - [Potential Challenges](#potential-challenges)
 
-## Important
+## Important note
 
 Please read `Architecture Implementation Plan` below first, and then refer to client and server documentation:
 - [Client Documentation](client/README.md)
@@ -185,15 +205,17 @@ Fields:
 
 > Step-by-step walkthrough of a typical user interaction with the application
 
-1. **User visits the application**: The user opens the application in their web browser. They are presented with a loading indicator, and then a welcome screen and a modal to enter their username. If they've already entered the username, they land in step `3.`.
+1. **User visits the application**: The user opens the application in their web browser. They are presented with a loading indicator, and then an authentication form. They can either create a new account or sign in with existing crederntials. If they already have a valid session in the browser, they land in step `3.`.
 
-2. **User enters username**: The user enters their chosen username and clicks on the "Confirm" button. A session is created for the user, and they are taken to the main game lobby.
+2. **User authenticates**: 
+- A: The user enters their chosen username and password, and clicks on the "Create Account" button. New user is created, and session is created for that user, and they are taken to the main game lobby.
+- B: The user enters their existing username and password, and clicks on the "Sign In" button. Session is created for that user, and they are taken to the main game lobby.
 
-3. **User waits in the game lobby**: The user waits in the game lobby. They can see a list of open games, games in progress, as well as a list of finished games. In the top, there might be also a list of games that they are currently participating in.
+3. **User waits in the game lobby**: The user waits in the game lobby. They can see a list of open games, games in progress, as well as a list of finished games. In the top, there might be also a list of games that they are currently participating in. In the sidebar there's a list of all players, with indicators stating that they are online or offline.
 
 4. **User creates a new game or joins an existing one**
 - A: **User creates a new game**: User clicks on "New Game" button. New game is created, and user is redirected to a route with a new game. They are assigned as Player 1 and there's no Player 2 yet. User waits for another player to join. 
-- B: **User joins an existing game**: User clicks on one of the games in progress. They are redirected to a route with an existing game. If there's a free spot, user clicks on "Join Game" button. User is assigned as Player 1 or Player 2. If there isn't any free spot, user can watch the game.
+- B: **User joins an existing game**: User clicks on one of the open games or games in progress. They are redirected to a route with an existing game. If there's a free spot, user clicks on "Join Game" button. User is assigned as Player 1 or Player 2. If there isn't any free spot, user can watch the game.
 
 5. **Game starts**: The game board is displayed, and Player 1 is prompted to make the first move.
 
@@ -229,13 +251,21 @@ Fields:
 - [x] [Client - 404 page](https://github.com/alan-hadyk/side-stacker-game/pull/21)
 - [x] [Remove obsolete code](https://github.com/alan-hadyk/side-stacker-game/pull/22)
 - [x] [Testing - client & server](https://github.com/alan-hadyk/side-stacker-game/pull/23)
-- [ ] Missing documentation
+- [x] [Missing documentation](https://github.com/alan-hadyk/side-stacker-game/pull/24)
 
 ### Potential additional features
 
 > Step into the shoes of a product manager and spec out some potential features to add to the project. Frame it as if it’s a client project and explain thought process for gathering requirements, prioritizing tickets, delegating, and making time estimates.
 
-TODO
+**Proposed new features**
+
+- Real-time global chat for players in the game lobby.
+- System of levels and point for players.
+- Ability to make a game private, and/or invite a particular user.
+- Settings with the ability to update the username and password, as well as delete an account.
+- Ability to create a game with a custom name.
+- Ability for each player to have an avatar.
+- Display a history of moves made in a particular game, with ability to "replay" the game step by step.
 
 ### Testing Strategy
 

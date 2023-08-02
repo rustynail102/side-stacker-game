@@ -32,7 +32,7 @@ export interface GamesGetAllFilter {
   filterType?: FilterType
 }
 
-export enum QueryKeys {
+export enum QueryKey {
   Games = "games",
   Players = "players",
   List = "list",

@@ -1,4 +1,4 @@
-import { PlayerResponse, QueryKeys } from "@server/@types/api"
+import { PlayerResponse, QueryKey } from "@server/@types/api"
 import { Player } from "@server/@types/playerObject"
 import { AuthenticationError } from "@server/errors/authenticationError"
 import { ValidationError } from "@server/errors/validationError"
@@ -75,9 +75,9 @@ export class PlayerService {
     await RedisService.addOnlineUser(player.player_id)
 
     if (emitEvents) {
-      WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
+      WebsocketService.emitInvalidateQuery([QueryKey.Players, QueryKey.List])
       WebsocketService.emitInvalidateQuery(
-        [QueryKeys.Players, QueryKeys.Detail],
+        [QueryKey.Players, QueryKey.Detail],
         player_id,
       )
     }
@@ -92,9 +92,9 @@ export class PlayerService {
     await PlayerModel.update(player_id, {})
     await RedisService.removeOnlineUser(player_id)
 
-    WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
+    WebsocketService.emitInvalidateQuery([QueryKey.Players, QueryKey.List])
     WebsocketService.emitInvalidateQuery(
-      [QueryKeys.Players, QueryKeys.Detail],
+      [QueryKey.Players, QueryKey.Detail],
       player_id,
     )
   }
@@ -114,7 +114,7 @@ export class PlayerService {
     })
     await RedisService.addOnlineUser(newPlayer.player_id)
 
-    WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
+    WebsocketService.emitInvalidateQuery([QueryKey.Players, QueryKey.List])
     WebsocketService.emitToast(`New Player - ${newPlayer.username}`)
 
     const newPlayerResponse = PlayerService.parsePlayerToResponse(newPlayer)
@@ -170,9 +170,9 @@ export class PlayerService {
     }
 
     // Emit an event to all connected clients to invalidate the players query
-    WebsocketService.emitInvalidateQuery([QueryKeys.Players, QueryKeys.List])
+    WebsocketService.emitInvalidateQuery([QueryKey.Players, QueryKey.List])
     WebsocketService.emitInvalidateQuery(
-      [QueryKeys.Players, QueryKeys.Detail],
+      [QueryKey.Players, QueryKey.Detail],
       updatedPlayer.player_id,
     )
 

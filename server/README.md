@@ -1,6 +1,24 @@
 # Server
 
-Server for Side-Stacker game. This server is built using Node.js. Documentation in this file explains how the system works and interacts with the client. Similar documentation is provided for the client in `/client` folder.
+Server for Side-Stacker game. This server is built using Node.js. Documentation in this file explains how the system works and interacts with the client. Similar documentation is provided for the client in `/client` folder. [There's also a "main" documentation](https://github.com/alan-hadyk/side-stacker-game)
+
+## Table of Contents
+- [Getting Started](#getting-started)
+    - [Requirements](#requirements)
+    - [Development - Quick Start](#development---quick-start)
+    - [Production Build](#production-build)
+    - [Available Scripts](#available-scripts)
+- [Documentation](#documentation)
+    - [Server Architecture](#server-architecture)
+        - [System Diagram](#system-diagram)
+        - [Components](#components)
+    - [Design Patterns](#design-patterns)
+    - [API Endpoints](#api-endpoints)
+    - [Authentication](#authentication)
+    - [Real-time communication and Websockets](#real-time-communication-and-websockets)
+    - [Testing](#testing)
+        - [Unit tests](#unit-tests)
+        - [Integration tests](#integration-tests)
 
 # Getting Started
 
@@ -88,9 +106,7 @@ Runs all tests in CI
 ### `yarn test:watch`
 Starts Docker containers with Redis and PostgreSQL for testing, and then runs all tests in watch mode
 
-
 # Documentation
-
 
 ## Server Architecture
 
@@ -127,6 +143,32 @@ The server architecture is primarily composed of the following key components:
 - **Database (PostgreSQL)**: Relational database running inside a Docker container, used for storing structured data (players, games and moves).
 
 - **Redis**: This is an in-memory data structure store, used to store sessions and data related to active players.
+
+## Design Patterns
+
+### Model-View-Controller (MVC) Pattern
+Classic architectural pattern for implementing user interfaces. In the context of this app, Models correspond to data and the operations that can be performed on it (such as database interactions), Views correspond to the data presentation format (sending responses to the client in this RESTful API scenario), and Controllers handle the business logic, processing the user's input and returning the appropriate response.
+
+### Repository Pattern
+Models in this context act as Repositories, serving as an abstraction layer between the data access layer and the business logic or service layer. They manage the interactions with the database and provide an API for the Controllers to use.
+
+### Service Layer Pattern
+The services in the `services` directory encapsulate the application's business logic. This makes the code more reusable, testable, and organized. Services are typically used by Controllers, and they may use Models to access and manipulate data.
+
+### Middleware Pattern
+Middlewares in Express.js are functions that have access to the request and response objects, and the next function in the application’s request-response cycle. They can execute any code, modify the request and the response objects, end the request-response cycle, and call the next middleware in the stack. A good example of middleware is [`httpErrorsMiddleware`](src/middlewares/http/httpErrors.ts)
+
+### Singleton Pattern
+Singleton might be applied to database connection and Redis client. The idea of the Singleton pattern is to ensure that a class only has one instance, and to provide a global point of access to it. A database connection pool is a good example of where the Singleton pattern is used.
+
+### Module Pattern
+The overall structure of the application follows the Module pattern, which is a design pattern that uses modules to organize and encapsulate related pieces of code. In Node.js, each file is treated as a separate module.
+
+### Observer Pattern
+The websocket implementation is using the Observer pattern where events (like a new game or a new player) are broadcasted to all connected clients.
+
+### Initializer Pattern
+This pattern is used to manage the startup sequence of an application. Initializers are responsible for starting up the application in the correct order of dependencies. In the case of this app, initializers are making sure that connections to the database and Redis are established before the rest starts up.
 
 ## API Endpoints
 
@@ -456,3 +498,34 @@ To better comprehend the authentication process, let's break it down into its ma
 4. The server validates the request, sets the user status to "offline", destroys the session, and sends a response with the same cookie, but with a past expiration date.
 5. The browser receives a `204 No Content` response and removes the session cookie from its cache.
 6. The user is redirected to the authentication screen.
+
+## Real-time communication and Websockets
+
+Server establishes real-time communication with the client via [Socket.IO](https://socket.io/) library. There's a special service, [WebsocketService](src/services/websocketService.ts). It handles 2 types of events:
+
+1. **Query invalidation** (`emitInvalidateQuery`): This event sends a message to the client with a payload containing given query keys. Query keys are an array of strings (list entities) and strings with an ID (detail entity). Whenever such an event is received by the client, given entity is invalidated in the client-side cache (created via [TanStack Query](https://tanstack.com/query/latest)), which will trigger a refetch of related API endpoint. Examples
+    - `{ entity: [QueryKey.Games, QueryKey.List] }` invalidates all endpoints fetching a list of games (`GET /games`, `GET /games?filters[0][conditions][current_game_state]=in_progress&limit=1`, `GET /games?filters[0][conditions][current_game_state]=finished&limit=4&offset=0`, etc.)
+    - `{ entity: [QueryKey.Games, QueryKey.Detail], id: '29dc32af-b224-4ec8-b443-f658414531ad' }` invalidates endpoint fetching particular game entity (`GET /games/29dc32af-b224-4ec8-b443-f658414531ad`)
+
+2. **Toast message** (`emitToast`): This event sends a message to the client with a string. When this message is received by the client, it will display a toast with a message from the payload. Examples:
+    - `${player.username} just won ${game.name}!`
+    - `${player.username} joined ${game.name}`
+    - `New Game available - ${newGame.name}`
+
+## Testing
+
+This repository contains few tests, representing various testing strategies.
+
+### Unit tests
+
+Example unit tests, implemented with `Jest`:
+- [src/features/players/__tests__/playerObject.test.ts](src/features/players/__tests__/playerObject.test.ts)
+- [src/services/__tests__/redisService.test.ts](src/services/__tests__/redisService.test.ts)
+- [src/services/__tests__/passwordService.test.ts](src/services/__tests__/passwordService.test.ts)
+
+### Integration tests
+
+Example integration tests of `GET /games` route, implemented with `Jest` and `Supertest`:
+- [src/features/games/__tests__/gameRoutes/GET_games/2xx_GET_games.test.ts](src/features/games/__tests__/gameRoutes/GET_games/2xx_GET_games.test.ts)
+- [src/features/games/__tests__/gameRoutes/GET_games/4xx_GET_games.test.ts](src/features/games/__tests__/gameRoutes/GET_games/4xx_GET_games.test.ts)
+- [src/features/games/__tests__/gameRoutes/GET_games/5xx_GET_games.test.ts](src/features/games/__tests__/gameRoutes/GET_games/5xx_GET_games.test.ts)

@@ -1,7 +1,7 @@
-import { QueryKeys } from "@server/@types/api"
+import { QueryKey } from "@server/@types/api"
 
 export interface InvalidateQueryPayload {
-  entity: QueryKeys[]
+  entity: QueryKey[]
   id?: string | number
 }
 export interface ServerToClientEvents {
